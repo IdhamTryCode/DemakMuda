@@ -358,6 +358,105 @@ async function semaiProfil() {
   console.log("Profil contoh: rani-puspitasari");
 }
 
+const ORGANISASI = [
+  {
+    slug: "karang-taruna-bintoro",
+    nama: "Karang Taruna Bintoro",
+    jenis: "KARANG_TARUNA" as const,
+    kecamatanSlug: "demak",
+    desaNama: "Bintoro",
+    kontak: "0813-0000-0002",
+    deskripsi: `Karang taruna Kelurahan Bintoro, bergerak di kegiatan sosial, kebersihan lingkungan, dan pembinaan olahraga pemuda.
+
+Rutin mengadakan kerja bakti bulanan dan turnamen antar-RT.`,
+    pemilikEmail: "organisasi@demakmuda.test",
+    status: "TERVERIFIKASI" as const,
+  },
+  {
+    slug: "sanggar-tari-nusa-bintoro",
+    nama: "Sanggar Tari Nusa Bintoro",
+    jenis: "SANGGAR" as const,
+    kecamatanSlug: "demak",
+    desaNama: "Katonsari",
+    kontak: "sanggarnusa@contoh.id",
+    deskripsi: `Sanggar tari yang menekuni tari tradisional pesisiran dan tari kreasi bertema Demak.
+
+Latihan terbuka setiap Minggu sore untuk pemuda usia 16 sampai 25 tahun.`,
+    pemilikEmail: "dinas@demakmuda.test",
+    status: "TERVERIFIKASI" as const,
+  },
+  {
+    slug: "komunitas-mangrove-sayung",
+    nama: "Komunitas Mangrove Sayung",
+    jenis: "KOMUNITAS" as const,
+    kecamatanSlug: "sayung",
+    desaNama: "Bedono",
+    kontak: "0813-0000-0003",
+    deskripsi: `Komunitas pemuda pesisir yang menanam dan merawat mangrove sebagai upaya menahan abrasi di Kecamatan Sayung.`,
+    pemilikEmail: "dinas@demakmuda.test",
+    status: "TERVERIFIKASI" as const,
+  },
+  {
+    slug: "forum-pemuda-wedung",
+    nama: "Forum Pemuda Wedung",
+    jenis: "OKP" as const,
+    kecamatanSlug: "wedung",
+    desaNama: null,
+    kontak: null,
+    deskripsi: `Forum lintas organisasi kepemudaan di Kecamatan Wedung. Masih menunggu verifikasi dinas.`,
+    pemilikEmail: "organisasi@demakmuda.test",
+    status: "MENUNGGU" as const,
+  },
+];
+
+async function semaiOrganisasi() {
+  for (const o of ORGANISASI) {
+    const pemilik = await prisma.user.findUniqueOrThrow({
+      where: { email: o.pemilikEmail },
+      select: { id: true },
+    });
+    const kecamatan = await prisma.kecamatan.findUniqueOrThrow({
+      where: { slug: o.kecamatanSlug },
+      select: { id: true },
+    });
+    const desa = o.desaNama
+      ? await prisma.desa.findFirst({
+          where: { kecamatanId: kecamatan.id, nama: o.desaNama },
+          select: { id: true },
+        })
+      : null;
+
+    // Nama desa yang salah ketik akan menghasilkan organisasi tanpa desa dan
+    // sulit disadari; lebih baik berhenti di sini.
+    if (o.desaNama && !desa) {
+      throw new Error(`Desa "${o.desaNama}" tidak ada di Kecamatan ${o.kecamatanSlug}.`);
+    }
+
+    const isi = {
+      nama: o.nama,
+      jenis: o.jenis,
+      deskripsi: o.deskripsi,
+      kontak: o.kontak,
+      kecamatanId: kecamatan.id,
+      desaId: desa?.id ?? null,
+      statusVerifikasi: o.status,
+    };
+
+    await prisma.organisasi.upsert({
+      where: { slug: o.slug },
+      update: isi,
+      create: { ...isi, slug: o.slug, pemilikId: pemilik.id },
+    });
+  }
+
+  const terverifikasi = await prisma.organisasi.count({
+    where: { statusVerifikasi: "TERVERIFIKASI" },
+  });
+  console.log(
+    `Organisasi: ${await prisma.organisasi.count()} (${terverifikasi} terverifikasi)`,
+  );
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -400,6 +499,7 @@ async function main() {
   await semaiAgenda(penulis.id);
   await semaiPeluang(penulis.id);
   await semaiProfil();
+  await semaiOrganisasi();
 
   console.log("Penyemaian isi contoh selesai.");
 }

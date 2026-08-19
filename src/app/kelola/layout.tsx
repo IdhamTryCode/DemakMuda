@@ -28,6 +28,7 @@ export default async function TataLetakKelola({
               { href: "/kelola/kabar", label: "Kabar" },
               { href: "/kelola/agenda", label: "Agenda" },
               { href: "/kelola/peluang", label: "Peluang" },
+              { href: "/kelola/organisasi", label: "Organisasi" },
             ].map((m) => (
               <Link
                 key={m.href}

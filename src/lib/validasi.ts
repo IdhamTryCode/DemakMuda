@@ -90,6 +90,28 @@ export const PeluangSkema = z
     path: ["usiaMaks"],
   });
 
+export const OrganisasiSkema = z.object({
+  nama: teks(4, 120, "Nama organisasi"),
+  jenis: z.enum(["OKP", "KARANG_TARUNA", "SANGGAR", "KOMUNITAS", "LAINNYA"]),
+  deskripsi: z
+    .string()
+    .trim()
+    .max(3000, "Deskripsi maksimal 3000 karakter.")
+    .optional()
+    .or(z.literal("")),
+  kontak: z
+    .string()
+    .trim()
+    .max(120, "Kontak maksimal 120 karakter.")
+    .optional()
+    .or(z.literal("")),
+  logoUrl: urlAman("Alamat logo").optional().or(z.literal("")),
+  kecamatanId: z.string().trim().min(1, "Kecamatan wajib dipilih.").max(20),
+  desaId: z.string().trim().max(30).optional().or(z.literal("")),
+});
+
+export type OrganisasiMasukan = z.infer<typeof OrganisasiSkema>;
+
 export const ProfilSkema = z.object({
   nama: teks(3, 120, "Nama"),
   bio: z.string().trim().max(500, "Bio maksimal 500 karakter.").optional().or(z.literal("")),

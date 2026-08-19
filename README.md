@@ -66,6 +66,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:profil` | Uji asap Kartu Talenta dan aturan privasinya |
 | `npm run uji:pendaftaran` | Uji asap Pendaftaran Kegiatan dan unduhan peserta |
 | `npm run uji:sertifikat` | Uji asap Rekam Prestasi dan pemeriksaan keaslian |
+| `npm run uji:direktori` | Uji asap Direktori Organisasi dan verifikasinya |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -127,6 +128,13 @@ ikuti urutan berkas ini:
 Dua aturan yang berlaku di seluruh kanal: isi berstatus draf tidak boleh
 tampil di halaman publik, dan isi milik pengguna lain dibalas **404**, bukan
 403 — 403 memberi tahu penyerang bahwa sebuah id itu nyata.
+
+Untuk halaman rinci dinamis, `revalidatePath` perlu dipanggil dengan pola
+rutenya (`revalidatePath("/direktori/[slug]", "page")`), bukan hanya alamat
+daftarnya — tanpa itu halaman rinci dapat menyajikan angka lama.
+
+Catatan rute: `/organisasi` sudah dipakai sebagai dasbor peran, sehingga
+direktori publiknya berada di `/direktori`.
 
 ## Data yang belum lengkap
 

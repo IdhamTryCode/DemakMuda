@@ -10,6 +10,7 @@ const MENU = [
   { href: "/kabar", label: "Kabar" },
   { href: "/agenda", label: "Agenda" },
   { href: "/peluang", label: "Peluang" },
+  { href: "/direktori", label: "Organisasi" },
   { href: "/cek", label: "Cek sertifikat" },
 ];
 
