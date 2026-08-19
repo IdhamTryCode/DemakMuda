@@ -92,7 +92,14 @@ export const PeluangSkema = z
 
 export const OrganisasiSkema = z.object({
   nama: teks(4, 120, "Nama organisasi"),
-  jenis: z.enum(["OKP", "KARANG_TARUNA", "SANGGAR", "KOMUNITAS", "LAINNYA"]),
+  jenis: z.enum([
+    "OKP",
+    "KARANG_TARUNA",
+    "SANGGAR",
+    "KLUB_OLAHRAGA",
+    "KOMUNITAS",
+    "LAINNYA",
+  ]),
   deskripsi: z
     .string()
     .trim()

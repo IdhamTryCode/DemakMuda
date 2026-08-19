@@ -4,6 +4,7 @@ export const JENIS_ORGANISASI = [
   "OKP",
   "KARANG_TARUNA",
   "SANGGAR",
+  "KLUB_OLAHRAGA",
   "KOMUNITAS",
   "LAINNYA",
 ] as const;
@@ -14,6 +15,7 @@ export const LABEL_ORGANISASI: Record<JenisOrganisasi, string> = {
   OKP: "Organisasi Kepemudaan",
   KARANG_TARUNA: "Karang Taruna",
   SANGGAR: "Sanggar",
+  KLUB_OLAHRAGA: "Klub Olahraga",
   KOMUNITAS: "Komunitas",
   LAINNYA: "Lainnya",
 };

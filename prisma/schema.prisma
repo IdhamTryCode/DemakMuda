@@ -40,6 +40,7 @@ enum JenisOrganisasi {
   OKP
   KARANG_TARUNA
   SANGGAR
+  KLUB_OLAHRAGA
   KOMUNITAS
   LAINNYA
 }
