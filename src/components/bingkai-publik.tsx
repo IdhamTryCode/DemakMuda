@@ -32,7 +32,10 @@ export async function BingkaiPublik({
             <LogoDemak ukuran={40} />
           </Link>
 
-          <nav className="order-3 flex w-full gap-1 sm:order-2 sm:w-auto sm:flex-1 sm:pl-4">
+          {/* flex-wrap wajib: lima menu tidak muat pada lebar ponsel, dan tanpa
+              ini seluruh halaman publik meluber ke samping. whitespace-nowrap
+              menjaga satu label tidak patah di tengah kata. */}
+          <nav className="order-3 flex w-full flex-wrap gap-1 sm:order-2 sm:w-auto sm:flex-1 sm:pl-4">
             {MENU.map((m) => {
               const sedangAktif = aktif === m.href;
               return (
@@ -40,7 +43,7 @@ export async function BingkaiPublik({
                   key={m.href}
                   href={m.href}
                   aria-current={sedangAktif ? "page" : undefined}
-                  className={`rounded-sk px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`whitespace-nowrap rounded-sk px-2.5 py-2 text-sm font-medium transition-colors sm:px-3 ${
                     sedangAktif
                       ? "bg-accent-soft text-accent"
                       : "text-ink-soft hover:text-ink"
@@ -75,8 +78,11 @@ export async function BingkaiPublik({
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">{children}</main>
 
-      <footer className="border-t border-line px-6 py-6 text-center text-xs text-muted">
-        DemakMuda — Portal talenta dan peluang pemuda Kabupaten Demak
+      <footer className="flex flex-col items-center gap-2 border-t border-line px-6 py-6 text-center text-xs text-muted">
+        <span>DemakMuda — Portal talenta dan peluang pemuda Kabupaten Demak</span>
+        <Link href="/privasi" className="text-accent underline underline-offset-2">
+          Perlindungan data
+        </Link>
       </footer>
     </>
   );

@@ -94,6 +94,15 @@ export function FormDaftar({ modePeragaan = false }: { modePeragaan?: boolean })
         </p>
       </div>
 
+      <p className="text-xs text-muted">
+        Dengan membuat akun, Anda menyetujui pengumpulan data seperti dijelaskan
+        pada{" "}
+        <Link href="/privasi" className="text-accent underline underline-offset-2">
+          halaman perlindungan data
+        </Link>
+        . Selain nama dan surel, seluruh isian bersifat pilihan.
+      </p>
+
       <Tombol type="submit" disabled={sedang} className="mt-1">
         {sedang ? "Mendaftarkan…" : "Buat akun"}
       </Tombol>

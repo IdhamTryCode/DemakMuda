@@ -70,6 +70,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:peta` | Uji asap Peta Potensi Pemuda |
 | `npm run uji:admin` | Uji asap administrasi sistem dan header keamanan |
 | `npm run uji:dualangkah` | Uji asap autentikasi dua langkah, dengan kode TOTP sungguhan |
+| `npm run uji:privasi` | Uji asap perlindungan data dan halaman 404 |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -172,6 +173,11 @@ yang sahih sudah ditemukan, semai lewat pola yang sama dengan
   nomor telepon tidak pernah tampil di halaman publik untuk siapa pun, dan bagi
   pengguna di bawah 18 tahun usia, desa, serta sekolah ikut disembunyikan.
   Tanggal lahir yang kosong diperlakukan sebagai anak — memilih yang lebih aman.
+- Halaman `/privasi` menjelaskan data yang dikumpulkan. **Setiap janji di sana
+  harus cocok dengan yang dikerjakan kode** — `npm run uji:privasi` memeriksanya
+  terhadap basis data, bukan sekadar memastikan halamannya terbuka. Bila
+  perilaku aplikasi berubah, ubah halaman itu juga; halaman privasi yang tidak
+  jujur lebih buruk daripada tidak ada.
 - **Autentikasi dua langkah** diwajibkan bagi peran dinas dan superadmin: selama
   belum dipasang, dasbor mereka dialihkan ke `/keamanan`. Di `MODE_PERAGAAN`
   kewajiban itu turun menjadi anjuran — dinyatakan terbuka di halamannya, karena

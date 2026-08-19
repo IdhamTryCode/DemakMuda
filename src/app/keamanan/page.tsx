@@ -65,7 +65,11 @@ export default async function HalamanKeamanan() {
         <h1 className="text-2xl font-semibold tracking-tight">Keamanan Akun</h1>
         <p className="max-w-prose text-sm text-ink-soft">
           Autentikasi dua langkah membuat kata sandi yang bocor saja tidak cukup
-          untuk masuk ke akun Anda.
+          untuk masuk ke akun Anda. Lihat juga{" "}
+          <Link href="/privasi" className="text-accent underline underline-offset-2">
+            perlindungan data
+          </Link>
+          .
         </p>
       </header>
 
