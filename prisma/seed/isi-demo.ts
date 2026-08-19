@@ -542,7 +542,9 @@ async function semaiPemudaContoh() {
 
       const isi = {
         tanggalLahir: lahir,
-        jenisKelamin: (n % 2 === 0 ? "LAKI_LAKI" : "PEREMPUAN") as const,
+        // Ditulis sebagai dua nilai literal terpisah, bukan `as const` pada
+        // hasil ternari — TypeScript tidak menerima penegasan const di sana.
+        jenisKelamin: n % 2 === 0 ? ("LAKI_LAKI" as const) : ("PEREMPUAN" as const),
         kecamatanId,
       };
 
