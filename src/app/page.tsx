@@ -38,26 +38,65 @@ export default function Beranda() {
           <p className="text-sm italic text-muted">Nyawiji dadi soko.</p>
         </div>
 
-        <Kartu className="flex flex-col gap-4">
-          <h2 className="text-lg font-semibold">Fondasi terpasang</h2>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/daftar"
+            className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
+          >
+            Buat akun
+          </Link>
+          <Link
+            href="/masuk"
+            className="sk-pressable sk-raised rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
+          >
+            Masuk
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              href: "/kabar",
+              judul: "Kabar Demak",
+              teks: "Berita dan pengumuman resmi kepemudaan, bersumber dari dinas dan organisasi terverifikasi.",
+            },
+            {
+              href: "/agenda",
+              judul: "Agenda Demak",
+              teks: "Kalender kegiatan se-kabupaten, dapat disaring menurut kecamatan dan waktu.",
+            },
+            {
+              href: "/peluang",
+              judul: "Papan Peluang",
+              teks: "Lomba, pelatihan, beasiswa, magang, dan lowongan beserta tenggat pendaftarannya.",
+            },
+            {
+              href: "/direktori",
+              judul: "Direktori Organisasi",
+              teks: "Karang taruna, OKP, sanggar, dan komunitas di seluruh empat belas kecamatan.",
+            },
+          ].map((m) => (
+            <Link key={m.href} href={m.href} className="block h-full rounded-sk">
+              <Kartu className="sk-pressable flex h-full flex-col gap-2">
+                <h2 className="text-base font-semibold">{m.judul}</h2>
+                <p className="text-sm text-ink-soft">{m.teks}</p>
+              </Kartu>
+            </Link>
+          ))}
+        </div>
+
+        <Kartu className="flex flex-col gap-2">
+          <h2 className="text-base font-semibold">Punya sertifikat DemakMuda?</h2>
           <p className="text-sm text-ink-soft">
-            Autentikasi, peran, dan data wilayah sudah berjalan. Halaman kabar,
-            agenda, dan peluang menyusul sesuai cetak biru teknis.
+            Setiap sertifikat kegiatan punya kode unik yang dapat diperiksa
+            keasliannya oleh siapa pun, tanpa perlu bertanya ke panitia.
           </p>
-          <div className="flex flex-wrap gap-3 pt-1">
-            <Link
-              href="/masuk"
-              className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
-            >
-              Masuk
-            </Link>
-            <Link
-              href="/daftar"
-              className="sk-pressable sk-raised rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
-            >
-              Buat akun
-            </Link>
-          </div>
+          <Link
+            href="/cek"
+            className="w-fit pt-1 text-sm text-accent underline underline-offset-2"
+          >
+            Periksa sertifikat →
+          </Link>
         </Kartu>
       </main>
     </>
