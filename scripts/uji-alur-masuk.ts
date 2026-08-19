@@ -98,6 +98,14 @@ async function main() {
 
     for (const lain of KASUS.filter((k) => k.peran !== kasus.peran)) {
       const hasil = await lokasiSetelah(lain.dasbor, kuki);
+
+      // Kekecualian yang disengaja: matriks peran memberi superadmin hak
+      // lihatPetaPotensi, sehingga ia memang boleh membuka dasbor dinas.
+      if (kasus.peran === "superadmin" && lain.dasbor === "/dinas") {
+        periksa(hasil === null, "superadmin diizinkan membuka /dinas (Peta Potensi)");
+        continue;
+      }
+
       periksa(
         hasil === kasus.dasbor,
         `ditolak dari ${lain.dasbor}, dipulangkan ke ${kasus.dasbor} (dapat ${hasil})`,

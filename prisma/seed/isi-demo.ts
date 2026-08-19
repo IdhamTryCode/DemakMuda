@@ -457,6 +457,178 @@ async function semaiOrganisasi() {
   );
 }
 
+/**
+ * Pemuda contoh untuk mengisi Peta Potensi.
+ *
+ * Tanpa ini dasbor dinas hanya menampilkan satu profil, dan grafiknya terlihat
+ * seperti aplikasi yang tidak dipakai siapa pun — padahal yang ingin
+ * diperlihatkan justru kegunaannya sebagai bahan perencanaan.
+ *
+ * Seluruh nama di bawah adalah karangan. Sebarannya sengaja tidak rata:
+ * kecamatan besar mendapat lebih banyak, dan dua kecamatan sengaja dibiarkan
+ * kosong supaya panel "kecamatan yang belum terjangkau" tetap bermakna —
+ * itulah keadaan yang sebenarnya akan dihadapi dinas.
+ *
+ * Dibangkitkan secara pasti (tanpa acak) agar penyemaian ulang selalu
+ * menghasilkan kondisi peragaan yang sama persis.
+ */
+const NAMA_DEPAN = [
+  "Aditya", "Bagus", "Citra", "Dwi", "Eka", "Fajar", "Gilang", "Hana",
+  "Indra", "Joko", "Kartika", "Lestari", "Maulana", "Nisa", "Oktavia",
+  "Prasetyo", "Rahmawati", "Slamet", "Tri", "Umar", "Vina", "Wahyu",
+  "Yudha", "Zahra", "Anisa", "Bayu",
+];
+const NAMA_BELAKANG = [
+  "Pratama", "Wijaya", "Saputra", "Ramadhani", "Nugroho", "Susanti",
+  "Hidayat", "Kusuma", "Lestari", "Maulida", "Firmansyah", "Anggraini",
+  "Setiawan", "Rahayu",
+];
+
+/** Bobot sebaran: kecamatan besar lebih banyak, dua terakhir dibiarkan kosong. */
+const BOBOT: Record<string, number> = {
+  mranggen: 9,
+  demak: 8,
+  sayung: 7,
+  wonosalam: 5,
+  bonang: 5,
+  karangawen: 4,
+  guntur: 4,
+  wedung: 4,
+  karangtengah: 3,
+  gajah: 3,
+  karanganyar: 2,
+  dempet: 2,
+  // mijen dan kebonagung sengaja nol
+};
+
+async function semaiPemudaContoh() {
+  const [minat, keterampilan, kecamatan] = await Promise.all([
+    prisma.minat.findMany({ select: { id: true }, orderBy: { slug: "asc" } }),
+    prisma.keterampilan.findMany({ select: { id: true }, orderBy: { slug: "asc" } }),
+    prisma.kecamatan.findMany({ select: { id: true, slug: true } }),
+  ]);
+  const perSlug = new Map(kecamatan.map((k) => [k.slug, k.id]));
+
+  let n = 0;
+  for (const [slug, banyak] of Object.entries(BOBOT)) {
+    const kecamatanId = perSlug.get(slug);
+    if (!kecamatanId) throw new Error(`Kecamatan "${slug}" tidak ada.`);
+
+    for (let i = 0; i < banyak; i++) {
+      const nama = `${NAMA_DEPAN[n % NAMA_DEPAN.length]} ${NAMA_BELAKANG[(n * 3) % NAMA_BELAKANG.length]}`;
+      const email = `contoh-${n + 1}@demakmuda.test`;
+      // Usia 17 sampai 29, berputar supaya rentangnya terwakili.
+      const lahir = new Date(ACUAN);
+      lahir.setFullYear(lahir.getFullYear() - (17 + (n % 13)));
+
+      const user = await prisma.user.upsert({
+        where: { email },
+        update: { name: nama },
+        create: {
+          id: `contoh-pemuda-${n + 1}`,
+          name: nama,
+          email,
+          emailVerified: true,
+          role: "pemuda",
+        },
+        select: { id: true },
+      });
+
+      const minatDipilih = [minat[n % minat.length], minat[(n * 5 + 3) % minat.length]];
+      const keterampilanDipilih = [
+        keterampilan[n % keterampilan.length],
+        keterampilan[(n * 7 + 2) % keterampilan.length],
+      ];
+
+      const isi = {
+        tanggalLahir: lahir,
+        jenisKelamin: (n % 2 === 0 ? "LAKI_LAKI" : "PEREMPUAN") as const,
+        kecamatanId,
+      };
+
+      await prisma.profilPemuda.upsert({
+        where: { userId: user.id },
+        update: {
+          ...isi,
+          minat: { set: [...new Set(minatDipilih.map((m) => m.id))].map((id) => ({ id })) },
+          keterampilan: {
+            set: [...new Set(keterampilanDipilih.map((k) => k.id))].map((id) => ({ id })),
+          },
+        },
+        create: {
+          ...isi,
+          userId: user.id,
+          slug: `contoh-pemuda-${n + 1}`,
+          minat: { connect: [...new Set(minatDipilih.map((m) => m.id))].map((id) => ({ id })) },
+          keterampilan: {
+            connect: [...new Set(keterampilanDipilih.map((k) => k.id))].map((id) => ({ id })),
+          },
+        },
+      });
+      n++;
+    }
+  }
+
+  console.log(`Pemuda contoh: ${n} profil di ${Object.keys(BOBOT).length} kecamatan`);
+}
+
+/** Pendaftaran dan sertifikat contoh, supaya panel keikutsertaan tidak kosong. */
+async function semaiKeikutsertaan() {
+  const peluang = await prisma.peluang.findFirstOrThrow({
+    where: { slug: "lomba-teknologi-piranti-lunak-2026" },
+    select: { id: true, judul: true, pembuatId: true },
+  });
+  const agenda = await prisma.agenda.findFirstOrThrow({
+    where: { slug: "pelatihan-pemasaran-digital-angkatan-3" },
+    select: { id: true, pembuatId: true },
+  });
+  const pemuda = await prisma.user.findMany({
+    where: { email: { startsWith: "contoh-" } },
+    orderBy: { email: "asc" },
+    take: 18,
+    select: { id: true },
+  });
+
+  const STATUS = ["HADIR", "DITERIMA", "MENUNGGU", "DITOLAK"] as const;
+
+  for (const [i, p] of pemuda.entries()) {
+    const status = STATUS[i % STATUS.length];
+    const sasaran = i % 2 === 0 ? { peluangId: peluang.id } : { agendaId: agenda.id };
+
+    const pendaftaran = await prisma.pendaftaran.upsert({
+      where:
+        i % 2 === 0
+          ? { userId_peluangId: { userId: p.id, peluangId: peluang.id } }
+          : { userId_agendaId: { userId: p.id, agendaId: agenda.id } },
+      update: { status },
+      create: { userId: p.id, status, ...sasaran },
+      select: { id: true },
+    });
+
+    // Sertifikat hanya untuk yang hadir — aturan yang sama seperti di aplikasi.
+    if (status === "HADIR") {
+      const kode = `DM-CTH${String(i).padStart(1, "0")}-${String(1000 + i)}`;
+      await prisma.sertifikat.upsert({
+        where: { kode },
+        update: {},
+        create: {
+          kode,
+          judul: peluang.judul,
+          peringkat: i === 0 ? "Juara 1" : "Peserta",
+          penerimaId: p.id,
+          penerbitId: peluang.pembuatId,
+          pendaftaranId: pendaftaran.id,
+        },
+      });
+    }
+  }
+
+  console.log(
+    `Keikutsertaan: ${await prisma.pendaftaran.count()} pendaftaran, ` +
+      `${await prisma.sertifikat.count()} sertifikat`,
+  );
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -500,6 +672,8 @@ async function main() {
   await semaiPeluang(penulis.id);
   await semaiProfil();
   await semaiOrganisasi();
+  await semaiPemudaContoh();
+  await semaiKeikutsertaan();
 
   console.log("Penyemaian isi contoh selesai.");
 }
