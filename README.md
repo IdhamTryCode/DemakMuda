@@ -67,6 +67,8 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:pendaftaran` | Uji asap Pendaftaran Kegiatan dan unduhan peserta |
 | `npm run uji:sertifikat` | Uji asap Rekam Prestasi dan pemeriksaan keaslian |
 | `npm run uji:direktori` | Uji asap Direktori Organisasi dan verifikasinya |
+| `npm run uji:peta` | Uji asap Peta Potensi Pemuda |
+| `npm run uji:admin` | Uji asap administrasi sistem dan header keamanan |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -169,6 +171,14 @@ yang sahih sudah ditemukan, semai lewat pola yang sama dengan
   nomor telepon tidak pernah tampil di halaman publik untuk siapa pun, dan bagi
   pengguna di bawah 18 tahun usia, desa, serta sekolah ikut disembunyikan.
   Tanggal lahir yang kosong diperlakukan sebagai anak — memilih yang lebih aman.
+- Header keamanan diatur di `next.config.ts`. HSTS **tidak** dicantumkan karena
+  Vercel sudah mengirimkannya sendiri. Kebijakan Keamanan Konten (CSP) sengaja
+  belum dipasang — keputusan yang ditunda secara sadar, bukan terlewat.
+- `/admin` dan turunannya hanya untuk superadmin; **dinas pun ditolak**, karena
+  halaman itu memuat surel seluruh pengguna dan memberi wewenang menaikkan
+  siapa pun menjadi dinas.
+- Superadmin tidak dapat mengubah peran akunnya sendiri. Tanpa aturan itu, satu
+  kesalahan klik bisa mengunci pengelolaan peran tanpa jalan kembali.
 - Kode sertifikat dibangkitkan dengan `randomInt` dari modul `crypto`, bukan
   `Math.random`, supaya kode berikutnya tidak dapat ditebak dari kode yang sudah
   terbit. Huruf yang mudah tertukar (`0 O 1 I L`) tidak dipakai karena kode ini
