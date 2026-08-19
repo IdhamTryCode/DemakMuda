@@ -47,6 +47,27 @@ export function waktuSaja(nilai: Date): string {
   }).format(nilai);
 }
 
+/** Nama bulan dan tahun, dipakai sebagai pemisah kelompok pada daftar agenda. */
+export function bulanTahun(nilai: Date): string {
+  return new Intl.DateTimeFormat("id-ID", {
+    month: "long",
+    year: "numeric",
+    timeZone: ZONA,
+  }).format(nilai);
+}
+
+/**
+ * Mengubah Date menjadi nilai untuk <input type="datetime-local">.
+ * Kolom itu hanya menerima "YYYY-MM-DDTHH:mm" dalam waktu setempat.
+ */
+export function keNilaiWaktuLokal(nilai: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${nilai.getFullYear()}-${p(nilai.getMonth() + 1)}-${p(nilai.getDate())}` +
+    `T${p(nilai.getHours())}:${p(nilai.getMinutes())}`
+  );
+}
+
 /** "3 hari lagi", "hari ini", atau "sudah lewat" untuk tenggat pendaftaran. */
 export function sisaWaktu(tenggat: Date, sekarang: Date): string {
   const hari = Math.ceil(

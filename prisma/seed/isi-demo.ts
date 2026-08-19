@@ -87,6 +87,95 @@ Panitia membuka kesempatan bagi organisasi kepemudaan lain yang ingin mengikuti 
   },
 ];
 
+const AGENDA = [
+  {
+    slug: "jambore-pemuda-demak-2026",
+    judul: "Jambore Pemuda Tingkat Kabupaten Demak 2026",
+    deskripsi: `Puncak kegiatan kepemudaan Kabupaten Demak tahun ini, diikuti perwakilan dari seluruh kecamatan.
+
+## Rangkaian kegiatan
+
+- Pembukaan dan pentas seni daerah
+- Sepuluh kategori lomba kepemudaan
+- Temu organisasi kepemudaan se-kabupaten
+
+Peserta wajib membawa identitas asli sesuai ketentuan panitia.`,
+    lokasi: "Alun-alun Simpang Enam Demak",
+    kecamatanSlug: "demak",
+    hariMulai: 19,
+    jamMulai: 7,
+    hariSelesai: 27,
+    jamSelesai: 16,
+  },
+  {
+    slug: "pelatihan-pemasaran-digital-angkatan-3",
+    judul: "Pelatihan pemasaran digital angkatan ketiga",
+    deskripsi: `Pelatihan tiga hari bagi wirausaha muda Demak yang ingin memperluas pasar produk unggulan daerah.
+
+Peserta diminta membawa perangkat sendiri dan contoh produk yang akan dipasarkan.`,
+    lokasi: "Aula Dinas Kepemudaan dan Olahraga",
+    kecamatanSlug: "demak",
+    hariMulai: 8,
+    jamMulai: 8,
+    hariSelesai: 10,
+    jamSelesai: 15,
+  },
+  {
+    slug: "tanam-mangrove-pesisir-sayung",
+    judul: "Aksi tanam mangrove pesisir Sayung",
+    deskripsi: `Penanaman mangrove serentak oleh karang taruna se-Kecamatan Sayung sebagai upaya menahan abrasi.
+
+Peserta disarankan memakai pakaian lapangan dan membawa air minum sendiri.`,
+    lokasi: "Pesisir Desa Bedono",
+    kecamatanSlug: "sayung",
+    hariMulai: 3,
+    jamMulai: 6,
+    hariSelesai: 3,
+    jamSelesai: 11,
+  },
+  {
+    slug: "temu-sanggar-tari-demak",
+    judul: "Temu sanggar tari se-Kabupaten Demak",
+    deskripsi: `Pertemuan pengelola sanggar tari untuk menyusun kalender pentas bersama dan regenerasi penari muda.`,
+    lokasi: "Pendopo Kabupaten Demak",
+    kecamatanSlug: "demak",
+    hariMulai: -8,
+    jamMulai: 9,
+    hariSelesai: -8,
+    jamSelesai: 12,
+  },
+];
+
+async function semaiAgenda(pembuatId: string) {
+  for (const a of AGENDA) {
+    const kecamatan = await prisma.kecamatan.findUnique({
+      where: { slug: a.kecamatanSlug },
+      select: { id: true },
+    });
+
+    const isi = {
+      judul: a.judul,
+      deskripsi: a.deskripsi,
+      lokasi: a.lokasi,
+      mulai: geser(a.hariMulai, a.jamMulai),
+      selesai: geser(a.hariSelesai, a.jamSelesai),
+      kecamatanId: kecamatan?.id ?? null,
+      status: "TERBIT" as const,
+    };
+
+    await prisma.agenda.upsert({
+      where: { slug: a.slug },
+      update: isi,
+      create: { ...isi, slug: a.slug, pembuatId },
+    });
+  }
+
+  const mendatang = await prisma.agenda.count({
+    where: { status: "TERBIT", mulai: { gte: ACUAN } },
+  });
+  console.log(`Agenda terbit: ${await prisma.agenda.count({ where: { status: "TERBIT" } })} (${mendatang} mendatang)`);
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -125,6 +214,9 @@ async function main() {
   if (jumlah < KABAR.length) {
     throw new Error(`Kabar tersemai ${jumlah}, seharusnya minimal ${KABAR.length}.`);
   }
+
+  await semaiAgenda(penulis.id);
+
   console.log("Penyemaian isi contoh selesai.");
 }
 

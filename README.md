@@ -34,7 +34,10 @@ npm run db:seed
 # 6. Buat akun demo untuk keempat peran
 npm run db:seed:akun
 
-# 7. Jalankan aplikasi
+# 7. Isi kabar dan agenda contoh
+npm run db:seed:isi
+
+# 8. Jalankan aplikasi
 npm run dev
 ```
 
@@ -54,7 +57,11 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run db:migrate` | Menerapkan perubahan skema |
 | `npm run db:seed` | Mengisi data acuan; aman dijalankan berulang kali |
 | `npm run db:seed:akun` | Membuat akun demo untuk keempat peran |
+| `npm run db:seed:isi` | Mengisi kabar dan agenda contoh untuk peragaan |
+| `npm run uji` | Menjalankan seluruh uji asap |
 | `npm run uji:masuk` | Uji asap alur masuk dan pengarahan peran |
+| `npm run uji:kabar` | Uji asap kanal Kabar |
+| `npm run uji:agenda` | Uji asap kanal Agenda |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -100,6 +107,22 @@ Kata sandi seragam: `DemakMuda2026!`
 Jalankan `npm run uji:masuk` (dengan `npm run dev` menyala di terminal lain)
 untuk membuktikan keempatnya masuk ke dasbor yang benar dan ditolak dari dasbor
 peran lain.
+
+## Pola menambah kanal baru
+
+Kabar dan Agenda dibangun dengan pola yang sama. Untuk kanal berikutnya,
+ikuti urutan berkas ini:
+
+1. Skema Zod di `src/lib/validasi.ts`
+2. Server Action di `src/server/aksi-<kanal>.ts` — urutannya **selalu**: periksa
+   peran, periksa masukan, periksa kepemilikan, ubah data, catat jejak audit
+3. Halaman publik `src/app/<kanal>/` (daftar dan rinci)
+4. Formulir dan pengelolaan di `src/app/kelola/<kanal>/`
+5. Uji asap di `scripts/uji-<kanal>.ts`
+
+Dua aturan yang berlaku di seluruh kanal: isi berstatus draf tidak boleh
+tampil di halaman publik, dan isi milik pengguna lain dibalas **404**, bukan
+403 — 403 memberi tahu penyerang bahwa sebuah id itu nyata.
 
 ## Catatan keamanan
 

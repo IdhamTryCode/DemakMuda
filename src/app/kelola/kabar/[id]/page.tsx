@@ -6,8 +6,8 @@ import { Kartu } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
 import { bolehMengubah } from "@/server/penjaga";
-import { ubahKabar } from "@/server/aksi-kabar";
-import { TombolArsip } from "@/app/kelola/kabar/[id]/tombol-arsip";
+import { arsipkanKabar, ubahKabar } from "@/server/aksi-kabar";
+import { TombolArsip } from "@/components/tombol-arsip";
 
 export const metadata: Metadata = { title: "Ubah Kabar" };
 
@@ -46,11 +46,22 @@ export default async function HalamanUbahKabar({
     return ubahKabar(id, data);
   }
 
+  async function arsip() {
+    "use server";
+    return arsipkanKabar(id);
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight">Ubah kabar</h1>
-        {kabar.status !== "ARSIP" && <TombolArsip id={kabar.id} />}
+        {kabar.status !== "ARSIP" && (
+          <TombolArsip
+            arsipkan={arsip}
+            kembaliKe="/kelola/kabar"
+            keterangan="Arsipkan kabar ini?"
+          />
+        )}
       </div>
 
       <Kartu>

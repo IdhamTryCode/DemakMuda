@@ -24,12 +24,18 @@ export default async function TataLetakKelola({
             <LogoDemak ukuran={40} />
           </Link>
           <nav className="flex gap-1 sm:pl-4">
-            <Link
-              href="/kelola/kabar"
-              className="rounded-sk px-3 py-2 text-sm font-medium text-ink-soft hover:text-ink"
-            >
-              Kabar
-            </Link>
+            {[
+              { href: "/kelola/kabar", label: "Kabar" },
+              { href: "/kelola/agenda", label: "Agenda" },
+            ].map((m) => (
+              <Link
+                key={m.href}
+                href={m.href}
+                className="rounded-sk px-3 py-2 text-sm font-medium text-ink-soft hover:text-ink"
+              >
+                {m.label}
+              </Link>
+            ))}
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <GantiTema />

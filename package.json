@@ -20,7 +20,9 @@
     "uji:masuk": "tsx scripts/uji-alur-masuk.ts",
     "aset:ikon": "tsx scripts/buat-ikon.ts",
     "db:seed:isi": "tsx prisma/seed/isi-demo.ts",
-    "uji:kabar": "tsx scripts/uji-kabar.ts"
+    "uji:kabar": "tsx scripts/uji-kabar.ts",
+    "uji:agenda": "tsx scripts/uji-agenda.ts",
+    "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
