@@ -6,24 +6,36 @@ import { admin, twoFactor } from "better-auth/plugins";
 import { prisma } from "@/lib/prisma";
 import { ac, dinas, organisasi, pemuda, superadmin } from "@/lib/permissions";
 
+/**
+ * Mode peragaan.
+ *
+ * Layanan pengiriman surel belum dipasang, sehingga verifikasi surel tidak
+ * dapat diselesaikan siapa pun di lingkungan yang diterbitkan. Daripada
+ * membiarkan pendaftaran gagal dengan galat 500 di depan juri, lingkungan
+ * peragaan boleh melewati verifikasi — tetapi harus dinyatakan terang-terangan
+ * lewat variabel lingkungan dan diberi tahu di halaman pendaftaran, bukan
+ * dilemahkan diam-diam.
+ *
+ * Di produksi sungguhan, biarkan variabel ini kosong dan pasang layanan surel.
+ */
+export const MODE_PERAGAAN = process.env.MODE_PERAGAAN === "true";
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
 
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: !MODE_PERAGAAN,
     minPasswordLength: 10,
   },
 
   emailVerification: {
-    sendOnSignUp: true,
+    sendOnSignUp: !MODE_PERAGAAN,
     autoSignInAfterVerification: true,
-    // Layanan surel belum dipasang. Sampai itu ada, tautan verifikasi dicetak
-    // ke konsol agar alur pendaftaran tetap dapat diuji tanpa jaringan surel.
-    // Rencana berikutnya (cetak biru Bagian IV): halaman kotak-masuk-demo,
-    // supaya pendaftaran tetap bisa diperagakan utuh di depan juri.
+    // Selama layanan surel belum ada, tautan verifikasi dicetak ke konsol
+    // server agar alur pendaftaran tetap dapat diuji saat pengembangan.
     sendVerificationEmail: async ({ user, url }) => {
-      if (process.env.NODE_ENV === "production") {
+      if (process.env.NODE_ENV === "production" && !MODE_PERAGAAN) {
         throw new Error(
           "Pengiriman surel verifikasi belum dipasang untuk produksi.",
         );

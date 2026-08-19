@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type FormEvent } from "react";
 
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
@@ -7,7 +8,7 @@ import { authClient } from "@/lib/auth-client";
 
 const PANJANG_SANDI_MIN = 10;
 
-export function FormDaftar() {
+export function FormDaftar({ modePeragaan = false }: { modePeragaan?: boolean }) {
   const [galat, setGalat] = useState<string | null>(null);
   const [berhasil, setBerhasil] = useState(false);
   const [sedang, setSedang] = useState(false);
@@ -41,10 +42,19 @@ export function FormDaftar() {
 
   if (berhasil) {
     return (
-      <Pesan nada="berhasil">
-        Akun dibuat. Tautan verifikasi sudah dikirim ke surel Anda — buka tautan
-        itu lebih dulu sebelum masuk.
-      </Pesan>
+      <div className="flex flex-col gap-4">
+        <Pesan nada="berhasil">
+          {modePeragaan
+            ? "Akun dibuat dan langsung dapat dipakai masuk."
+            : "Akun dibuat. Tautan verifikasi sudah dikirim ke surel Anda — buka tautan itu lebih dulu sebelum masuk."}
+        </Pesan>
+        <Link
+          href="/masuk"
+          className="sk-btn-utama sk-pressable w-fit rounded-sk px-5 py-2.5 text-sm"
+        >
+          Ke halaman masuk
+        </Link>
+      </div>
     );
   }
 
