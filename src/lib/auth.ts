@@ -44,7 +44,13 @@ function alamatTepercaya(): string[] {
   return [...new Set(daftar)];
 }
 
+/** Peran yang wajib memakai autentikasi dua langkah. */
+export const PERAN_WAJIB_2FA = ["dinas", "superadmin"];
+
 export const auth = betterAuth({
+  // Muncul sebagai nama penerbit di aplikasi autentikator pengguna.
+  appName: "DemakMuda",
+
   database: prismaAdapter(prisma, { provider: "postgresql" }),
 
   // Bila BETTER_AUTH_URL tidak diisi, pakai alamat produksi dari Vercel.
@@ -104,7 +110,7 @@ export const auth = betterAuth({
       defaultRole: "pemuda",
       adminRoles: ["superadmin"],
     }),
-    twoFactor(),
+    twoFactor({ issuer: "DemakMuda" }),
     // Wajib menjadi plugin terakhir: menangani penulisan kuki sesi dari
     // Server Action pada App Router.
     nextCookies(),

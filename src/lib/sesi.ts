@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth";
+import { auth, MODE_PERAGAAN, PERAN_WAJIB_2FA } from "@/lib/auth";
 import { bacaPeran, dasborUntuk, type Peran } from "@/lib/peran";
 
 /**
@@ -25,6 +25,21 @@ export async function wajibMasuk() {
 }
 
 /**
+ * Peran dinas dan superadmin memegang data seluruh pemuda, sehingga wajib
+ * memakai autentikasi dua langkah. Selama belum dipasang, mereka diantar ke
+ * halaman keamanan dan tidak dapat membuka apa pun yang lain.
+ *
+ * Di mode peragaan aturan ini dilonggarkan menjadi anjuran, karena memaksa
+ * pendaftaran autentikator di depan juri hanya akan menghambat peragaan —
+ * dan itu dinyatakan terbuka pada halamannya, bukan disembunyikan.
+ */
+function wajibDuaLangkah(sesi: { user: { role?: string | null; twoFactorEnabled?: boolean | null } }) {
+  if (MODE_PERAGAAN) return false;
+  const peran = bacaPeran(sesi.user.role);
+  return PERAN_WAJIB_2FA.includes(peran) && sesi.user.twoFactorEnabled !== true;
+}
+
+/**
  * Memastikan pengguna sudah masuk DAN perannya termasuk yang diizinkan.
  * Peran yang tidak cocok dikembalikan ke dasbornya sendiri, bukan diberi
  * halaman kosong, agar tidak membocorkan keberadaan halaman ini.
@@ -34,5 +49,16 @@ export async function wajibPeran(...diizinkan: Peran[]) {
   if (!diizinkan.includes(sesi.peran)) {
     redirect(dasborUntuk(sesi.peran));
   }
+  if (wajibDuaLangkah(sesi)) {
+    redirect("/keamanan");
+  }
   return sesi;
+}
+
+/** Benar bila pengguna ini semestinya memasang dua langkah tetapi belum. */
+export function perluPasangDuaLangkah(sesi: {
+  user: { role?: string | null; twoFactorEnabled?: boolean | null };
+}): boolean {
+  const peran = bacaPeran(sesi.user.role);
+  return PERAN_WAJIB_2FA.includes(peran) && sesi.user.twoFactorEnabled !== true;
 }
