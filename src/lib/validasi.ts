@@ -15,13 +15,39 @@ const teks = (min: number, maks: number, nama: string) =>
     .min(min, `${nama} minimal ${min} karakter.`)
     .max(maks, `${nama} maksimal ${maks} karakter.`);
 
+/**
+ * Alamat web yang hanya boleh http atau https.
+ *
+ * `z.url()` saja TIDAK cukup: pemeriksaannya memakai konstruktor URL bawaan,
+ * yang menganggap `javascript:alert(1)`, `data:text/html,…`, dan `vbscript:`
+ * sebagai alamat yang sah. Bila nilai seperti itu tersimpan lalu dipasang
+ * sebagai href atau src, ia berubah menjadi jalan masuk skrip asing.
+ * Karena itu skemanya dibatasi pada dua protokol saja.
+ */
+const urlAman = (nama: string) =>
+  z
+    .string()
+    .trim()
+    .max(500, `${nama} maksimal 500 karakter.`)
+    .refine(
+      (nilai) => {
+        try {
+          const p = new URL(nilai).protocol.toLowerCase();
+          return p === "http:" || p === "https:";
+        } catch {
+          return false;
+        }
+      },
+      { message: `${nama} harus diawali http:// atau https://` },
+    );
+
 export const StatusTerbitSkema = z.enum(["DRAF", "TERBIT"]);
 
 export const BeritaSkema = z.object({
   judul: teks(6, 160, "Judul"),
   ringkasan: teks(20, 300, "Ringkasan"),
   isi: teks(50, 20000, "Isi"),
-  gambarUrl: z.string().url("Alamat gambar tidak sah.").max(500).optional().or(z.literal("")),
+  gambarUrl: urlAman("Alamat gambar").optional().or(z.literal("")),
   status: StatusTerbitSkema,
 });
 
@@ -53,7 +79,7 @@ export const PeluangSkema = z
     judul: teks(6, 160, "Judul"),
     jenis: JenisPeluangSkema,
     deskripsi: teks(20, 5000, "Deskripsi"),
-    tautanLuar: z.string().url("Tautan tidak sah.").max(500).optional().or(z.literal("")),
+    tautanLuar: urlAman("Tautan").optional().or(z.literal("")),
     tenggat: z.coerce.date().optional().nullable(),
     usiaMin: z.coerce.number().int().min(0).max(99).optional().nullable(),
     usiaMaks: z.coerce.number().int().min(0).max(99).optional().nullable(),

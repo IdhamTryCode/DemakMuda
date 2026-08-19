@@ -62,6 +62,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:masuk` | Uji asap alur masuk dan pengarahan peran |
 | `npm run uji:kabar` | Uji asap kanal Kabar |
 | `npm run uji:agenda` | Uji asap kanal Agenda |
+| `npm run uji:peluang` | Uji asap Papan Peluang |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -137,6 +138,15 @@ tampil di halaman publik, dan isi milik pengguna lain dibalas **404**, bukan
 - Paket `deepmerge-ts` dipaksa ke versi 8 lewat `overrides` pada `package.json`
   untuk menutup GHSA-ggr8-5vv4-36mx yang terbawa dari ketergantungan Prisma.
   Jangan hapus blok `overrides` tanpa memeriksa `npm audit` lebih dulu.
+- Alamat web yang dikirim pengguna diperiksa dengan `urlAman` di
+  `src/lib/validasi.ts`, **bukan** `z.url()` saja. Pemeriksaan bawaan Zod
+  menganggap `javascript:`, `data:`, dan `vbscript:` sebagai alamat sah, dan
+  nilai seperti itu berubah menjadi jalan masuk skrip begitu dipasang sebagai
+  `href`. Uji regresinya ada di `scripts/uji-peluang.ts`.
+- Penampil Markdown (`src/components/markdown.tsx`) tidak memasang plugin
+  `rehype-raw`, sehingga HTML mentah dari pengguna tidak pernah menjadi markup
+  aktif. Uji regresinya ada di `scripts/uji-kabar.ts` — jangan menambahkan
+  plugin itu tanpa mengganti pengamanan lain.
 
 ## Susunan berkas
 

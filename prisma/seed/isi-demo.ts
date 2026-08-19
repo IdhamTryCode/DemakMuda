@@ -176,6 +176,131 @@ async function semaiAgenda(pembuatId: string) {
   console.log(`Agenda terbit: ${await prisma.agenda.count({ where: { status: "TERBIT" } })} (${mendatang} mendatang)`);
 }
 
+const PELUANG = [
+  {
+    slug: "lomba-teknologi-piranti-lunak-2026",
+    judul: "Lomba Teknologi Piranti Lunak Jambore Pemuda 2026",
+    jenis: "LOMBA" as const,
+    deskripsi: `Merancang, mengembangkan, dan mengimplementasikan aplikasi digital bertema kepemudaan.
+
+## Ketentuan pokok
+
+- Peserta perorangan, laki-laki atau perempuan
+- Karya wajib mengangkat kearifan dan keunggulan Kabupaten Demak
+- Karya sekurang-kurangnya 70 persen selesai sebelum hari penilaian
+
+Penilaian mencakup kualitas dan keandalan, inovasi, antarmuka, keamanan, dokumentasi, serta kompatibilitas.`,
+    hariTenggat: 3,
+    usiaMin: 16,
+    usiaMaks: 30,
+    minat: ["teknologi-informasi", "desain-dan-industri-kreatif"],
+    agendaSlug: "jambore-pemuda-demak-2026",
+  },
+  {
+    slug: "pelatihan-pemasaran-digital-umkm-muda",
+    judul: "Pelatihan pemasaran digital untuk wirausaha muda",
+    jenis: "PELATIHAN" as const,
+    deskripsi: `Pelatihan tiga hari tanpa biaya bagi pemuda Demak yang menjalankan usaha kecil.
+
+Peserta akan belajar memotret produk, menulis keterangan yang menjual, dan mengelola lapak daring. Diutamakan yang menekuni produk unggulan daerah.`,
+    hariTenggat: 15,
+    usiaMin: 18,
+    usiaMaks: 30,
+    minat: ["kewirausahaan"],
+    agendaSlug: "pelatihan-pemasaran-digital-angkatan-3",
+  },
+  {
+    slug: "beasiswa-pendidikan-pemuda-demak",
+    judul: "Beasiswa pendidikan bagi pemuda berprestasi Demak",
+    jenis: "BEASISWA" as const,
+    deskripsi: `Bantuan biaya pendidikan bagi pemuda Demak yang melanjutkan ke jenjang perguruan tinggi.
+
+Pendaftar melampirkan bukti prestasi, keterangan tidak mampu bila ada, serta surat rekomendasi dari sekolah atau organisasi.`,
+    hariTenggat: 40,
+    usiaMin: 17,
+    usiaMaks: 25,
+    minat: ["pendidikan"],
+    agendaSlug: null,
+  },
+  {
+    slug: "magang-pengelolaan-media-sosial-dispora",
+    judul: "Magang pengelolaan media sosial di Dispora Demak",
+    jenis: "MAGANG" as const,
+    deskripsi: `Kesempatan magang tiga bulan membantu pengelolaan kanal informasi kepemudaan.
+
+Cocok bagi pemuda yang tertarik pada jurnalistik, desain, atau videografi. Tersedia uang saku dan sertifikat.`,
+    hariTenggat: 21,
+    usiaMin: 18,
+    usiaMaks: 27,
+    minat: ["jurnalistik-dan-media", "desain-dan-industri-kreatif"],
+    agendaSlug: null,
+  },
+  {
+    slug: "lomba-cipta-lagu-daerah-2026-lampau",
+    judul: "Lomba cipta lagu bertema Demak",
+    jenis: "LOMBA" as const,
+    deskripsi: `Lomba menciptakan lagu bertema Kabupaten Demak. Pendaftaran sudah ditutup dan penilaian telah selesai.`,
+    hariTenggat: -12,
+    usiaMin: 16,
+    usiaMaks: 30,
+    minat: ["seni-dan-budaya"],
+    agendaSlug: null,
+  },
+];
+
+async function semaiPeluang(pembuatId: string) {
+  for (const p of PELUANG) {
+    const minat = await prisma.minat.findMany({
+      where: { slug: { in: p.minat } },
+      select: { id: true, slug: true },
+    });
+    // Slug yang salah ketik akan diam-diam menghasilkan peluang tanpa bidang,
+    // dan penyaringan minat jadi tampak rusak tanpa sebab. Lebih baik berhenti.
+    if (minat.length !== p.minat.length) {
+      const ketemu = new Set(minat.map((m) => m.slug));
+      throw new Error(
+        `Minat tidak dikenal pada peluang "${p.slug}": ` +
+          p.minat.filter((s) => !ketemu.has(s)).join(", "),
+      );
+    }
+    const agenda = p.agendaSlug
+      ? await prisma.agenda.findUnique({
+          where: { slug: p.agendaSlug },
+          select: { id: true },
+        })
+      : null;
+
+    const isi = {
+      judul: p.judul,
+      jenis: p.jenis,
+      deskripsi: p.deskripsi,
+      tenggat: geser(p.hariTenggat, 23),
+      usiaMin: p.usiaMin,
+      usiaMaks: p.usiaMaks,
+      status: "TERBIT" as const,
+      agendaId: agenda?.id ?? null,
+    };
+
+    await prisma.peluang.upsert({
+      where: { slug: p.slug },
+      update: { ...isi, minat: { set: minat.map((m) => ({ id: m.id })) } },
+      create: {
+        ...isi,
+        slug: p.slug,
+        pembuatId,
+        minat: { connect: minat.map((m) => ({ id: m.id })) },
+      },
+    });
+  }
+
+  const terbuka = await prisma.peluang.count({
+    where: { status: "TERBIT", OR: [{ tenggat: null }, { tenggat: { gte: ACUAN } }] },
+  });
+  console.log(
+    `Peluang terbit: ${await prisma.peluang.count({ where: { status: "TERBIT" } })} (${terbuka} masih dibuka)`,
+  );
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -216,6 +341,7 @@ async function main() {
   }
 
   await semaiAgenda(penulis.id);
+  await semaiPeluang(penulis.id);
 
   console.log("Penyemaian isi contoh selesai.");
 }

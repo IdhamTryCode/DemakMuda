@@ -97,6 +97,46 @@ async function main() {
   const drafRinci = await ambil(`/kabar/${draf.slug}`);
   periksa(drafRinci.status === 404, `halaman rinci draf menolak (${drafRinci.status})`);
 
+  console.log("\npenyaringan isi Markdown");
+  const jahat = await prisma.berita.create({
+    data: {
+      judul: "Uji penyaringan tautan di dalam Markdown",
+      slug: `uji-md-${Date.now()}`,
+      ringkasan: "Memastikan isi Markdown berbahaya tidak berubah menjadi markup aktif.",
+      isi: [
+        "[klik jahat](javascript:alert(document.cookie))",
+        "",
+        "[data jahat](data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==)",
+        "",
+        "<img src=x onerror=alert(1)>",
+        "",
+        "[tautan wajar](https://demakkab.go.id)",
+      ].join("\n"),
+      status: "TERBIT",
+      terbitPada: new Date(),
+      penulisId: (await prisma.user.findUniqueOrThrow({
+        where: { email: "dinas@demakmuda.test" },
+        select: { id: true },
+      })).id,
+    },
+    select: { id: true, slug: true },
+  });
+
+  const dirender = (await ambil(`/kabar/${jahat.slug}`)).isi;
+  periksa(
+    !/href="(javascript|data|vbscript):/i.test(dirender),
+    "tautan javascript: dan data: tidak menjadi href aktif",
+  );
+  periksa(
+    !/<img[^>]*onerror/i.test(dirender),
+    "HTML mentah tidak menjadi tag aktif",
+  );
+  periksa(
+    dirender.includes('href="https://demakkab.go.id"'),
+    "tautan http(s) yang wajar tetap berfungsi",
+  );
+  await prisma.berita.delete({ where: { id: jahat.id } });
+
   console.log("\npemuda");
   const kukiPemuda = await masuk("pemuda@demakmuda.test");
   const kelolaPemuda = await ambil("/kelola/kabar", kukiPemuda);

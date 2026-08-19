@@ -16,6 +16,8 @@ export default async function HalamanKabar() {
   const daftar = await prisma.berita.findMany({
     where: { status: "TERBIT" },
     orderBy: { terbitPada: "desc" },
+    // Batas aman supaya halaman tetap ringan bila isinya sudah banyak.
+    take: 60,
     select: {
       id: true,
       judul: true,

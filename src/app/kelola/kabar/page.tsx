@@ -24,6 +24,7 @@ export default async function HalamanKelolaKabar() {
   const daftar = await prisma.berita.findMany({
     where: hanyaMilikSendiri ? { penulisId: sesi.user.id } : undefined,
     orderBy: { dibuatPada: "desc" },
+    take: 100,
     select: {
       id: true,
       judul: true,

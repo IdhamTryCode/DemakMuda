@@ -35,6 +35,8 @@ export default async function HalamanAgenda({
         mulai: lampau ? { lt: sekarang } : { gte: sekarang },
       },
       orderBy: { mulai: lampau ? "desc" : "asc" },
+      // Batas aman supaya halaman tetap ringan bila isinya sudah banyak.
+      take: 60,
       select: {
         id: true,
         judul: true,

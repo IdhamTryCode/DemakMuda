@@ -18,6 +18,30 @@ export function slugUnik(nama: string): string {
   return `${dasar}-${akhiran}`;
 }
 
+/**
+ * Membuat cuplikan satu paragraf dari isi Markdown.
+ *
+ * Daftar hanya menampilkan potongan pendek, dan tanpa pembersihan ini penanda
+ * Markdown seperti "## " dan "- " ikut terbaca sebagai teks biasa oleh pembaca.
+ * Ini bukan pembersihan keamanan — pengamanan isi ada pada penampil Markdown,
+ * yang memang tidak pernah merender HTML mentah.
+ */
+export function cuplikan(markdown: string, panjang = 180): string {
+  const datar = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    .replace(/^\s{0,3}>\s?/gm, "")
+    .replace(/^\s{0,3}[-*+]\s+/gm, "")
+    .replace(/^\s{0,3}\d+\.\s+/gm, "")
+    .replace(/[*_~`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return datar.length > panjang ? `${datar.slice(0, panjang).trimEnd()}…` : datar;
+}
+
 const ZONA = "Asia/Jakarta";
 
 export function tanggalPanjang(nilai: Date): string {
