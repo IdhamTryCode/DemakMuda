@@ -1,0 +1,1023 @@
+<title>Cetak Biru DemakMuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@300;400;500;600&display=swap">
+
+<style>
+:root {
+  --ground: #F5F6F2;
+  --surface: #FFFFFF;
+  --surface-sunk: #EDEFE9;
+  --ink: #131C18;
+  --ink-soft: #34423C;
+  --muted: #5E6B64;
+  --line: #D8DDD5;
+  --line-strong: #BFC7BC;
+  --accent: #0D5C4C;
+  --accent-soft: #E3EFE9;
+  --accent-ink: #0A4A3D;
+  --brass: #A97527;
+  --brass-soft: #F4EBDA;
+  --danger: #9B3226;
+  --danger-soft: #F7E7E4;
+
+  --f-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --f-body: "Public Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --measure: 68ch;
+  --page: 1180px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1512;
+    --surface: #16201C;
+    --surface-sunk: #111A17;
+    --ink: #E7EDE8;
+    --ink-soft: #C2CDC6;
+    --muted: #93A199;
+    --line: #26332D;
+    --line-strong: #38473F;
+    --accent: #57C2A5;
+    --accent-soft: #14312A;
+    --accent-ink: #8FD9C3;
+    --brass: #D7A954;
+    --brass-soft: #2A2317;
+    --danger: #E08C7D;
+    --danger-soft: #2E1B18;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0E1512;
+  --surface: #16201C;
+  --surface-sunk: #111A17;
+  --ink: #E7EDE8;
+  --ink-soft: #C2CDC6;
+  --muted: #93A199;
+  --line: #26332D;
+  --line-strong: #38473F;
+  --accent: #57C2A5;
+  --accent-soft: #14312A;
+  --accent-ink: #8FD9C3;
+  --brass: #D7A954;
+  --brass-soft: #2A2317;
+  --danger: #E08C7D;
+  --danger-soft: #2E1B18;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--page); margin-inline: auto; padding-inline: 28px; }
+.prose { max-width: var(--measure); }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+strong { font-weight: 600; color: var(--ink); }
+
+a { color: var(--accent-ink); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+h1, h2, h3, h4 {
+  font-family: var(--f-display); font-weight: 500;
+  text-wrap: balance; letter-spacing: -0.012em; margin: 0;
+}
+
+.eyebrow {
+  font-family: var(--f-mono); font-size: 11.5px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+
+code {
+  font-family: var(--f-mono); font-size: 0.88em;
+  background: var(--surface-sunk); border: 1px solid var(--line);
+  border-radius: 3px; padding: 1px 5px;
+}
+
+.cover {
+  border-bottom: 1px solid var(--line);
+  background: radial-gradient(120% 90% at 88% 0%, var(--accent-soft) 0%, transparent 60%), var(--surface);
+}
+.cover-inner {
+  padding-block: clamp(46px, 7vw, 82px) clamp(34px, 5vw, 56px);
+  display: flex; flex-direction: column; gap: 28px;
+}
+.cover-tag { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; color: var(--muted); }
+.cover-tag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brass); }
+.title {
+  font-size: clamp(38px, 7vw, 66px); line-height: 1.02;
+  font-weight: 600; letter-spacing: -0.03em;
+}
+.cover-lead { max-width: 62ch; font-size: 17.5px; line-height: 1.68; color: var(--ink-soft); }
+.cover-lead strong { color: var(--ink); }
+
+.countdown {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1px; background: var(--line); border: 1px solid var(--line);
+  border-radius: 3px; overflow: hidden;
+}
+.countdown div { background: var(--surface); padding: 15px 18px; display: flex; flex-direction: column; gap: 4px; }
+.countdown .k {
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.countdown .v {
+  font-family: var(--f-display); font-size: 25px; font-weight: 600;
+  color: var(--accent); line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+.countdown .n { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+.bab { padding-block: clamp(42px, 5.5vw, 68px); border-bottom: 1px solid var(--line); }
+.bab-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+@media (min-width: 940px) { .bab-grid { grid-template-columns: 150px minmax(0, 1fr); gap: 42px; } }
+.bab-rail { display: flex; flex-direction: column; gap: 8px; }
+@media (min-width: 940px) { .bab-rail { position: sticky; top: 28px; align-self: start; } }
+.bab-no {
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--brass);
+}
+.bab-rail .rule { height: 1px; background: var(--line-strong); width: 32px; }
+.bab-body { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.bab-title { font-size: clamp(27px, 3.6vw, 36px); line-height: 1.14; }
+.sec { display: flex; flex-direction: column; gap: 13px; }
+.sec-title { font-size: 20px; line-height: 1.3; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.55; }
+thead th {
+  font-family: var(--f-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); background: var(--surface-sunk); white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom: 0; }
+td.key { font-weight: 600; }
+td .mini { display: block; font-size: 13px; color: var(--muted); margin-top: 3px; }
+td.ctr { text-align: center; font-family: var(--f-mono); font-size: 14px; }
+.yes { color: var(--accent); font-weight: 600; }
+.no { color: var(--line-strong); }
+
+ul.clean { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; max-width: var(--measure); }
+ul.clean li { position: relative; padding-left: 21px; }
+ul.clean li::before {
+  content: ""; position: absolute; left: 2px; top: 0.65em;
+  width: 6px; height: 6px; border: 1px solid var(--brass); transform: rotate(45deg);
+}
+ol.numbered { margin: 0; padding: 0; list-style: none; counter-reset: n; display: flex; flex-direction: column; gap: 13px; max-width: var(--measure); }
+ol.numbered li { counter-increment: n; position: relative; padding-left: 33px; }
+ol.numbered li::before {
+  content: counter(n, decimal-leading-zero); position: absolute; left: 0; top: 0.18em;
+  font-family: var(--f-mono); font-size: 11.5px; color: var(--brass);
+}
+
+pre.tree {
+  margin: 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 3px; padding: 18px 20px; font-family: var(--f-mono);
+  font-size: 13px; line-height: 1.72; color: var(--ink-soft);
+}
+pre.tree b { color: var(--accent); font-weight: 500; }
+pre.tree i { color: var(--muted); font-style: normal; }
+
+.stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 13px; }
+.stack article {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 3px;
+  padding: 17px 19px; display: flex; flex-direction: column; gap: 7px;
+}
+.stack .k { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brass); }
+.stack h4 { font-size: 17.5px; }
+.stack p { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+.tier { display: flex; flex-direction: column; gap: 13px; }
+.tier article {
+  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 3px; padding: 17px 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.tier article.onsite { border-left-color: var(--brass); }
+.tier article.later { border-left-color: var(--line-strong); }
+.tier .head { display: flex; flex-wrap: wrap; gap: 9px; align-items: baseline; }
+.tier h4 { font-size: 18px; }
+.tier .badge {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent-ink);
+}
+.tier article.onsite .badge { background: var(--brass-soft); color: var(--brass); }
+.tier article.later .badge { background: var(--surface-sunk); color: var(--muted); }
+.tier p { font-size: 14.5px; color: var(--ink-soft); }
+.tier .items { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
+.tier .items span {
+  font-size: 13px; padding: 3px 10px; border: 1px solid var(--line-strong);
+  border-radius: 999px; color: var(--ink-soft);
+}
+
+.timeline { display: flex; flex-direction: column; border-left: 1px solid var(--line-strong); padding-left: 24px; gap: 21px; margin-left: 5px; }
+.timeline > div { position: relative; display: flex; flex-direction: column; gap: 5px; }
+.timeline > div::before {
+  content: ""; position: absolute; left: -29px; top: 7px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--ground); border: 1.5px solid var(--brass);
+}
+.timeline > div.onsite::before { background: var(--brass); }
+.timeline .when { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brass); }
+.timeline h4 { font-size: 17px; }
+.timeline p { font-size: 14.5px; color: var(--ink-soft); max-width: 62ch; }
+
+.note {
+  background: var(--brass-soft); border: 1px solid var(--line); border-radius: 3px;
+  padding: 15px 19px; font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); max-width: var(--measure);
+}
+.note b { color: var(--ink); }
+.note.warn { background: var(--danger-soft); }
+.note.warn b { color: var(--danger); }
+
+.foot {
+  padding-block: 24px; border-top: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="cover">
+  <div class="wrap cover-inner">
+    <div class="cover-tag eyebrow">
+      <span>DemakMuda</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Rencana Teknis &amp; Implementasi</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Idham Hanif Multaam</span>
+    </div>
+
+    <h1 class="title">Cetak Biru<br>DemakMuda</h1>
+
+    <p class="cover-lead">Dokumen kerja yang menerjemahkan proposal menjadi keputusan teknis: pilihan stack, model data, rencana keamanan berlapis, pembagian lingkup, dan jadwal harian sampai hari penilaian. Disusun dengan satu prinsip: <strong>yang masuk demo harus mulus, yang belum siap tidak masuk demo.</strong></p>
+
+    <div class="countdown">
+      <div>
+        <span class="k">Waktu tersisa</span>
+        <span class="v">26 hari</span>
+        <span class="n">19 Agustus &rarr; 14 September 2026</span>
+      </div>
+      <div>
+        <span class="k">Target 70% selesai</span>
+        <span class="v">12 Sep</span>
+        <span class="n">Dua hari sebelum berangkat, bukan malam sebelumnya</span>
+      </div>
+      <div>
+        <span class="k">Hari penilaian</span>
+        <span class="v">14 Sep</span>
+        <span class="n">Senin, 07.00, Ruang Rapat Dispora Demak</span>
+      </div>
+      <div>
+        <span class="k">Pengerjaan di lokasi</span>
+        <span class="v">5 jam</span>
+        <span class="n">Sisa 30%, sudah ditentukan bagiannya</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian I</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Stack</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Pilihan teknologi dan alasannya</h2>
+      <div class="prose">
+        <p>Semua pilihan di bawah tunduk pada tiga syarat: bisa dikuasai satu orang dalam 26 hari, bisa diperagakan langsung di depan juri tanpa instalasi apa pun di sisi mereka, dan tidak mengikat karya ini pada layanan berbayar &mdash; karena bila menang, kode ini menjadi milik panitia dan harus bisa mereka jalankan sendiri.</p>
+      </div>
+
+      <div class="stack">
+        <article>
+          <span class="k">Kerangka kerja</span>
+          <h4>Next.js 16 &middot; App Router</h4>
+          <p>React 19 dan TypeScript. Server Components dan Server Actions menekan jumlah kode yang harus ditulis, dan sebagian besar logika sensitif tidak pernah sampai ke peramban.</p>
+        </article>
+        <article>
+          <span class="k">Tampilan</span>
+          <h4>Tailwind CSS v4 + shadcn/ui</h4>
+          <p>Komponen disalin ke dalam repositori, bukan dipasang sebagai ketergantungan &mdash; penting, karena gaya skeuomorfisme (Bagian VII) menuntut restyle menyeluruh atas permukaan komponen, dan itu hanya wajar bila kodenya milik kita.</p>
+        </article>
+        <article>
+          <span class="k">Basis data</span>
+          <h4>PostgreSQL &middot; Docker</h4>
+          <p>Versi Postgres dikunci lewat <code>docker-compose.yml</code> di repositori, sama persis dengan yang dipakai di Neon untuk penerbitan daring. Basis data dapat dihapus dan disemai ulang dengan dua perintah &mdash; berguna tiap hari, dan berguna sekali lagi saat karya ini diserahkan ke panitia.</p>
+        </article>
+        <article>
+          <span class="k">Akses data</span>
+          <h4>Prisma ORM</h4>
+          <p>Migrasi dan skrip penyemaian data yang rapi &mdash; penting karena kita menyemai 14 kecamatan, 249 desa, dan ratusan data contoh. Prisma Studio juga berguna saat presentasi.</p>
+        </article>
+        <article>
+          <span class="k">Autentikasi</span>
+          <h4>Better Auth</h4>
+          <p>Berbasis sesi, dipasang sendiri, tanpa layanan pihak ketiga. Plugin bawaan untuk peran admin, autentikasi dua langkah, dan pembatasan laju permintaan &mdash; ketiganya langsung menjawab kriteria keamanan.</p>
+        </article>
+        <article>
+          <span class="k">Validasi</span>
+          <h4>Zod + React Hook Form</h4>
+          <p>Satu skema Zod dipakai di formulir dan di server sekaligus, sehingga tidak ada jalur masuk data yang lolos tanpa diperiksa.</p>
+        </article>
+        <article>
+          <span class="k">Peta</span>
+          <h4>Leaflet + OpenStreetMap</h4>
+          <p>Tanpa kunci API dan tanpa tagihan. Dimuat khusus di sisi klien (dynamic import) karena Leaflet tidak bisa dirender server. Peta adalah pemanis direktori organisasi &mdash; daftar tersaring per kecamatan adalah intinya, jadi peta boleh gugur tanpa merusak fitur.</p>
+        </article>
+        <article>
+          <span class="k">Grafik</span>
+          <h4>Recharts</h4>
+          <p>Untuk dasbor peta potensi pemuda: sebaran minat per kecamatan dan tingkat keikutsertaan kegiatan.</p>
+        </article>
+        <article>
+          <span class="k">Berkas</span>
+          <h4>Vercel Blob</h4>
+          <p>Satu jalur penyimpanan untuk semua berkas &mdash; foto profil, gambar berita, berkas karya &mdash; tanpa percabangan kode antara mode daring dan luring. Gambar sumber untuk data contoh tetap tersimpan di repositori, karena skrip penyemaian memang perlu berkas asal untuk diunggah.</p>
+        </article>
+        <article>
+          <span class="k">Penerbitan</span>
+          <h4>Vercel</h4>
+          <p>Satu tautan langsung yang bisa dibuka juri dari ponsel masing-masing, plus salinan lokal di laptop sebagai cadangan.</p>
+        </article>
+      </div>
+
+      <div class="note">
+        <b>Kalau Anda lebih lancar dengan yang lain, tukar saja.</b> Prisma dapat diganti Drizzle, dan Better Auth dapat diganti Auth.js v5 tanpa mengubah rencana lain di dokumen ini. Yang tidak boleh ditukar adalah yang mengikat ke layanan berbayar atau yang menyimpan autentikasi di luar kendali kita &mdash; itu menabrak ketentuan hak milik karya juara.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian II</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Peran</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Peran pengguna dan hak aksesnya</h2>
+      <div class="prose">
+        <p>Empat peran, dengan hak yang ditegakkan di sisi server pada setiap aksi &mdash; bukan sekadar disembunyikan tombolnya di layar. Matriks ini menjadi rujukan saat menulis pemeriksaan izin, dan menjadi bahan jawaban ketika juri bertanya soal keamanan.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Kemampuan</th>
+              <th scope="col">Pemuda</th>
+              <th scope="col">Organisasi</th>
+              <th scope="col">Dinas</th>
+              <th scope="col">Superadmin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="key">Membaca kabar, agenda, peluang</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Mengelola profil sendiri</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Mendaftar kegiatan &amp; peluang</td><td class="ctr yes">&check;</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td></tr>
+            <tr><td class="key">Mengunggah karya</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td></tr>
+            <tr><td class="key">Menulis kabar &amp; memasang agenda</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Mengelola anggota organisasi</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Melihat daftar peserta kegiatannya</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Menerbitkan sertifikat</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Memverifikasi organisasi</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Memverifikasi akun pemuda</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Melihat peta potensi pemuda</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Mengubah peran pengguna</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td></tr>
+            <tr><td class="key">Membaca jejak audit</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr no">&mdash;</td><td class="ctr yes">&check;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <b>Jebakan yang harus dihindari.</b> Pemeriksaan sesi di <code>middleware.ts</code> hanya membaca kuki dan tidak memvalidasi sesi ke basis data &mdash; itu perlindungan sekilas untuk pengalaman pengguna, bukan penjaga keamanan. Setiap Server Action dan route handler tetap wajib memuat sesi lengkap dan memeriksa perannya sendiri. Ini kesalahan paling umum pada aplikasi Next.js dan kemungkinan besar akan ditanyakan juri.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian III</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Data</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Model data</h2>
+      <div class="prose">
+        <p>Sekitar dua puluh tabel termasuk tabel penghubung, dibagi menjadi tiga kelompok: bawaan autentikasi, data wilayah nyata yang disemai sekali, dan data aplikasi yang tumbuh saat dipakai.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Tabel</th><th scope="col">Isi pokok</th><th scope="col">Catatan</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="key">user</td>
+              <td>Nama, surel, peran, tanggal lahir, jenis kelamin, kecamatan, desa, status verifikasi, foto.</td>
+              <td>NIK <strong>tidak disimpan utuh</strong>. Lihat Bagian IV.</td>
+            </tr>
+            <tr>
+              <td class="key">session, account, verification</td>
+              <td>Sesi aktif, kredensial, token verifikasi surel.</td>
+              <td>Bawaan Better Auth, tidak dibuat sendiri.</td>
+            </tr>
+            <tr>
+              <td class="key">twoFactor, rateLimit</td>
+              <td>Rahasia TOTP dan penghitung pembatasan laju.</td>
+              <td>Bawaan plugin Better Auth.</td>
+            </tr>
+            <tr>
+              <td class="key">kecamatan, desa</td>
+              <td>14 kecamatan dan 249 desa/kelurahan Kabupaten Demak.</td>
+              <td>Data nyata, disemai sekali dari sumber resmi.</td>
+            </tr>
+            <tr>
+              <td class="key">sekolah</td>
+              <td>SMA, SMK, dan MA se-Kabupaten Demak beserta kecamatannya.</td>
+              <td>Data nyata dari pangkalan data pendidikan.</td>
+            </tr>
+            <tr>
+              <td class="key">organisasi</td>
+              <td>OKP, karang taruna, sanggar, komunitas: nama, bidang, kecamatan, kontak, pemilik akun, status verifikasi.</td>
+              <td>Contoh saat demo, diisi nyata setelah diserahkan.</td>
+            </tr>
+            <tr>
+              <td class="key">keanggotaan</td>
+              <td>Relasi pemuda dengan organisasi, jabatan, dan status pengajuan.</td>
+              <td>Mendukung alur rekrutmen anggota.</td>
+            </tr>
+            <tr>
+              <td class="key">berita</td>
+              <td>Judul, ringkasan, isi, gambar, penulis, tanggal terbit, status.</td>
+              <td>Fitur Kabar Demak.</td>
+            </tr>
+            <tr>
+              <td class="key">agenda</td>
+              <td>Judul, deskripsi, waktu mulai dan selesai, lokasi, kecamatan, penyelenggara, bidang.</td>
+              <td>Fitur Agenda Demak, sumber tampilan kalender.</td>
+            </tr>
+            <tr>
+              <td class="key">peluang</td>
+              <td>Jenis (lomba, pelatihan, beasiswa, magang, lowongan), tenggat, syarat usia, tautan, penyelenggara.</td>
+              <td>Terhubung ke agenda bila peluang itu juga sebuah acara.</td>
+            </tr>
+            <tr>
+              <td class="key">pendaftaran</td>
+              <td>Pemuda, agenda atau peluang yang didaftar, waktu, status, catatan panitia.</td>
+              <td>Menggantikan formulir daring yang berganti tiap acara.</td>
+            </tr>
+            <tr>
+              <td class="key">sertifikat</td>
+              <td>Kode publik unik, penerima, penerbit, jenis, peringkat, tanggal, berkas.</td>
+              <td>Kode dapat diperiksa siapa pun lewat halaman publik.</td>
+            </tr>
+            <tr>
+              <td class="key">minat, keterampilan</td>
+              <td>Daftar tetap bidang minat dan keterampilan, relasi banyak-ke-banyak ke pengguna.</td>
+              <td>Dasar penyaringan peluang dan dasbor peta potensi.</td>
+            </tr>
+            <tr>
+              <td class="key">karya, aspirasi</td>
+              <td>Etalase karya pemuda dan usulan kegiatan beserta status penanganannya.</td>
+              <td>Bagian yang dikerjakan di lokasi lomba.</td>
+            </tr>
+            <tr>
+              <td class="key">auditLog</td>
+              <td>Aktor, aksi, sasaran, alamat IP, waktu.</td>
+              <td>Mencatat semua aksi admin dan verifikasi.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian IV</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Keamanan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Rencana keamanan berlapis</h2>
+      <div class="prose">
+        <p>Keamanan adalah kriteria penilaian tersendiri dengan bobot setara fungsionalitas, dan hampir pasti bagian yang paling jarang digarap peserta lain. Delapan lapis di bawah ini bukan hanya untuk dikerjakan, tapi untuk diceritakan saat presentasi.</p>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">1 &middot; Autentikasi</h3>
+        <ul class="clean">
+          <li>Sesi disimpan di basis data, bukan token yang berdiri sendiri, sehingga sesi bisa dicabut sewaktu-waktu bila perangkat hilang.</li>
+          <li>Kuki sesi bersifat <code>httpOnly</code>, <code>Secure</code>, dan <code>SameSite=Lax</code> &mdash; tidak bisa dibaca JavaScript dan tidak ikut terkirim pada permintaan lintas situs.</li>
+          <li>Kata sandi disimpan dengan algoritma penurunan kunci berbiaya tinggi bawaan Better Auth, tidak pernah dalam bentuk asli dan tidak pernah dengan hash sederhana.</li>
+          <li>Verifikasi surel wajib sebelum akun dapat mendaftar kegiatan &mdash; tetapi <strong>jalur demo tidak boleh bergantung pada layanan surel eksternal</strong>: pada mode demo, tautan verifikasi tampil di halaman kotak-masuk-demo di aplikasi itu sendiri, sehingga registrasi tetap bisa diperagakan penuh walau jaringan atau layanan surel bermasalah.</li>
+          <li><strong>Autentikasi dua langkah TOTP diwajibkan</strong> untuk peran Dinas dan Superadmin, karena merekalah yang memegang data seluruh pemuda. Akun demo di-enroll ke aplikasi autentikator jauh hari, dengan kode cadangan dicetak &mdash; tidak ada pendaftaran TOTP dadakan di depan juri.</li>
+          <li>Halaman daftar sesi aktif, agar pengguna dapat melihat dan mengakhiri sesi di perangkat lain.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">2 &middot; Otorisasi</h3>
+        <ul class="clean">
+          <li>Empat peran dengan daftar izin eksplisit, ditegakkan lewat plugin admin Better Auth.</li>
+          <li>Setiap Server Action diawali pemeriksaan sesi dan peran di sisi server, tanpa pengecualian.</li>
+          <li>Pemeriksaan kepemilikan terpisah: sebuah organisasi hanya boleh menyunting kegiatannya sendiri, bukan kegiatan organisasi lain yang kebetulan punya peran sama.</li>
+          <li>Middleware hanya dipakai untuk pengalihan halaman, tidak pernah sebagai satu-satunya penjaga.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">3 &middot; Perlindungan data pribadi</h3>
+        <div class="prose">
+          <p>Ini bagian yang paling layak diceritakan ke juri, karena menyangkut data anak dan diatur undang-undang.</p>
+        </div>
+        <ul class="clean">
+          <li><strong>NIK tidak pernah disimpan utuh.</strong> Yang disimpan adalah sidik kriptografis NIK bersama kunci rahasia server, cukup untuk memastikan satu orang tidak mendaftar dua kali, ditambah empat digit terakhir untuk keperluan tampilan. Bila basis data bocor sekalipun, NIK tidak dapat dipulihkan.</li>
+          <li>Foto KTP atau KIA hanya untuk verifikasi manual oleh petugas, disimpan pada penyimpanan privat, dan <strong>dihapus otomatis setelah verifikasi selesai</strong>.</li>
+          <li>Pengguna berusia di bawah 18 tahun ditandai secara khusus: profil publiknya tidak menampilkan alamat, nomor telepon, maupun tanggal lahir lengkap.</li>
+          <li>Halaman persetujuan yang menjelaskan data apa yang dikumpulkan dan untuk apa, dengan bahasa yang bisa dipahami pelajar &mdash; bukan salinan syarat dan ketentuan.</li>
+          <li>Pengumpulan data seminimal mungkin: bila sebuah kolom tidak dipakai oleh fitur mana pun, kolom itu tidak dibuat.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">4 &middot; Validasi masukan</h3>
+        <ul class="clean">
+          <li>Skema Zod pada setiap batas masuk: Server Action, route handler, dan parameter pencarian.</li>
+          <li>Seluruh kueri lewat Prisma dengan parameter terikat, sehingga tidak ada perangkaian teks SQL.</li>
+          <li>Isi berita ditulis sebagai <strong>Markdown dengan pratinjau langsung, bukan editor teks kaya</strong>. HTML mentah tidak pernah diterima dari pengguna, sehingga seluruh kelas masalah pembersihan HTML hilang &mdash; lebih sederhana ditulis, lebih mudah dipertanggungjawabkan saat ditanya juri.</li>
+          <li>Pembatasan laju pada pendaftaran, masuk, lupa sandi, dan pengiriman aspirasi.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">5 &middot; Header dan transportasi</h3>
+        <ul class="clean">
+          <li>Kebijakan Keamanan Konten berbasis nonce &mdash; <strong>dipasang pada pekan fondasi, bukan menjelang tenggat</strong>: di Next.js App Router, CSP ketat menuntut penyaluran nonce lewat middleware dan mudah merusak halaman bila dipasang belakangan. Bila pada praktiknya terlalu banyak yang pecah, mundur secara sadar ke CSP pragmatis dan catat alasannya di dokumentasi.</li>
+          <li><code>Strict-Transport-Security</code>, <code>X-Content-Type-Options</code>, <code>X-Frame-Options: DENY</code>, <code>Referrer-Policy</code>, dan <code>Permissions-Policy</code>.</li>
+          <li>HTTPS di semua lingkungan, termasuk saat pengembangan bila memungkinkan.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">6 &middot; Unggahan berkas</h3>
+        <ul class="clean">
+          <li>Daftar putih jenis berkas dan batas ukuran, diperiksa dari tanda tangan isi berkas (magic bytes), bukan dari namanya.</li>
+          <li>Nama berkas diacak dan berkas disajikan dengan tipe konten yang dipaksakan benar, sehingga alamat tak tertebak dan berkas tak pernah dieksekusi sebagai skrip.</li>
+          <li>Penyandian ulang gambar di server <strong>ditunda sebagai penguatan opsional</strong> bila waktu tersisa &mdash; dengan tiga lapis di atas, nilainya kecil dibanding kerumitan yang dibawanya ke masa 26 hari ini.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">7 &middot; Jejak audit</h3>
+        <ul class="clean">
+          <li>Setiap verifikasi akun, perubahan peran, penerbitan sertifikat, dan penghapusan tercatat lengkap dengan pelakunya.</li>
+          <li>Halaman jejak audit khusus Superadmin, hanya bisa dibaca dan tidak bisa disunting dari antarmuka.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">8 &middot; Rahasia dan rantai pasok</h3>
+        <ul class="clean">
+          <li>Seluruh rahasia lewat variabel lingkungan, dengan berkas contoh yang aman untuk dibagikan dan berkas asli yang tidak pernah masuk repositori.</li>
+          <li>Pemeriksaan kerentanan ketergantungan dijalankan sejak hari pertama, bukan menjelang penyerahan. Temuan pertama sudah ditutup: <code>deepmerge-ts</code> rentan yang terbawa lewat Prisma dipaksa ke versi aman lewat <code>overrides</code>, dan hasilnya nol kerentanan.</li>
+          <li>Ketergantungan dijaga sesedikit mungkin: setiap pustaka tambahan harus punya alasan yang bisa dijelaskan.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian V</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Repositori</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Struktur repositori</h2>
+      <div class="prose">
+        <p>Dikelompokkan menurut peran pengguna, bukan menurut jenis berkas, supaya batas hak akses terlihat langsung dari susunan foldernya.</p>
+      </div>
+
+      <pre class="tree"><b>demakmuda/</b>
+├── <b>prisma/</b>
+│   ├── schema.prisma
+│   ├── migrations/
+│   └── seed/            <i>wilayah, sekolah, minat, data contoh</i>
+├── <b>src/</b>
+│   ├── <b>app/</b>
+│   │   ├── (publik)/    <i>beranda, kabar, agenda, peluang, organisasi</i>
+│   │   ├── (auth)/      <i>masuk, daftar, verifikasi, lupa sandi</i>
+│   │   ├── (pemuda)/    <i>profil, portofolio, pendaftaran, sertifikat</i>
+│   │   ├── (organisasi)/<i>kelola kabar, agenda, peserta, anggota</i>
+│   │   ├── (dinas)/     <i>verifikasi, peta potensi, jejak audit</i>
+│   │   ├── p/[slug]/    <i>kartu talenta publik</i>
+│   │   └── cek/[kode]/  <i>halaman verifikasi sertifikat</i>
+│   ├── <b>server/</b>
+│   │   ├── actions/     <i>Server Action, tiap berkas memeriksa peran</i>
+│   │   ├── auth.ts      <i>konfigurasi Better Auth</i>
+│   │   ├── permissions.ts
+│   │   └── audit.ts
+│   ├── <b>lib/</b>
+│   │   ├── validation/  <i>skema Zod bersama</i>
+│   │   ├── nik.ts       <i>penyidikan NIK, tanpa penyimpanan utuh</i>
+│   │   └── upload.ts
+│   ├── <b>components/</b>
+│   │   └── ui/          <i>shadcn/ui</i>
+│   └── middleware.ts    <i>pengalihan saja, bukan penjaga</i>
+├── <b>docs/</b>          <i>berkas wajib lomba</i>
+│   ├── panduan-pengguna.md
+│   ├── diagram-alur.png
+│   ├── aset-desain/
+│   └── teaser.mp4
+├── .env.example
+└── README.md</pre>
+
+      <div class="note">
+        <b>Soal riwayat git.</b> Repositori dimulai dari nol hari ini, bukan mendaur ulang proyek lama. Buat komit kecil dan sering, dengan tanggal yang berurutan &mdash; riwayat itu adalah bukti paling kuat bahwa karya ini benar dibuat setelah pengumuman lomba, sesuai surat pernyataan bermaterai yang Anda tandatangani.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian VI</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Data nyata</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Data nyata dan data contoh</h2>
+      <div class="prose">
+        <p>Pemisahannya tegas: <strong>kerangka wilayah dan lembaga memakai data asli</strong>, sedangkan <strong>seluruh data manusia memakai data contoh buatan sendiri</strong>. Menampilkan data pribadi orang sungguhan tanpa izin bukan nilai tambah di depan juri, melainkan pelanggaran &mdash; apalagi pada aplikasi yang justru menjual perlindungan data sebagai keunggulannya.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Data</th><th scope="col">Sifat</th><th scope="col">Sumber dan cara ambil</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="key">14 kecamatan<br>249 desa/kelurahan</td>
+              <td><span class="yes">Nyata</span></td>
+              <td>Kode wilayah administrasi Kemendagri dan tabel BPS Kabupaten Demak, disemai sekali lewat skrip.</td>
+            </tr>
+            <tr>
+              <td class="key">SMA, SMK, MA</td>
+              <td><span class="yes">Nyata</span></td>
+              <td>Pangkalan data pendidikan, disaring untuk Kabupaten Demak.</td>
+            </tr>
+            <tr>
+              <td class="key">Potensi dan keunggulan daerah</td>
+              <td><span class="yes">Nyata</span></td>
+              <td>Laman resmi Pemkab Demak: wisata religi, produk unggulan, agenda budaya.</td>
+            </tr>
+            <tr>
+              <td class="key">Statistik kependudukan</td>
+              <td><span class="yes">Nyata</span></td>
+              <td>BPS Kabupaten Demak, dipakai sebagai pembanding di dasbor peta potensi.</td>
+            </tr>
+            <tr>
+              <td class="key">Akun pemuda dan profilnya</td>
+              <td>Contoh</td>
+              <td>Dibangkitkan sendiri, nama dan foto fiktif, ditandai jelas sebagai data contoh.</td>
+            </tr>
+            <tr>
+              <td class="key">Organisasi, kabar, agenda, sertifikat</td>
+              <td>Contoh</td>
+              <td>Disusun agar masuk akal dan menyerupai keadaan sebenarnya, tanpa memakai identitas organisasi nyata tanpa izin.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian VII</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Desain</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Arah desain antarmuka: skeuomorfisme modern</h2>
+      <div class="prose">
+        <p>Aplikasi ini memakai bahasa visual <strong>skeuomorfisme modern yang halus</strong>: permukaan yang terasa bisa disentuh &mdash; tombol yang tampak timbul dan benar-benar &ldquo;tertekan&rdquo; saat diklik, kolom isian yang tampak cekung, kartu yang melayang lembut di atas latar &mdash; tanpa tekstur kulit dan jahitan ala 2010. Rujukannya kedalaman ala Apple masa kini: gradien tipis, bayangan berlapis, cahaya konsisten dari atas. Gaya ini justru cocok untuk DemakMuda: sertifikat bisa tampil seperti lembaran sungguhan dan Kartu Talenta seperti kartu identitas yang bisa dipegang.</p>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">Sistem permukaan</h3>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Permukaan</th><th scope="col">Resep visual</th><th scope="col">Dipakai untuk</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="key">Timbul (raised)</td>
+                <td>Gradien vertikal sangat tipis (terang di atas), dua lapis bayangan &mdash; ambient lebar lembut plus bayangan kunci pendek &mdash; dan garis sorot 1px di tepi atas.</td>
+                <td>Kartu, tombol utama, panel navigasi.</td>
+              </tr>
+              <tr>
+                <td class="key">Cekung (inset)</td>
+                <td>Bayangan dalam dari tepi atas, latar sedikit lebih gelap dari permukaan sekitarnya.</td>
+                <td>Kolom isian, kolom pencarian, area unggah, latar kelompok statistik.</td>
+              </tr>
+              <tr>
+                <td class="key">Tertekan (pressed)</td>
+                <td>Saat <code>:active</code>: turun 1px, bayangan luar berganti bayangan dalam. Transisi 150&ndash;200ms ease-out, hanya pada <code>transform</code> dan <code>box-shadow</code> agar tetap mulus di ponsel murah.</td>
+                <td>Semua tombol dan elemen yang bisa diklik.</td>
+              </tr>
+              <tr>
+                <td class="key">Mengambang (overlay)</td>
+                <td>Bayangan ambient paling lebar, sedikit blur latar (frosted glass) bila perangkat sanggup.</td>
+                <td>Dialog, menu tarik-turun, lembar bawah di ponsel.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title">Aturan yang menjaga gaya ini tetap disiplin</h3>
+        <ul class="clean">
+          <li><strong>Satu arah cahaya, dari atas, di seluruh aplikasi.</strong> Bayangan selalu jatuh ke bawah; sorot selalu di tepi atas. Skeuomorfisme rusak begitu arah cahayanya tidak konsisten.</li>
+          <li><strong>Kedalaman hanya untuk yang bermakna:</strong> elemen interaktif dan permukaan utama. Bila semua timbul, tidak ada yang timbul. Teks panjang tetap di permukaan datar agar nyaman dibaca.</li>
+          <li><strong>Kontras tidak boleh dikorbankan.</strong> Jebakan klasik neumorfisme adalah kontras rendah demi kehalusan. Semua kombinasi teks-latar tetap memenuhi WCAG AA &mdash; palet hijau kubah dan kuningan Demak dipertahankan, netralnya dihangatkan sedikit.</li>
+          <li><strong>Token, bukan improvisasi.</strong> Tiga token bayangan (<code>--shadow-raise</code>, <code>--shadow-press</code>, <code>--shadow-inset</code>) dan dua token gradien didefinisikan sekali di tema Tailwind v4; komponen shadcn/ui di-restyle lewat token itu, perilakunya tidak disentuh.</li>
+          <li><strong>Mode gelap dirancang, bukan dibalik.</strong> Di latar gelap, sorot tepi diturunkan opasitasnya dan bayangan ambient diperdalam; diuji sejajar dengan mode terang sejak pekan pertama.</li>
+          <li><strong>Hormati <code>prefers-reduced-motion</code></strong> &mdash; animasi tekan diganti perubahan warna sederhana.</li>
+        </ul>
+      </div>
+
+      <div class="note">
+        <b>Nilai jualnya ke juri:</b> gaya ini membuat antarmuka langsung terlihat berbeda dari aplikasi lomba pada umumnya yang datar seragam, dan tetap bisa dipertanggungjawabkan: konsisten, kontras aman, dan ringan karena hanya memakai CSS &mdash; tanpa pustaka animasi tambahan.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian VIII</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Lingkup</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Lingkup bertingkat</h2>
+      <div class="prose">
+        <p>Proposal menyebut sepuluh fitur sebagai visi produk. Yang dibangun sampai hari penilaian hanya Tingkat 1 sampai 3. Tingkat 4 tetap dicantumkan dalam presentasi sebagai arah pengembangan &mdash; itu memperlihatkan bahwa produk ini punya masa depan, tanpa mempertaruhkan demo.</p>
+      </div>
+
+      <div class="tier">
+        <article>
+          <div class="head"><h4>Tingkat 1 &mdash; Wajib mulus</h4><span class="badge">Jalur demo</span></div>
+          <p>Inilah yang akan diperagakan di depan juri dari awal sampai akhir. Tidak boleh ada satu pun kesalahan di jalur ini. Bila waktu menipis, semua tingkat lain dikorbankan lebih dulu.</p>
+          <div class="items">
+            <span>Autentikasi &amp; peran</span><span>Kabar Demak</span><span>Agenda Demak</span><span>Papan Peluang</span><span>Kartu Talenta</span><span>Pendaftaran Kegiatan</span>
+          </div>
+        </article>
+        <article>
+          <div class="head"><h4>Tingkat 2 &mdash; Pembeda nilai</h4><span class="badge">Inovasi</span></div>
+          <p>Bagian yang membuat karya ini tidak terlihat seperti aplikasi pendataan biasa. Sertifikat ber-kode yang bisa diperiksa keasliannya oleh siapa pun adalah cerita terkuat untuk kriteria inovasi.</p>
+          <div class="items">
+            <span>Rekam Prestasi &amp; verifikasi sertifikat</span><span>Direktori Organisasi</span><span>Peta Potensi Pemuda</span>
+          </div>
+        </article>
+        <article class="onsite">
+          <div class="head"><h4>Tingkat 3 &mdash; Dikerjakan di lokasi</h4><span class="badge">30% &middot; 5 jam</span></div>
+          <p>Sengaja dipilih dari pekerjaan yang sederhana, terpisah dari jalur demo, dan tidak berisiko merusak apa pun yang sudah jadi. Rancangan tampilannya sudah disiapkan; yang dikerjakan di lokasi adalah kodenya.</p>
+          <div class="items">
+            <span>Ruang Karya</span><span>Ruang Aspirasi</span><span>Penyempurnaan tampilan</span>
+          </div>
+        </article>
+        <article class="later">
+          <div class="head"><h4>Tingkat 4 &mdash; Visi lanjutan</h4><span class="badge">Tidak dibangun sekarang</span></div>
+          <p>Dipaparkan sebagai peta jalan pada bagian penutup presentasi, bukan sebagai janji yang harus ditepati hari itu.</p>
+          <div class="items">
+            <span>Pemberitahuan WhatsApp</span><span>Aplikasi gawai</span><span>Integrasi data kependudukan</span><span>Bursa kerja &amp; magang</span><span>Modul pelatihan daring</span><span>Papan peringkat antar-kecamatan</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian IX</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Linimasa</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Jadwal 26 hari</h2>
+
+      <div class="timeline">
+        <div>
+          <span class="when">20&ndash;23 Agustus &middot; 4 hari</span>
+          <h4>Fondasi</h4>
+          <p>Repositori baru, Next.js dan Tailwind, skema Prisma lengkap, penyemaian 14 kecamatan dan 249 desa, Better Auth dengan empat peran, token desain skeuomorfisme dan restyle komponen dasar, CSP ber-nonce, manifest PWA, halaman kosong untuk semua rute. <strong>Sketsa antarmuka dibuat dan diarsipkan di fase ini juga</strong> &mdash; sketsa adalah berkas wajib lomba dan bukti proses; membuatnya belakangan setelah tampilannya jadi sama saja memalsukannya.</p>
+          <p><strong>Selesai bila:</strong> build produksi hijau, seed menghasilkan 14 kecamatan dan 249 desa, dan keempat peran bisa masuk lalu diarahkan ke dasbornya masing-masing.</p>
+        </div>
+        <div>
+          <span class="when">24 Agustus &ndash; 1 September &middot; 9 hari</span>
+          <h4>Kanal publik</h4>
+          <p>Kabar Demak, Agenda Demak, dan Papan Peluang: tampilan publik, pencarian dan penyaringan, serta panel pengelolaan untuk organisasi dan dinas. Setelah tahap ini, aplikasi sudah berguna walau belum lengkap.</p>
+          <p><strong>Selesai bila:</strong> akun organisasi bisa menulis satu kabar, memasang satu agenda, dan membuka satu peluang &mdash; lalu ketiganya tampil benar di halaman publik dari ponsel. <strong>Gerbang 1 September:</strong> bila tahap ini belum tuntas pada tanggalnya, pemangkasan sudah diputuskan dari sekarang &mdash; grafik Peta Potensi diturunkan jadi angka ringkas per kecamatan, dan peta Leaflet dilepas &mdash; bukan panik memilih korban di tempat.</p>
+        </div>
+        <div>
+          <span class="when">2&ndash;7 September &middot; 6 hari</span>
+          <h4>Alur pemuda dan organisasi</h4>
+          <p>Kartu Talenta dan halaman portofolio publik, Pendaftaran Kegiatan beserta unduhan daftar peserta, Direktori Organisasi dengan peta, Rekam Prestasi dan halaman pemeriksaan keaslian sertifikat.</p>
+          <p><strong>Selesai bila:</strong> satu alur utuh berjalan tanpa sentuhan basis data manual &mdash; pemuda mendaftar kegiatan, panitia menerbitkan sertifikat, sertifikat muncul di profil, dan kodenya lolos dicek dari halaman publik.</p>
+        </div>
+        <div>
+          <span class="when">8&ndash;10 September &middot; 3 hari</span>
+          <h4>Dasbor dinas dan pengerasan keamanan</h4>
+          <p>Peta Potensi Pemuda dengan grafik per kecamatan, lalu seluruh delapan lapis keamanan di Bagian IV dituntaskan dan diperiksa satu per satu.</p>
+          <p><strong>Selesai bila:</strong> daftar periksa keamanan dicoret semua, dan percobaan nakal dasar gagal sebagaimana mestinya &mdash; akun pemuda yang memanggil aksi dinas ditolak, organisasi yang menyunting kegiatan organisasi lain ditolak, dan pembatasan laju menahan percobaan masuk beruntun.</p>
+        </div>
+        <div>
+          <span class="when">11&ndash;12 September &middot; 2 hari</span>
+          <h4>Pengujian, dokumen, dan penerbitan</h4>
+          <p>Uji seluruh alur dari tiga peran, perbaiki temuan, tulis dokumentasi dan panduan, buat diagram alur, rapikan aset desain yang sudah terkumpul sejak pekan fondasi, rekam video teaser, terbitkan ke Vercel. Siapkan pula <strong>tiga akun demo dengan sandi hafal dan naskah alur demo tertulis</strong>, plus satu perintah seed yang mengembalikan basis data ke kondisi demo persis. <strong>Jadwal ini tidak boleh digeser untuk menambah fitur.</strong></p>
+          <p><strong>Selesai bila:</strong> orang lain &mdash; bukan Anda &mdash; bisa menjalankan aplikasi dari README saja, dan demo bisa diulang dari nol dengan satu perintah.</p>
+        </div>
+        <div>
+          <span class="when">13 September &middot; 1 hari</span>
+          <h4>Persiapan akhir</h4>
+          <p>Salin seluruh karya ke dua flash disk, siapkan salinan lokal yang bisa jalan tanpa jaringan, latihan presentasi penuh dua kali dengan pengatur waktu, siapkan surat pernyataan bermaterai.</p>
+        </div>
+        <div class="onsite">
+          <span class="when">14 September &middot; 5 jam di lokasi</span>
+          <h4>Penyelesaian 30% terakhir</h4>
+          <p>Ruang Karya, Ruang Aspirasi, dan penyempurnaan tampilan &mdash; dikerjakan sesuai daftar di Bagian IX.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian X</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Hari-H</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Rencana lima jam di lokasi</h2>
+      <div class="prose">
+        <p>Lima jam terdengar lama sampai Anda mengerjakannya di ruangan asing, diawasi, dengan juri berkeliling. Karena itu urutannya ditetapkan dari sekarang, dan tidak diputuskan di tempat.</p>
+      </div>
+
+      <ol class="numbered">
+        <li><strong>Jam pertama &mdash; Ruang Karya.</strong> Tabel karya, formulir unggah, halaman etalase, dan halaman rinci. Pekerjaan pengelolaan data biasa yang polanya sudah diulang berkali-kali sejak Agustus.</li>
+        <li><strong>Jam kedua &mdash; Ruang Aspirasi.</strong> Formulir usulan, daftar aspirasi, dan status penanganan yang bisa diubah dinas.</li>
+        <li><strong>Jam ketiga &mdash; Penyambungan.</strong> Menautkan karya ke Kartu Talenta, menambahkan keduanya ke menu utama, dan menyesuaikan hak akses sesuai matriks Bagian II.</li>
+        <li><strong>Jam keempat &mdash; Penyempurnaan.</strong> Merapikan tampilan pada layar ponsel, keadaan kosong, keadaan memuat, dan pesan kesalahan.</li>
+        <li><strong>Jam kelima &mdash; Cadangan dan pemeriksaan akhir.</strong> Menelusuri ulang seluruh jalur demo dari awal, memastikan tidak ada yang rusak, lalu menyalin hasil akhir ke flash disk. <strong>Jam ini tidak boleh dipakai menulis fitur baru.</strong></li>
+      </ol>
+
+      <div class="note warn">
+        <b>Aturan yang tidak boleh dilanggar hari itu.</b> Jangan menyentuh kode Tingkat 1 dan 2. Jangan menjalankan migrasi yang mengubah tabel yang sudah ada &mdash; hanya menambah tabel baru. Jangan memperbarui satu pun paket. Bila sebuah fitur macet lebih dari empat puluh menit, hentikan, kembalikan ke keadaan terakhir yang jalan, dan lanjut ke nomor berikutnya. Aplikasi yang jalan dengan sembilan fitur mengalahkan aplikasi rusak dengan sepuluh.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian XI</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Risiko</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Risiko dan penanganannya</h2>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Risiko</th><th scope="col">Akibat</th><th scope="col">Penanganan</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="key">Fitur terlalu banyak, waktu habis</td>
+              <td>Banyak yang setengah jadi, nilai keandalan jatuh.</td>
+              <td>Lingkup bertingkat. Tingkat 1 dikunci sejak awal; tingkat lain boleh gugur tanpa merusak demo.</td>
+            </tr>
+            <tr>
+              <td class="key">Aplikasi error saat diperagakan</td>
+              <td>Kesan pertama rusak dan sulit dipulihkan.</td>
+              <td>Latihan demo penuh dua kali pada 13 September, memakai data contoh yang sama persis dengan yang dipakai hari-H.</td>
+            </tr>
+            <tr>
+              <td class="key">Jaringan di ruang lomba bermasalah</td>
+              <td>Aplikasi daring tidak bisa dibuka di depan juri.</td>
+              <td>Panitia memastikan ada internet, jadi ini risiko rendah. Cadangannya gratis: lingkungan pengembangan di laptop sendiri sudah lengkap dengan Postgres Docker yang tersemai, jadi <code>npm run dev</code> tetap menyajikan aplikasi utuh &mdash; hanya gambar unggahan yang perlu jaringan.</td>
+            </tr>
+            <tr>
+              <td class="key">Laptop bermasalah</td>
+              <td>Kehilangan seluruh pekerjaan.</td>
+              <td>Dorong ke repositori privat daring setiap hari, ditambah salinan di dua flash disk terpisah sejak 12 September.</td>
+            </tr>
+            <tr>
+              <td class="key">Restyle skeuomorfisme memakan waktu melebihi jatahnya</td>
+              <td>Waktu tersedot ke penampilan, fitur inti tertinggal.</td>
+              <td>Token dan resep permukaan dibuat sekali di pekan fondasi; setelah itu hanya belasan komponen inti yang di-restyle. Bila mundur, komponen selain jalur demo boleh tetap bergaya bawaan &mdash; konsistensi jalur demo lebih penting daripada kelengkapan.</td>
+            </tr>
+            <tr>
+              <td class="key">Kondisi demo tidak bisa diulang</td>
+              <td>Latihan lancar, hari-H datanya beda dan alur macet.</td>
+              <td>Satu perintah seed mengembalikan basis data ke kondisi demo persis; naskah demo tertulis memakai akun dan data yang itu-itu juga.</td>
+            </tr>
+            <tr>
+              <td class="key">Waktu tersedot ke fitur, dokumen wajib terbengkalai</td>
+              <td>Berkas tidak lengkap, kehilangan nilai dokumentasi.</td>
+              <td>11&ndash;12 September dikunci khusus untuk dokumen, teaser, dan pengujian. Tidak ada fitur baru setelah 10 September.</td>
+            </tr>
+            <tr>
+              <td class="key">Pertanyaan juri soal keamanan tidak terjawab</td>
+              <td>Kehilangan nilai pada kriteria yang justru sudah dikerjakan.</td>
+              <td>Siapkan jawaban singkat untuk tiap lapis di Bagian IV, terutama soal NIK dan data pengguna di bawah umur.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bagian XII</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Kesiapan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Daftar kesiapan penilaian</h2>
+      <div class="prose">
+        <p>Ditarik langsung dari butir 12 pedoman pelaksanaan. Semua masuk satu flash disk, dengan satu flash disk kedua sebagai cadangan.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Berkas wajib</th><th scope="col">Wujud</th><th scope="col">Selesai</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="key">Surat pernyataan bermaterai</td><td>Keaslian karya, tidak dalam sengketa, dibuat sejak pengumuman lomba.</td><td>12 Sep</td></tr>
+            <tr><td class="key">Deskripsi ringkas karya</td><td>Ringkasan satu halaman, diambil dari proposal.</td><td>11 Sep</td></tr>
+            <tr><td class="key">Visualisasi aset desain</td><td>Sketsa awal, logo, ikon, tipografi, skema warna, tata letak, dan tampilan akhir.</td><td>11 Sep</td></tr>
+            <tr><td class="key">Diagram alur</td><td>Alur pakai untuk ketiga peran pengguna.</td><td>11 Sep</td></tr>
+            <tr><td class="key">Simulasi digital</td><td>Aplikasi yang dapat dioperasikan langsung, daring maupun dari laptop.</td><td>10 Sep</td></tr>
+            <tr><td class="key">Video teaser</td><td>Maksimal tiga menit: tampilan antarmuka, alur interaksi, fungsi, dan cara pakai.</td><td>12 Sep</td></tr>
+            <tr><td class="key">Dokumentasi</td><td>Panduan pengguna per peran, dokumentasi teknis, dan cara memasang.</td><td>12 Sep</td></tr>
+            <tr><td class="key">Bahan presentasi</td><td>Konsep, fungsionalitas, inovasi, manfaat, dan peta jalan Tingkat 4.</td><td>13 Sep</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <b>Langkah berikutnya.</b> Bila cetak biru ini disetujui, pekerjaan pertama adalah menyiapkan repositori, skema Prisma, dan penyemaian data wilayah nyata &mdash; itu fondasi yang dipakai semua fitur lain, dan paling baik dikerjakan hari ini juga.
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot wrap">
+  <span>Cetak Biru DemakMuda</span>
+  <span>Idham Hanif Multaam &middot; Jambore Pemuda Kabupaten Demak 2026</span>
+</footer>

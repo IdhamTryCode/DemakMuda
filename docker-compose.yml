@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: demakmuda-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: demakmuda
+      POSTGRES_PASSWORD: demakmuda_dev
+      POSTGRES_DB: demakmuda
+    ports:
+      - "5432:5432"
+    volumes:
+      - demakmuda-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demakmuda -d demakmuda"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  demakmuda-pgdata:

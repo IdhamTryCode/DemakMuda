@@ -1,0 +1,1132 @@
+<title>DemakMuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+:root {
+  --ground: #F5F6F2;
+  --surface: #FFFFFF;
+  --surface-sunk: #EDEFE9;
+  --ink: #131C18;
+  --ink-soft: #34423C;
+  --muted: #5E6B64;
+  --line: #D8DDD5;
+  --line-strong: #BFC7BC;
+  --accent: #0D5C4C;
+  --accent-soft: #E3EFE9;
+  --accent-ink: #0A4A3D;
+  --brass: #A97527;
+  --brass-soft: #F4EBDA;
+
+  --f-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --f-body: "Public Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --measure: 68ch;
+  --page: 1120px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1512;
+    --surface: #16201C;
+    --surface-sunk: #111A17;
+    --ink: #E7EDE8;
+    --ink-soft: #C2CDC6;
+    --muted: #93A199;
+    --line: #26332D;
+    --line-strong: #38473F;
+    --accent: #57C2A5;
+    --accent-soft: #14312A;
+    --accent-ink: #8FD9C3;
+    --brass: #D7A954;
+    --brass-soft: #2A2317;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0E1512;
+  --surface: #16201C;
+  --surface-sunk: #111A17;
+  --ink: #E7EDE8;
+  --ink-soft: #C2CDC6;
+  --muted: #93A199;
+  --line: #26332D;
+  --line-strong: #38473F;
+  --accent: #57C2A5;
+  --accent-soft: #14312A;
+  --accent-ink: #8FD9C3;
+  --brass: #D7A954;
+  --brass-soft: #2A2317;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.wrap {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: 28px;
+}
+
+.prose { max-width: var(--measure); }
+
+p { margin: 0 0 1.05em; }
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: 600; color: var(--ink); }
+
+a {
+  color: var(--accent-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--f-display);
+  font-weight: 500;
+  text-wrap: balance;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Sampul ---------- */
+
+.cover {
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 12% 0%, var(--accent-soft) 0%, transparent 62%),
+    var(--surface);
+}
+
+.cover-inner {
+  padding-block: clamp(52px, 9vw, 104px) clamp(40px, 6vw, 68px);
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.cover-tag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  color: var(--muted);
+}
+
+.cover-tag .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+.cover-head { display: flex; flex-direction: column; gap: 18px; }
+
+.wordmark {
+  font-family: var(--f-display);
+  font-size: clamp(46px, 9.5vw, 92px);
+  line-height: 0.98;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.wordmark em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.cover-sub {
+  font-family: var(--f-display);
+  font-size: clamp(19px, 2.6vw, 25px);
+  line-height: 1.42;
+  color: var(--ink-soft);
+  max-width: 30ch;
+  margin: 0;
+}
+
+.cover-lead {
+  max-width: 60ch;
+  font-size: 17.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.cover-lead strong { color: var(--ink); font-weight: 600; }
+
+.tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 2px solid var(--brass);
+  padding-left: 16px;
+  max-width: 46ch;
+}
+.tagline .jv {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 21px;
+  color: var(--brass);
+}
+.tagline .id { font-size: 15px; color: var(--muted); }
+
+.cover-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.cover-meta div {
+  background: var(--surface);
+  padding: 15px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.cover-meta dt {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+.cover-meta dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ---------- Ringkasan ---------- */
+
+.summary {
+  background: var(--surface-sunk);
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(38px, 5vw, 60px);
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+}
+@media (min-width: 900px) {
+  .summary-grid { grid-template-columns: 168px minmax(0, 1fr); gap: 44px; }
+}
+.summary-lead {
+  font-family: var(--f-display);
+  font-size: clamp(20px, 2.3vw, 24px);
+  line-height: 1.52;
+  color: var(--ink);
+  max-width: 60ch;
+}
+.summary-lead p { margin-bottom: 0.7em; }
+
+/* ---------- Struktur bab ---------- */
+
+.bab {
+  padding-block: clamp(46px, 6vw, 76px);
+  border-bottom: 1px solid var(--line);
+}
+.bab:last-of-type { border-bottom: 0; }
+
+.bab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 26px;
+}
+@media (min-width: 900px) {
+  .bab-grid { grid-template-columns: 168px minmax(0, 1fr); gap: 44px; }
+}
+
+.bab-rail { display: flex; flex-direction: column; gap: 8px; }
+@media (min-width: 900px) {
+  .bab-rail { position: sticky; top: 30px; align-self: start; }
+}
+.bab-no {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.bab-rail .rule {
+  height: 1px;
+  background: var(--line-strong);
+  width: 34px;
+}
+
+.bab-body { display: flex; flex-direction: column; gap: 34px; min-width: 0; }
+
+.bab-title {
+  font-size: clamp(29px, 4vw, 40px);
+  line-height: 1.12;
+  margin-bottom: 2px;
+}
+
+.sec { display: flex; flex-direction: column; gap: 14px; }
+
+.sec-title {
+  font-size: 21px;
+  line-height: 1.3;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+.sec-title .num {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  flex: none;
+  padding-top: 2px;
+}
+
+/* ---------- Data ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.stat {
+  background: var(--surface);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat .fig {
+  font-family: var(--f-display);
+  font-size: clamp(30px, 4vw, 38px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.stat .lab { font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
+.stat .src {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ---------- Daftar ---------- */
+
+ul.clean, ol.clean {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: var(--measure);
+}
+ul.clean li {
+  position: relative;
+  padding-left: 22px;
+}
+ul.clean li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.66em;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--brass);
+  transform: rotate(45deg);
+}
+
+ol.numbered {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: n;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: var(--measure);
+}
+ol.numbered li {
+  counter-increment: n;
+  position: relative;
+  padding-left: 34px;
+}
+ol.numbered li::before {
+  content: counter(n, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--brass);
+}
+
+/* ---------- Kartu ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.card h4 {
+  font-size: 18px;
+  line-height: 1.3;
+}
+.card p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.card .kode {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--brass);
+  text-transform: uppercase;
+}
+
+.persona {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.persona article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.persona h4 { font-size: 17px; }
+.persona .who {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.persona p { font-size: 14.5px; line-height: 1.58; color: var(--ink-soft); }
+
+/* ---------- Tabel ---------- */
+
+.tablewrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px;
+  font-size: 15px;
+}
+th, td {
+  text-align: left;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.55;
+}
+thead th {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-sunk);
+  white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom: 0; }
+td.key { font-weight: 500; white-space: nowrap; }
+td .mini { display: block; font-size: 13.5px; color: var(--muted); margin-top: 3px; }
+
+/* ---------- Linimasa ---------- */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line-strong);
+  padding-left: 24px;
+  gap: 22px;
+  margin-left: 5px;
+}
+.timeline > div { position: relative; display: flex; flex-direction: column; gap: 5px; }
+.timeline > div::before {
+  content: "";
+  position: absolute;
+  left: -29px;
+  top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ground);
+  border: 1.5px solid var(--brass);
+}
+.timeline .when {
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.timeline h4 { font-size: 17.5px; }
+.timeline p { font-size: 15px; color: var(--ink-soft); max-width: 62ch; }
+
+/* ---------- Kutipan ---------- */
+
+.pull {
+  border-left: 2px solid var(--brass);
+  padding: 4px 0 4px 20px;
+  max-width: 58ch;
+}
+.pull p {
+  font-family: var(--f-display);
+  font-size: clamp(19px, 2.2vw, 22px);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.pull .by {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.note {
+  background: var(--brass-soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 16px 20px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+.note b { color: var(--ink); }
+
+/* ---------- Penutup ---------- */
+
+.closing {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding-block: clamp(44px, 6vw, 72px);
+}
+.sign {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 26px;
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.sign div { display: flex; flex-direction: column; gap: 4px; }
+.sign .lab {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sign .val { font-size: 15.5px; font-weight: 500; }
+
+.refs { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.refs ol { padding-left: 20px; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.foot {
+  padding-block: 26px;
+  border-top: 1px solid var(--line);
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<header class="cover">
+  <div class="wrap cover-inner">
+    <div class="cover-tag eyebrow">
+      <span>Jambore Pemuda Kabupaten Demak 2026</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Lomba Teknologi Piranti Lunak</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Proposal Umum</span>
+    </div>
+
+    <div class="cover-head">
+      <h1 class="wordmark">Demak<em>Muda</em></h1>
+      <p class="cover-sub">Portal talenta dan peluang bagi pemuda Kabupaten Demak.</p>
+      <p class="cover-lead">Singkatnya: sebuah <strong>aplikasi web</strong> yang menjadi kanal resmi kepemudaan Kabupaten Demak. Di dalamnya pemuda membaca <strong>kabar dan agenda kegiatan</strong> yang akan berlangsung di Demak, menemukan <strong>lomba, pelatihan, beasiswa, dan lowongan magang</strong> beserta tenggatnya, mengumpulkan sertifikat serta karyanya menjadi <strong>satu portofolio yang bisa dibuktikan</strong>, dan bergabung dengan organisasi kepemudaan di kecamatannya. Data yang sama, tanpa pengisian ulang, menjadi <strong>peta potensi pemuda per kecamatan</strong> bagi Dinas Kepemudaan dan Olahraga.</p>
+      <div class="tagline">
+        <span class="jv">Nyawiji dadi soko.</span>
+        <span class="id">Menyatu menjadi tiang penyangga &mdash; filosofi soko tatal Sunan Kalijaga.</span>
+      </div>
+    </div>
+
+    <dl class="cover-meta">
+      <div><dt>Kategori</dt><dd>Teknologi Piranti Lunak</dd></div>
+      <div><dt>Tema</dt><dd>Aplikasi Kepemudaan Menyongsong Bonus Demografi</dd></div>
+      <div><dt>Peserta</dt><dd>Idham Hanif Multaam</dd></div>
+      <div><dt>Asal</dt><dd>Kecamatan Demak, Kabupaten Demak</dd></div>
+      <div><dt>Penilaian</dt><dd>Senin, 14 September 2026</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section class="summary">
+  <div class="wrap summary-grid">
+    <div class="bab-rail"><span class="bab-no">Ringkasan</span><span class="rule"></span></div>
+    <div class="summary-lead prose">
+      <p>Kabupaten Demak memiliki lebih dari delapan ratus ribu penduduk usia produktif, tetapi kesempatan untuk berkembang masih beredar lewat jalur yang sempit: surat berjenjang, grup pesan tertutup, dan formulir daring yang berganti setiap kegiatan. Akibatnya potensi pemuda tersebar tanpa pernah terkumpul, prestasi tidak meninggalkan jejak, dan pemerintah daerah tidak memiliki peta yang utuh tentang generasi mudanya sendiri.</p>
+      <p><strong>DemakMuda</strong> adalah portal talenta dan peluang pemuda Kabupaten Demak: satu tempat untuk mengikuti kabar dan agenda kegiatan di Demak, menemukan peluang beserta tenggatnya, membangun portofolio yang terverifikasi, dan bergabung dengan organisasi di daerahnya &mdash; sekaligus menjadi peta potensi pemuda bagi dinas. Gagasannya berakar pada riwayat soko tatal Masjid Agung Demak: serpihan kayu yang disusun menjadi tiang penyangga.</p>
+    </div>
+  </div>
+</section>
+
+<main id="isi">
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab I</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Pendahuluan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Mengapa aplikasi ini perlu dibuat</h2>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">1.1</span> Latar Belakang</h3>
+        <div class="prose">
+          <p>Indonesia sedang melewati periode yang tidak akan terulang. Jumlah penduduk usia produktif melampaui jumlah penduduk usia tidak produktif, dan puncaknya diperkirakan terjadi sekitar tahun 2030, ketika angkatan kerja diproyeksikan mencapai sekitar tujuh puluh satu persen dari seluruh penduduk. Periode inilah yang disebut bonus demografi, dan di atasnya cita-cita Indonesia Emas 2045 disandarkan. Namun bonus itu tidak bekerja dengan sendirinya. Ia baru menjadi keuntungan apabila pemuda yang jumlahnya besar itu terdidik, terampil, dan terhubung dengan kesempatan; bila tidak, jumlah yang besar justru berubah menjadi beban.</p>
+          <p>Kabupaten Demak berada tepat di tengah kondisi itu. Pada 2024, penduduk Demak tercatat sekitar 1,25 juta jiwa, dan 65,73 persen di antaranya &mdash; sekitar 822 ribu orang &mdash; berada pada usia produktif lima belas sampai lima puluh sembilan tahun. Modalnya besar. Tetapi pada Agustus 2024, dari 695.174 orang angkatan kerja, yang benar-benar bekerja 662.147 orang. Sisanya, sekitar tiga puluh tiga ribu orang, belum bekerja. Tingkat pengangguran terbukanya 4,75 persen &mdash; membaik dibanding tahun sebelumnya, namun tetap berarti puluhan ribu orang usia produktif yang belum menemukan jalannya.</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="fig">1,25 jt</span>
+            <span class="lab">Penduduk Kabupaten Demak</span>
+            <span class="src">BPS, 2024</span>
+          </div>
+          <div class="stat">
+            <span class="fig">65,73%</span>
+            <span class="lab">Berusia produktif 15&ndash;59 tahun, sekitar 822 ribu jiwa</span>
+            <span class="src">BPS, 2024</span>
+          </div>
+          <div class="stat">
+            <span class="fig">4,75%</span>
+            <span class="lab">Tingkat pengangguran terbuka, turun 0,63 poin dari tahun sebelumnya</span>
+            <span class="src">BPS Demak, Agustus 2024</span>
+          </div>
+          <div class="stat">
+            <span class="fig">~33 rb</span>
+            <span class="lab">Selisih angkatan kerja (695.174) dan penduduk bekerja (662.147)</span>
+            <span class="src">BPS Demak, Agustus 2024</span>
+          </div>
+          <div class="stat">
+            <span class="fig">14 / 249</span>
+            <span class="lab">Kecamatan serta desa dan kelurahan yang harus terjangkau</span>
+            <span class="src">BPS Demak, 2024</span>
+          </div>
+        </div>
+
+        <div class="prose">
+          <p>Yang tidak terbaca dalam angka-angka itu adalah sebabnya. Di Demak, kesempatan untuk berkembang sebenarnya tidak sedikit: ada lomba, pelatihan kerja, program pembinaan usaha, karang taruna yang tersebar di 249 desa dan kelurahan, sanggar tari, serta organisasi kepemudaan di seluruh empat belas kecamatan. Persoalannya, semua itu berjalan sendiri-sendiri, dan kabarnya beredar lewat jalur yang sempit.</p>
+        </div>
+
+        <div class="pull">
+          <p>Undangan lomba ini sendiri adalah buktinya: surat disebar berjenjang ke camat, sekolah, dan organisasi, lalu pendaftaran ditampung lewat satu tautan formulir dan satu nomor telepon.</p>
+          <span class="by">Edaran Jambore Pemuda Demak, 10 Juli 2026</span>
+        </div>
+
+        <div class="prose">
+          <p>Cara itu bekerja, tetapi hanya menjangkau pemuda yang kebetulan terhubung ke sekolah atau organisasi yang menerima surat. Pemuda yang sudah lulus, yang bekerja, atau yang tidak aktif berorganisasi hampir pasti tidak pernah tahu. Setelah acara selesai, datanya berhenti di satu berkas dan tidak menjadi apa pun bagi penyelenggaraan tahun berikutnya. Bonus demografi tidak hilang karena pemudanya kurang; ia hilang karena potensi yang ada tidak pernah bertemu dengan kesempatan yang tersedia.</p>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">1.2</span> Identifikasi Masalah</h3>
+        <ul class="clean">
+          <li><strong>Informasi peluang tidak merata.</strong> Pengumuman lomba, pelatihan, beasiswa, dan lowongan magang beredar lewat jalur surat dan grup pesan tertutup, sehingga hanya sampai ke lingkaran yang itu-itu saja.</li>
+          <li><strong>Tidak ada satu pun kalender dan kanal kabar kepemudaan yang resmi.</strong> Tidak ada tempat untuk sekadar mengetahui kegiatan apa saja yang akan berlangsung di Kabupaten Demak bulan ini, atau memastikan kebenaran sebuah kabar lomba yang beredar di grup pesan.</li>
+          <li><strong>Pemuda tidak punya rekam jejak yang bisa ditunjukkan.</strong> Sertifikat lomba dan pelatihan tersimpan sebagai lembaran kertas atau berkas foto di ponsel, tidak terkumpul menjadi portofolio yang bisa dibuktikan ke pemberi kerja atau panitia seleksi.</li>
+          <li><strong>Organisasi kepemudaan sulit ditemukan.</strong> Seorang pemuda yang ingin aktif di karang taruna, sanggar tari, atau komunitas literasi di kecamatannya tidak punya tempat untuk mencari tahu organisasi apa saja yang ada dan bagaimana bergabung.</li>
+          <li><strong>Pemerintah daerah tidak memiliki peta potensi pemuda.</strong> Data peserta kegiatan tersebar dalam formulir yang berbeda-beda tiap acara, sehingga sulit menjawab pertanyaan sederhana seperti berapa banyak pemuda berminat teknologi di tiap kecamatan.</li>
+          <li><strong>Karya dan usaha pemuda kehilangan panggung.</strong> Produk UMKM muda, karya seni, dan kegiatan komunitas jarang mendapat etalase resmi yang dikenali di tingkat kabupaten.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">1.3</span> Rumusan Masalah</h3>
+        <ol class="numbered">
+          <li>Bagaimana merancang satu kanal digital yang membuat informasi peluang kepemudaan sampai secara merata ke seluruh pemuda Kabupaten Demak, termasuk yang tidak terhubung ke sekolah atau organisasi?</li>
+          <li>Bagaimana membangun rekam jejak prestasi pemuda yang terverifikasi, tersimpan permanen, dan dapat digunakan kembali oleh pemiliknya untuk melamar kerja, beasiswa, atau seleksi kegiatan?</li>
+          <li>Bagaimana mengubah data kegiatan kepemudaan yang selama ini tercecer menjadi peta potensi yang dapat dipakai pemerintah daerah untuk menyusun program yang tepat sasaran?</li>
+        </ol>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">1.4</span> Tujuan</h3>
+        <div class="prose">
+          <p><strong>Tujuan umum.</strong> Membangun sebuah aplikasi kepemudaan berbasis web yang mempertemukan potensi pemuda Kabupaten Demak dengan peluang pengembangan diri yang tersedia, sebagai langkah nyata memanfaatkan bonus demografi menuju Generasi Emas 2045.</p>
+        </div>
+        <ul class="clean">
+          <li>Menyediakan satu pintu kabar, agenda, dan informasi kegiatan &mdash; pelatihan, beasiswa, lomba, dan lowongan magang &mdash; bagi pemuda usia 16&ndash;30 tahun di Kabupaten Demak.</li>
+          <li>Menjadi kanal berita kepemudaan resmi tingkat kabupaten yang jelas sumbernya, sehingga kabar kegiatan tidak lagi bergantung pada penyebaran berantai di grup pesan.</li>
+          <li>Memberi setiap pemuda sebuah profil talenta digital yang memuat minat, keterampilan, karya, dan prestasi yang terverifikasi.</li>
+          <li>Memetakan organisasi kepemudaan, sanggar, dan komunitas di seluruh kecamatan agar mudah ditemukan dan diikuti.</li>
+          <li>Menyederhanakan proses pendaftaran kegiatan kepemudaan menjadi satu alur yang tercatat rapi dan dapat ditelusuri kembali.</li>
+          <li>Menyajikan ringkasan data potensi pemuda per kecamatan sebagai bahan pertimbangan penyusunan program bagi dinas terkait.</li>
+          <li>Mengangkat kearifan dan keunggulan Kabupaten Demak sebagai identitas yang melekat pada produk digital ini, bukan sekadar tempelan nama.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">1.5</span> Manfaat</h3>
+        <div class="cards">
+          <article class="card">
+            <span class="kode">Bagi pemuda</span>
+            <h4>Peluang jadi terlihat</h4>
+            <p>Tidak perlu menunggu kabar dari orang dalam. Setiap pemuda melihat daftar peluang yang sama, menyimpan bukti prestasinya sendiri, dan membawa portofolio itu ke mana pun ia melamar.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Bagi Dispora</span>
+            <h4>Program berbasis data</h4>
+            <p>Pendaftaran, kehadiran, dan hasil kegiatan terkumpul otomatis menjadi ringkasan per kecamatan, sehingga perencanaan program tidak lagi bertumpu pada perkiraan.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Bagi organisasi &amp; sekolah</span>
+            <h4>Regenerasi lebih mudah</h4>
+            <p>Karang taruna, OKP, dan sanggar mendapat halaman resmi untuk memperkenalkan diri, membuka rekrutmen anggota, dan mengumumkan kegiatan tanpa bergantung pada penyebaran surat.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Bagi Kabupaten Demak</span>
+            <h4>Talenta bertahan di daerah</h4>
+            <p>Ketika kesempatan berkembang tersedia dan terlihat di daerah sendiri, alasan pemuda untuk pergi berkurang, dan keunggulan lokal Demak punya penerus.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab II</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Gagasan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">DemakMuda sebagai jawaban</h2>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">2.1</span> Deskripsi Singkat</h3>
+        <div class="prose">
+          <p><strong>DemakMuda</strong> adalah portal talenta dan peluang pemuda Kabupaten Demak: sebuah aplikasi web yang mempertemukan tiga pihak yang selama ini berjalan sendiri-sendiri. Pemuda mendaftar, mengisi minat dan keterampilannya, lalu menerima kabar, agenda, dan peluang yang relevan dengan dirinya. Organisasi, sekolah, dan sanggar memuat berita, memasang kegiatan, serta membuka rekrutmen anggota. Dinas Kepemudaan dan Olahraga menerbitkan pengumuman resmi dan melihat semuanya terangkum sebagai peta potensi pemuda per kecamatan.</p>
+          <p>Dengan begitu, aplikasi ini berfungsi sekaligus sebagai <strong>portal berita dan agenda kepemudaan Kabupaten Demak</strong>. Seorang pemuda yang membukanya dapat langsung mengetahui kegiatan apa yang akan berlangsung bulan ini, lomba apa yang sedang dibuka pendaftarannya, pelatihan apa yang tersedia, dan kabar apa yang baru diumumkan dinas &mdash; tanpa perlu menunggu surat sampai ke sekolahnya atau kebetulan masuk ke grup pesan yang tepat.</p>
+          <p>Aplikasi ini dirancang untuk dibuka dari ponsel dengan koneksi seadanya, karena itulah kondisi sebenarnya sebagian besar calon penggunanya. Tidak ada yang perlu dipasang, cukup dibuka lewat peramban, dan bisa disimpan di layar utama seperti aplikasi biasa.</p>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">2.2</span> Kearifan Lokal yang Diangkat</h3>
+        <div class="prose">
+          <p>Masjid Agung Demak berdiri di atas empat soko guru. Salah satunya, menurut riwayat yang hidup di masyarakat Demak, tidak dibuat dari satu batang kayu utuh, melainkan disusun Sunan Kalijaga dari kumpulan tatal &mdash; serpihan sisa pahatan yang oleh orang lain dianggap tidak berguna. Serpihan itu diikat menjadi satu, dan justru menjadi tiang yang ikut menyangga bangunan hingga hari ini.</p>
+          <p>Gagasan itulah yang dipakai sebagai dasar aplikasi ini. Potensi pemuda Demak hari ini tersebar seperti tatal: ada di empat belas kecamatan, di sekolah, di sanggar, di karang taruna, di kamar-kamar yang menyimpan sertifikat lomba yang tidak pernah dilihat siapa pun. Sendiri-sendiri, tidak banyak artinya. Disusun dan diikat menjadi satu, ia menjadi penyangga daerahnya sendiri. Dari situ pula nama dan semboyan aplikasi ini diambil: <em>nyawiji dadi soko</em>.</p>
+          <p>Kearifan lokal ini tidak berhenti di nama. Ia terbawa ke dalam pilihan warna yang mengambil hijau dan kuningan ornamen Masjid Agung, ke penamaan menu yang memakai kosakata yang akrab di telinga warga Demak, serta ke isi aplikasi: etalase keunggulan daerah seperti jambu air citra, belimbing, batik Demak, olahan hasil laut pesisir Wedung, dan wisata religi Kadilangu diberi ruang sebagai bidang yang bisa ditekuni pemuda, bukan sekadar dipajang sebagai gambar latar.</p>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">2.3</span> Fitur Utama</h3>
+        <div class="prose">
+          <p>Tiga fitur pertama menjawab pertanyaan yang berbeda dan karena itu dipisahkan. <strong>Kabar</strong> menjawab &ldquo;apa yang sedang terjadi&rdquo;, <strong>Agenda</strong> menjawab &ldquo;apa yang akan berlangsung dan kapan&rdquo;, sedangkan <strong>Papan Peluang</strong> menjawab &ldquo;apa yang bisa saya ikuti dan sampai kapan pendaftarannya&rdquo;. Ketiganya saling terhubung: satu pengumuman lomba muncul sebagai kabar, tercatat di agenda, dan terbuka pendaftarannya di papan peluang.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <span class="kode">Fitur 01</span>
+            <h4>Kabar Demak</h4>
+            <p>Kanal berita dan pengumuman resmi seputar kepemudaan Demak: hasil lomba, pembukaan program, kegiatan organisasi, hingga liputan prestasi pemuda. Semua bersumber dari dinas dan organisasi terverifikasi, sehingga menjadi rujukan yang jelas asal-usulnya, bukan kabar yang beredar dari grup ke grup.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 02</span>
+            <h4>Agenda Demak</h4>
+            <p>Kalender kegiatan sekabupaten dalam satu tampilan: jambore, lomba, pelatihan, kegiatan organisasi, sampai agenda budaya seperti Grebeg Besar dan syawalan Kadilangu. Dapat disaring menurut kecamatan, bidang, dan bulan, serta diingatkan menjelang harinya.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 03</span>
+            <h4>Papan Peluang</h4>
+            <p>Kumpulan lomba, pelatihan, beasiswa, magang, dan lowongan kerja yang terbuka bagi pemuda Demak, lengkap dengan tenggat pendaftaran, disaring menurut minat, kecamatan, dan batas usia sehingga yang muncul memang yang relevan.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 04</span>
+            <h4>Kartu Talenta</h4>
+            <p>Profil digital tiap pemuda: data diri terverifikasi, minat, keterampilan, karya, dan riwayat kegiatan. Dapat dibagikan sebagai satu tautan atau diunduh sebagai berkas ringkas untuk lampiran lamaran.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 05</span>
+            <h4>Pendaftaran Kegiatan</h4>
+            <p>Pengganti formulir dan tautan pendek yang berganti tiap acara. Peserta mendaftar dengan data yang sudah ada di profilnya, panitia melihat daftar peserta yang rapi dan siap diunduh.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 06</span>
+            <h4>Rekam Prestasi</h4>
+            <p>Sertifikat digital yang diterbitkan panitia langsung masuk ke profil pemenang dan peserta, dilengkapi kode penelusuran agar keasliannya dapat diperiksa siapa pun tanpa perlu bertanya ke panitia.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 07</span>
+            <h4>Direktori Organisasi</h4>
+            <p>Peta dan daftar karang taruna, OKP, sanggar tari, serta komunitas di seluruh kecamatan, lengkap dengan bidang kegiatan, kontak, dan tombol untuk mengajukan diri sebagai anggota.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 08</span>
+            <h4>Ruang Karya</h4>
+            <p>Etalase karya dan usaha pemuda Demak: produk UMKM muda, karya seni, tulisan, dan proyek komunitas, dengan cerita di balik setiap karya sebagai pengantarnya.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 09</span>
+            <h4>Ruang Aspirasi</h4>
+            <p>Kanal bagi pemuda untuk mengusulkan kegiatan atau menyampaikan masukan kepada dinas, dengan status penanganan yang terbuka sehingga usulan tidak hilang tanpa kabar.</p>
+          </article>
+          <article class="card">
+            <span class="kode">Fitur 10</span>
+            <h4>Peta Potensi Pemuda</h4>
+            <p>Ringkasan untuk dinas: sebaran minat dan keterampilan pemuda per kecamatan, tingkat keikutsertaan kegiatan, dan bidang yang paling diminati &mdash; disajikan sebagai angka dan grafik, bukan tumpukan berkas.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">2.4</span> Tiga Peran Pengguna</h3>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Peran</th><th scope="col">Yang dilakukan</th><th scope="col">Yang didapat</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="key">Pemuda<span class="mini">16&ndash;30 tahun, ber-KTP Demak</span></td>
+                <td>Membaca kabar dan agenda, mengisi minat dan keterampilan, menelusuri peluang, mendaftar kegiatan, mengunggah karya.</td>
+                <td>Kabar dan agenda daerah dalam satu tempat, portofolio digital, pemberitahuan peluang yang sesuai, sertifikat terverifikasi, akses ke komunitas.</td>
+              </tr>
+              <tr>
+                <td class="key">Organisasi &amp; sekolah<span class="mini">OKP, karang taruna, sanggar, SMA/SMK/MA</span></td>
+                <td>Mengelola halaman organisasi, memuat berita kegiatan, memasang agenda dan peluang, membuka rekrutmen, menerbitkan sertifikat peserta.</td>
+                <td>Jangkauan peserta yang lebih luas, daftar pendaftar yang rapi, jejak kegiatan yang terdokumentasi.</td>
+              </tr>
+              <tr>
+                <td class="key">Dinas &amp; admin<span class="mini">Dispora Kabupaten Demak</span></td>
+                <td>Memverifikasi organisasi dan kegiatan, menerbitkan pengumuman resmi, menelaah ringkasan data.</td>
+                <td>Peta potensi pemuda per kecamatan, satu kanal resmi pengumuman, arsip kegiatan lintas tahun.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">2.5</span> Inovasi dan Pembeda</h3>
+        <ul class="clean">
+          <li><strong>Menyelesaikan masalah yang benar-benar ada di Demak.</strong> Titik berangkatnya bukan tema yang dikarang, melainkan cara kerja penyebaran informasi kepemudaan yang berlaku hari ini di kabupaten ini, termasuk pada lomba yang sedang diikuti.</li>
+          <li><strong>Prestasi menjadi milik pemudanya, bukan arsip panitia.</strong> Sertifikat yang terbit langsung menempel pada profil penerimanya dan tetap ada setelah acara usai, sehingga satu kali ikut kegiatan memberi manfaat yang berlanjut.</li>
+          <li><strong>Satu data untuk tiga kepentingan.</strong> Data yang sama melayani pemuda sebagai portofolio, organisasi sebagai daftar peserta, dan dinas sebagai bahan perencanaan &mdash; tanpa pengisian ulang.</li>
+          <li><strong>Keamanan diperlakukan sebagai fitur, bukan pelengkap.</strong> Aplikasi ini menyimpan nomor induk kependudukan dan data pribadi pemuda di bawah umur, sehingga perlindungan data dirancang sejak awal dan dijelaskan terbuka kepada penggunanya.</li>
+          <li><strong>Identitas Demak yang terasa, bukan tertempel.</strong> Nama, semboyan, warna, dan isi aplikasi berakar pada riwayat dan keunggulan daerah, sehingga produk ini tidak bisa begitu saja dipindahkan ke kabupaten lain dengan mengganti logo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab III</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Sasaran</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Siapa yang akan memakainya</h2>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">3.1</span> Gambaran Pengguna</h3>
+        <div class="persona">
+          <article>
+            <span class="who">Pelajar &middot; 17 tahun</span>
+            <h4>Kelas XI SMK, Kecamatan Mranggen</h4>
+            <p>Punya keterampilan desain grafis tetapi tidak tahu ada lomba dan pelatihan apa saja di kabupatennya. Informasi hanya sampai kalau gurunya kebetulan menyampaikan.</p>
+          </article>
+          <article>
+            <span class="who">Baru lulus &middot; 21 tahun</span>
+            <h4>Lulusan SMA, Kecamatan Sayung</h4>
+            <p>Sedang mencari kerja dan sertifikat pelatihannya tersimpan sebagai foto di ponsel. Ia butuh cara menunjukkan bahwa dirinya pernah dilatih dan pernah berprestasi.</p>
+          </article>
+          <article>
+            <span class="who">Penggerak &middot; 26 tahun</span>
+            <h4>Ketua karang taruna desa</h4>
+            <p>Kesulitan mencari anggota baru dan kehabisan tenaga menyebarkan pengumuman kegiatan satu per satu lewat grup pesan.</p>
+          </article>
+          <article>
+            <span class="who">Wirausaha muda &middot; 29 tahun</span>
+            <h4>Perajin batik Demak, Kecamatan Bonang</h4>
+            <p>Punya produk bagus tetapi pasarnya terbatas pada pelanggan lama, dan belum pernah masuk ke program pembinaan UMKM daerah.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">3.2</span> Sasaran Terukur</h3>
+        <div class="prose">
+          <p>Agar tidak berhenti sebagai gagasan, keberhasilan aplikasi ini diukur dengan angka yang jelas pada tahun pertama penggunaannya:</p>
+        </div>
+        <ol class="numbered">
+          <li>Terdaftar sebagai pengguna aktif oleh pemuda dari <strong>seluruh kecamatan</strong> di Kabupaten Demak, tanpa ada kecamatan yang kosong sama sekali.</li>
+          <li>Sekurang-kurangnya <strong>lima puluh organisasi kepemudaan</strong>, sanggar, dan komunitas memiliki halaman resmi yang terverifikasi.</li>
+          <li>Seluruh kegiatan kepemudaan tingkat kabupaten yang diselenggarakan dinas dapat didaftar melalui satu alur di dalam aplikasi.</li>
+          <li>Agenda kegiatan kepemudaan sekabupaten tersaji dalam <strong>satu kalender</strong> yang diperbarui berkelanjutan, dan menjadi rujukan pertama pemuda Demak ketika mencari tahu ada acara apa.</li>
+          <li>Setiap peserta kegiatan menerima <strong>sertifikat digital terverifikasi</strong> yang tersimpan permanen di profilnya.</li>
+          <li>Tersedia <strong>ringkasan potensi pemuda per kecamatan</strong> yang dapat diakses dinas kapan saja tanpa perlu merekap ulang.</li>
+        </ol>
+      </div>
+
+      <div class="sec">
+        <h3 class="sec-title"><span class="num">3.3</span> Dampak yang Diharapkan</h3>
+        <div class="prose">
+          <p>Dampak terdekat adalah berkurangnya jarak antara pemuda dan kesempatan: seorang pelajar di desa yang jauh dari pusat kabupaten melihat pengumuman yang sama pada hari yang sama dengan pelajar di kota. Dampak menengahnya adalah tumbuhnya rekam jejak &mdash; setelah beberapa kegiatan, seorang pemuda memiliki portofolio yang benar-benar bisa dipakai melamar kerja atau beasiswa.</p>
+          <p>Dampak jangka panjangnya menyentuh perencanaan daerah. Ketika minat dan keterampilan pemuda terpetakan per kecamatan, program pelatihan dapat diarahkan ke tempat yang membutuhkannya, dan kebijakan kepemudaan disusun di atas data, bukan asumsi. Di situlah bonus demografi berubah dari sekadar jumlah penduduk usia produktif menjadi kekuatan yang benar-benar terpakai.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab IV</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Keselarasan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Kesesuaian dengan ketentuan lomba</h2>
+      <div class="prose">
+        <p>Bagian ini memetakan setiap butir penilaian dalam pedoman pelaksanaan Lomba Teknologi Piranti Lunak terhadap wujudnya dalam DemakMuda, sehingga dewan juri dapat menelusurinya secara langsung.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Butir penilaian</th><th scope="col">Wujudnya dalam DemakMuda</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="key">Kualitas &amp; keandalan</td>
+              <td>Alur inti &mdash; daftar, cari peluang, ikut kegiatan, terima sertifikat &mdash; diselesaikan lebih dahulu dan diuji berulang, agar bagian yang paling sering dipakai adalah bagian yang paling matang.</td>
+            </tr>
+            <tr>
+              <td class="key">Inovasi &amp; kreativitas</td>
+              <td>Sertifikat terverifikasi yang menempel pada profil pemuda, serta satu data yang sekaligus menjadi portofolio, daftar peserta, dan bahan perencanaan dinas.</td>
+            </tr>
+            <tr>
+              <td class="key">Antarmuka pengguna</td>
+              <td>Dirancang untuk ponsel terlebih dahulu, dengan bahasa Indonesia yang wajar, istilah yang dikenali warga, serta tampilan yang tetap terbaca pada mode terang maupun gelap.</td>
+            </tr>
+            <tr>
+              <td class="key">Keamanan</td>
+              <td>Perlindungan data pribadi pemuda, termasuk pengguna di bawah umur, dirancang sejak awal: pembatasan akses menurut peran, penyimpanan kata sandi yang aman, dan pencatatan aktivitas admin.</td>
+            </tr>
+            <tr>
+              <td class="key">Dokumentasi &amp; bantuan</td>
+              <td>Panduan penggunaan untuk ketiga peran, diagram alur, dokumentasi teknis, dan halaman bantuan di dalam aplikasi &mdash; disiapkan sebagai bagian dari karya, bukan pelengkap terakhir.</td>
+            </tr>
+            <tr>
+              <td class="key">Kompatibilitas</td>
+              <td>Berjalan pada peramban umum di ponsel Android, iPhone, dan komputer tanpa pemasangan aplikasi, sehingga dapat diperagakan langsung di hadapan juri.</td>
+            </tr>
+            <tr>
+              <td class="key">Kesesuaian tema</td>
+              <td>Menjawab tema bonus demografi dan Generasi Emas 2045 pada tingkat kabupaten, dengan kearifan lokal Demak sebagai dasar gagasan dan isi aplikasi.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <b>Kelengkapan wajib peserta.</b> Sesuai butir 12 pedoman pelaksanaan, karya ini akan dilengkapi surat pernyataan bermaterai tentang keaslian karya, visualisasi aset desain, diagram alur penggunaan, simulasi aplikasi yang dapat dioperasikan langsung, serta video teaser berdurasi maksimal tiga menit. Seluruh berkas diserahkan dalam satu flash disk pada hari penilaian.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab V</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Keberlanjutan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Setelah lomba selesai</h2>
+      <div class="prose">
+        <p>Banyak karya lomba berhenti begitu penilaian usai. DemakMuda dirancang agar tidak demikian, karena masalah yang dijawabnya tetap ada pada tahun berikutnya. Pedoman lomba menyebutkan bahwa karya juara menjadi hak penuh panitia &mdash; ketentuan itu justru membuka jalan paling wajar bagi kelanjutannya: aplikasi ini dapat langsung dipakai Dinas Kepemudaan dan Olahraga sebagai kanal resmi kegiatan kepemudaan Kabupaten Demak.</p>
+      </div>
+      <ul class="clean">
+        <li><strong>Penggunaan pertama yang masuk akal.</strong> Jambore Pemuda tahun berikutnya dapat menjadi kegiatan perdana yang pendaftarannya dijalankan sepenuhnya melalui aplikasi ini.</li>
+        <li><strong>Biaya operasional yang ringan.</strong> Aplikasi berbasis web tidak memerlukan biaya penerbitan di toko aplikasi dan dapat dijalankan dengan kebutuhan peladen yang sederhana.</li>
+        <li><strong>Perluasan bertahap.</strong> Kecamatan dan desa dapat bergabung menyusul, dimulai dari organisasi yang paling aktif, tanpa harus menunggu seluruh kabupaten siap.</li>
+        <li><strong>Penyerahan yang tuntas.</strong> Kode sumber, dokumentasi, dan panduan pengelolaan diserahkan lengkap agar pengembang atau tim teknis daerah dapat melanjutkan tanpa bergantung pada pembuat awalnya.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="bab">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Bab VI</span>
+      <span class="rule"></span>
+      <span class="eyebrow">Tahapan</span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Rencana pengerjaan sampai hari penilaian</h2>
+      <div class="prose">
+        <p>Pedoman lomba mengatur bahwa karya harus sudah selesai sekurang-kurangnya tujuh puluh persen sebelum hari pelaksanaan, dan sisanya dikerjakan di lokasi dalam waktu lima jam. Rencana di bawah ini disusun mengikuti ketentuan tersebut, dengan bagian yang disisakan sengaja dipilih dari pekerjaan yang ringan dan tidak berisiko.</p>
+      </div>
+
+      <div class="timeline">
+        <div>
+          <span class="when">Sampai 22 Agustus 2026</span>
+          <h4>Pendaftaran dan pematangan konsep</h4>
+          <p>Mendaftar melalui tautan resmi panitia sebelum batas waktu, sekaligus menetapkan lingkup fitur yang akan dikerjakan dan yang ditunda.</p>
+        </div>
+        <div>
+          <span class="when">Akhir Agustus 2026</span>
+          <h4>Perancangan tampilan dan aset</h4>
+          <p>Menyusun sketsa antarmuka, logo, ikon, dan skema warna, serta membuat diagram alur penggunaan sebagai bagian dari berkas wajib.</p>
+        </div>
+        <div>
+          <span class="when">Awal September 2026</span>
+          <h4>Pembangunan alur inti</h4>
+          <p>Mengerjakan pendaftaran pengguna, kabar dan agenda, papan peluang, kartu talenta, direktori organisasi, serta pendaftaran kegiatan hingga dapat dijalankan sepenuhnya.</p>
+        </div>
+        <div>
+          <span class="when">10&ndash;12 September 2026</span>
+          <h4>Pengujian, dokumentasi, dan teaser</h4>
+          <p>Menguji seluruh alur, memperbaiki kesalahan yang ditemukan, menulis dokumentasi dan panduan, merekam video teaser, serta menyiapkan surat pernyataan bermaterai.</p>
+        </div>
+        <div>
+          <span class="when">13 September 2026</span>
+          <h4>Penyiapan berkas dan latihan presentasi</h4>
+          <p>Menyalin seluruh karya ke flash disk, menyiapkan cadangan, dan berlatih menyampaikan konsep, fungsi, inovasi, serta manfaat aplikasi kepada dewan juri.</p>
+        </div>
+        <div>
+          <span class="when">14 September 2026 &middot; 5 jam di lokasi</span>
+          <h4>Penyelesaian tiga puluh persen terakhir</h4>
+          <p>Menyelesaikan ruang karya, ruang aspirasi, dan penyempurnaan tampilan &mdash; bagian yang sudah dirancang sebelumnya sehingga pengerjaannya terukur dan tidak mengganggu alur inti yang telah matang.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<section class="closing">
+  <div class="wrap bab-grid">
+    <div class="bab-rail">
+      <span class="bab-no">Penutup</span>
+      <span class="rule"></span>
+    </div>
+    <div class="bab-body">
+      <h2 class="bab-title">Penutup</h2>
+      <div class="prose">
+        <p>Bonus demografi hanya akan menjadi keuntungan apabila pemuda yang jumlahnya besar itu benar-benar terhubung dengan kesempatan untuk berkembang. Di Kabupaten Demak, kesempatan itu sebenarnya tersedia &mdash; ada lomba, pelatihan, organisasi, dan program pembinaan &mdash; tetapi tersebar dan sering tidak sampai kepada yang membutuhkannya. DemakMuda dibuat untuk menutup jarak itu.</p>
+        <p>Seperti tatal yang disusun menjadi soko guru, potensi pemuda Demak yang selama ini terserak dapat diikat menjadi satu kekuatan yang menyangga daerahnya sendiri. Proposal ini menjadi dasar bagi penyusunan rancangan teknis dan pengerjaan aplikasi pada tahap berikutnya.</p>
+      </div>
+
+      <div class="sign">
+        <div><span class="lab">Diajukan oleh</span><span class="val">Idham Hanif Multaam</span></div>
+        <div><span class="lab">Alamat sesuai KTP</span><span class="val">Kecamatan Demak, Kabupaten Demak</span></div>
+        <div><span class="lab">Kontak</span><span class="val">0813 2906 923</span></div>
+        <div><span class="lab">Kategori lomba</span><span class="val">Teknologi Piranti Lunak</span></div>
+      </div>
+
+      <div class="sec" style="margin-top:38px">
+        <h3 class="sec-title"><span class="num">&mdash;</span> Sumber Data</h3>
+        <div class="refs">
+          <ol>
+            <li>Badan Pusat Statistik Kabupaten Demak. <em>Berita Resmi Statistik Ketenagakerjaan 2024</em>, 16 Desember 2024. <a href="https://demakkab.bps.go.id/id/pressrelease/2024/12/16/327/brs-ketenagakerjaan-2024.html">demakkab.bps.go.id</a></li>
+            <li>Badan Pusat Statistik Kabupaten Demak. <em>Jumlah Desa dan Kelurahan Menurut Kecamatan di Kabupaten Demak, 2024</em>. <a href="https://demakkab.bps.go.id/id/statistics-table/2/MTYxIzI=/jumlah-desa-kelurahan-menurut-kecamatan.html">demakkab.bps.go.id</a></li>
+            <li>Databoks Katadata, diolah dari data Badan Pusat Statistik. <em>Komposisi Penduduk Kabupaten Demak Menurut Kelompok Umur, 2024</em>. <a href="https://databoks.katadata.co.id/demografi/statistik/e3be950debe99a2/23-46-penduduk-kabupaten-demak-pada-2024-dengan-usia-0-14-tahun">databoks.katadata.co.id</a></li>
+            <li>Kementerian Pemuda dan Olahraga Republik Indonesia. <em>Indeks Pembangunan Pemuda Indonesia 2024</em>. <a href="https://satudata.kemenpora.go.id/cdn/uploads/produk/7/laporan-2024_ipp-2023.pdf">satudata.kemenpora.go.id</a></li>
+            <li>Kementerian Koordinator Bidang Pembangunan Manusia dan Kebudayaan. <em>Pembangunan Pemuda Kunci Sukses Bonus Demografi</em>. <a href="https://www.kemenkopmk.go.id/pembangunan-pemuda-kunci-sukses-bonus-demografi">kemenkopmk.go.id</a></li>
+            <li>Sekretariat Daerah Kabupaten Demak. <em>Edaran Jambore Pemuda Tingkat Kabupaten Demak Tahun 2026</em>, Nomor 400.5.5.2/1105, 10 Juli 2026, beserta lampiran Pedoman Pelaksanaan Lomba.</li>
+            <li>Undang-Undang Republik Indonesia Nomor 40 Tahun 2009 tentang Kepemudaan.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot wrap">
+  <span>DemakMuda &mdash; Proposal Umum</span>
+  <span>Jambore Pemuda Kabupaten Demak 2026</span>
+</footer>
