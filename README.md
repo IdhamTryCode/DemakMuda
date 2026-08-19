@@ -71,6 +71,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:admin` | Uji asap administrasi sistem dan header keamanan |
 | `npm run uji:dualangkah` | Uji asap autentikasi dua langkah, dengan kode TOTP sungguhan |
 | `npm run uji:privasi` | Uji asap perlindungan data dan halaman 404 |
+| `npm run uji:pencarian` | Uji asap pencarian dan status HTTP halaman rinci |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -139,6 +140,17 @@ daftarnya — tanpa itu halaman rinci dapat menyajikan angka lama.
 
 Catatan rute: `/organisasi` sudah dipakai sebagai dasbor peran, sehingga
 direktori publiknya berada di `/direktori`.
+
+**Keadaan memuat (`loading.tsx`) hanya boleh menaungi halaman daftar.** Berkas
+itu membuka batas Suspense, dan tanggapan yang sudah mulai mengalir tidak dapat
+lagi mengubah statusnya menjadi 404 — halaman rinci untuk isi yang tidak ada
+akan membalas 200. Karena itu halaman daftar ditempatkan di grup rute
+`(daftar)/`, terpisah dari `[slug]/`. Dijaga oleh `npm run uji:pencarian`.
+
+**Hati-hati dengan kunci `OR` ganda pada satu `where` Prisma.** Bila dua syarat
+sama-sama di-spread sebagai `OR`, yang belakangan menimpa yang pertama tanpa
+peringatan — pernah membuat pencarian di Papan Peluang diabaikan diam-diam.
+Bungkus keduanya di dalam `AND: [...]`.
 
 ## Data yang belum lengkap
 

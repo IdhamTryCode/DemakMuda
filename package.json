@@ -22,7 +22,7 @@
     "db:seed:isi": "tsx prisma/seed/isi-demo.ts",
     "uji:kabar": "tsx scripts/uji-kabar.ts",
     "uji:agenda": "tsx scripts/uji-agenda.ts",
-    "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda && npm run uji:peluang && npm run uji:profil && npm run uji:pendaftaran && npm run uji:sertifikat && npm run uji:direktori && npm run uji:peta && npm run uji:admin && npm run uji:dualangkah && npm run uji:privasi",
+    "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda && npm run uji:peluang && npm run uji:profil && npm run uji:pendaftaran && npm run uji:sertifikat && npm run uji:direktori && npm run uji:peta && npm run uji:admin && npm run uji:dualangkah && npm run uji:privasi && npm run uji:pencarian",
     "uji:peluang": "tsx scripts/uji-peluang.ts",
     "uji:profil": "tsx scripts/uji-profil.ts",
     "uji:pendaftaran": "tsx scripts/uji-pendaftaran.ts",
@@ -31,7 +31,8 @@
     "uji:peta": "tsx scripts/uji-peta-potensi.ts",
     "uji:admin": "tsx scripts/uji-admin.ts",
     "uji:dualangkah": "tsx scripts/uji-dua-langkah.ts",
-    "uji:privasi": "tsx scripts/uji-privasi.ts"
+    "uji:privasi": "tsx scripts/uji-privasi.ts",
+    "uji:pencarian": "tsx scripts/uji-pencarian.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

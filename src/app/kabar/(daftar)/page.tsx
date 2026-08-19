@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
+import { KotakCari } from "@/components/kotak-cari";
 import { Kartu } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { tanggalPanjang } from "@/lib/teks";
@@ -12,9 +13,29 @@ export const metadata: Metadata = {
     "Berita dan pengumuman resmi seputar kepemudaan Kabupaten Demak.",
 };
 
-export default async function HalamanKabar() {
+export default async function HalamanKabar({
+  searchParams,
+}: {
+  searchParams: Promise<{ cari?: string }>;
+}) {
+  const { cari } = await searchParams;
+  const kunci = cari?.trim();
+
   const daftar = await prisma.berita.findMany({
-    where: { status: "TERBIT" },
+    where: {
+      status: "TERBIT",
+      // Judul, ringkasan, dan isi ikut dicari sekaligus — pembaca biasanya
+      // hanya ingat sepotong kalimat, bukan judul persisnya.
+      ...(kunci
+        ? {
+            OR: [
+              { judul: { contains: kunci, mode: "insensitive" as const } },
+              { ringkasan: { contains: kunci, mode: "insensitive" as const } },
+              { isi: { contains: kunci, mode: "insensitive" as const } },
+            ],
+          }
+        : {}),
+    },
     orderBy: { terbitPada: "desc" },
     // Batas aman supaya halaman tetap ringan bila isinya sudah banyak.
     take: 60,
@@ -40,10 +61,27 @@ export default async function HalamanKabar() {
           </p>
         </div>
 
+        <div className="sk-inset p-4">
+          <KotakCari
+            aksi="/kabar"
+            nilai={kunci}
+            petunjuk="Kata dalam judul atau isi kabar"
+            keterangan="Mencari di judul, ringkasan, dan isi kabar."
+          />
+        </div>
+
+        {kunci && daftar.length > 0 && (
+          <p className="text-sm text-muted">
+            {daftar.length} kabar memuat “{kunci}”.
+          </p>
+        )}
+
         {daftar.length === 0 ? (
           <Kartu>
             <p className="text-sm text-muted">
-              Belum ada kabar yang diterbitkan.
+              {kunci
+                ? `Tidak ada kabar yang memuat “${kunci}”. Coba kata lain yang lebih umum.`
+                : "Belum ada kabar yang diterbitkan."}
             </p>
           </Kartu>
         ) : (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
+import { KotakCari } from "@/components/kotak-cari";
 import { Kartu } from "@/components/sk";
 import { adalahJenis, JENIS_PELUANG, LABEL_JENIS } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
@@ -16,15 +17,16 @@ export const metadata: Metadata = {
 /** Batas aman supaya halaman tetap ringan bila isinya sudah banyak. */
 const BATAS = 60;
 
-type Saringan = { jenis?: string; minat?: string; tutup?: string };
+type Saringan = { jenis?: string; minat?: string; tutup?: string; cari?: string };
 
 export default async function HalamanPeluang({
   searchParams,
 }: {
   searchParams: Promise<Saringan>;
 }) {
-  const { jenis, minat, tutup } = await searchParams;
+  const { jenis, minat, tutup, cari } = await searchParams;
   const tampilkanTutup = tutup === "1";
+  const kunci = cari?.trim();
   const sekarang = new Date();
 
   const [daftarMinat, peluang] = await Promise.all([
@@ -37,10 +39,24 @@ export default async function HalamanPeluang({
         status: "TERBIT",
         ...(adalahJenis(jenis) ? { jenis } : {}),
         ...(minat ? { minat: { some: { slug: minat } } } : {}),
-        // Peluang tanpa tenggat selalu dianggap masih terbuka.
-        ...(tampilkanTutup
-          ? { tenggat: { lt: sekarang } }
-          : { OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }] }),
+        // Kedua syarat di bawah sama-sama berbentuk OR. Bila keduanya ditaruh
+        // langsung sebagai kunci `OR`, yang belakangan menimpa yang pertama dan
+        // salah satunya hilang tanpa jejak — pencarian tampak bekerja padahal
+        // diabaikan. Karena itu keduanya dibungkus di dalam AND.
+        AND: [
+          kunci
+            ? {
+                OR: [
+                  { judul: { contains: kunci, mode: "insensitive" as const } },
+                  { deskripsi: { contains: kunci, mode: "insensitive" as const } },
+                ],
+              }
+            : {},
+          // Peluang tanpa tenggat selalu dianggap masih terbuka.
+          tampilkanTutup
+            ? { tenggat: { lt: sekarang } }
+            : { OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }] },
+        ],
       },
       orderBy: tampilkanTutup ? { tenggat: "desc" } : [{ tenggat: "asc" }, { dibuatPada: "desc" }],
       take: BATAS,
@@ -63,9 +79,11 @@ export default async function HalamanPeluang({
     const j = ubah.jenis ?? jenis;
     const m = ubah.minat ?? minat;
     const t = ubah.tutup ?? tutup;
+    const c = ubah.cari ?? kunci;
     if (j) p.set("jenis", j);
     if (m) p.set("minat", m);
     if (t) p.set("tutup", t);
+    if (c) p.set("cari", c);
     const q = p.toString();
     return q ? `/peluang?${q}` : "/peluang";
   }
@@ -107,9 +125,17 @@ export default async function HalamanPeluang({
             ))}
           </div>
 
+          <KotakCari
+            aksi="/peluang"
+            nilai={kunci}
+            tersembunyi={{ jenis, minat, tutup }}
+            petunjuk="Kata dalam judul atau keterangan peluang"
+          />
+
           <form action="/peluang" method="get" className="flex flex-wrap items-end gap-3">
             {jenis && <input type="hidden" name="jenis" value={jenis} />}
             {tutup && <input type="hidden" name="tutup" value={tutup} />}
+            {kunci && <input type="hidden" name="cari" value={kunci} />}
             <div className="flex min-w-56 flex-1 flex-col gap-1.5">
               <label
                 htmlFor="minat"
@@ -149,9 +175,11 @@ export default async function HalamanPeluang({
         {peluang.length === 0 ? (
           <Kartu>
             <p className="text-sm text-muted">
-              {tampilkanTutup
-                ? "Belum ada peluang yang tenggatnya sudah lewat."
-                : "Belum ada peluang yang terbuka dengan saringan ini."}
+              {kunci
+                ? `Tidak ada peluang yang memuat “${kunci}” dengan saringan ini.`
+                : tampilkanTutup
+                  ? "Belum ada peluang yang tenggatnya sudah lewat."
+                  : "Belum ada peluang yang terbuka dengan saringan ini."}
             </p>
           </Kartu>
         ) : (
