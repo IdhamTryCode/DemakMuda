@@ -24,17 +24,25 @@ const NAMA_TANPA_POOL = [
 
 const NAMA_BIASA = ["DATABASE_URL", "POSTGRES_PRISMA_URL", "POSTGRES_URL"];
 
-function alamatBasisData(): string {
+/**
+ * Sengaja TIDAK melempar galat bila alamatnya tidak ada.
+ *
+ * Berkas konfigurasi ini dimuat oleh setiap perintah Prisma, termasuk
+ * `prisma generate` yang sama sekali tidak memerlukan basis data. Melempar di
+ * sini akan menggagalkan pemasangan ketergantungan — bukan hanya migrasi.
+ * Perintah yang benar-benar butuh alamat akan gagal sendiri dengan pesannya.
+ */
+function alamatBasisData(): string | undefined {
   for (const nama of [...NAMA_TANPA_POOL, ...NAMA_BIASA]) {
     const nilai = process.env[nama];
     if (nilai) return nilai;
   }
-  throw new Error(
-    "Alamat basis data tidak ditemukan. Setel salah satu variabel berikut: " +
+  console.warn(
+    "[prisma] Alamat basis data tidak ditemukan. Variabel yang dicari: " +
       [...NAMA_TANPA_POOL, ...NAMA_BIASA].join(", ") +
-      ". Pada Vercel, periksa Settings → Environment Variables dan pastikan " +
-      "variabelnya berlaku untuk lingkungan yang sedang dibangun.",
+      ". Perintah yang memerlukan basis data akan gagal.",
   );
+  return undefined;
 }
 
 export default defineConfig({
