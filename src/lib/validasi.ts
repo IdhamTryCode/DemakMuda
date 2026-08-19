@@ -90,6 +90,33 @@ export const PeluangSkema = z
     path: ["usiaMaks"],
   });
 
+export const ProfilSkema = z.object({
+  nama: teks(3, 120, "Nama"),
+  bio: z.string().trim().max(500, "Bio maksimal 500 karakter.").optional().or(z.literal("")),
+  telepon: z
+    .string()
+    .trim()
+    .max(20, "Nomor telepon maksimal 20 karakter.")
+    .regex(/^[0-9+\-\s()]*$/, "Nomor telepon hanya boleh angka dan tanda + - ( ).")
+    .optional()
+    .or(z.literal("")),
+  tanggalLahir: z.coerce.date().optional().nullable(),
+  jenisKelamin: z.enum(["LAKI_LAKI", "PEREMPUAN"]).optional().or(z.literal("")),
+  kecamatanId: z.string().trim().max(20).optional().or(z.literal("")),
+  desaId: z.string().trim().max(30).optional().or(z.literal("")),
+  sekolahId: z.string().trim().max(40).optional().or(z.literal("")),
+}).refine(
+  (n) => {
+    if (!n.tanggalLahir) return true;
+    const t = n.tanggalLahir.getTime();
+    const seratusTahun = 100 * 365.25 * 24 * 60 * 60 * 1000;
+    return t < Date.now() && t > Date.now() - seratusTahun;
+  },
+  { message: "Tanggal lahir tidak masuk akal.", path: ["tanggalLahir"] },
+);
+
+export type ProfilMasukan = z.infer<typeof ProfilSkema>;
+
 export type BeritaMasukan = z.infer<typeof BeritaSkema>;
 export type AgendaMasukan = z.infer<typeof AgendaSkema>;
 export type PeluangMasukan = z.infer<typeof PeluangSkema>;

@@ -301,6 +301,63 @@ async function semaiPeluang(pembuatId: string) {
   );
 }
 
+/**
+ * Profil contoh untuk akun pemuda demo, supaya Kartu Talenta tidak kosong
+ * saat diperagakan. Tanggal lahirnya dibuat pasti di atas 18 tahun agar
+ * halaman publiknya menampilkan bagian yang lengkap.
+ */
+async function semaiProfil() {
+  const pemuda = await prisma.user.findUnique({
+    where: { email: "pemuda@demakmuda.test" },
+    select: { id: true },
+  });
+  if (!pemuda) return;
+
+  const kecamatan = await prisma.kecamatan.findUniqueOrThrow({
+    where: { slug: "demak" },
+    select: { id: true },
+  });
+  const desa = await prisma.desa.findFirstOrThrow({
+    where: { kecamatanId: kecamatan.id, nama: "Bintoro" },
+    select: { id: true },
+  });
+  const minat = await prisma.minat.findMany({
+    where: { slug: { in: ["teknologi-informasi", "desain-dan-industri-kreatif"] } },
+    select: { id: true },
+  });
+  const keterampilan = await prisma.keterampilan.findMany({
+    where: { slug: { in: ["desain-grafis", "fotografi", "pemrograman"] } },
+    select: { id: true },
+  });
+
+  const isi = {
+    bio: "Suka desain grafis dan sedang belajar membuat aplikasi. Aktif di karang taruna desa.",
+    telepon: "081200000001",
+    tanggalLahir: new Date("2004-04-12T00:00:00+07:00"),
+    jenisKelamin: "PEREMPUAN" as const,
+    kecamatanId: kecamatan.id,
+    desaId: desa.id,
+  };
+
+  await prisma.profilPemuda.upsert({
+    where: { userId: pemuda.id },
+    update: {
+      ...isi,
+      minat: { set: minat.map((m) => ({ id: m.id })) },
+      keterampilan: { set: keterampilan.map((k) => ({ id: k.id })) },
+    },
+    create: {
+      ...isi,
+      userId: pemuda.id,
+      slug: "rani-puspitasari",
+      minat: { connect: minat.map((m) => ({ id: m.id })) },
+      keterampilan: { connect: keterampilan.map((k) => ({ id: k.id })) },
+    },
+  });
+
+  console.log("Profil contoh: rani-puspitasari");
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -342,6 +399,7 @@ async function main() {
 
   await semaiAgenda(penulis.id);
   await semaiPeluang(penulis.id);
+  await semaiProfil();
 
   console.log("Penyemaian isi contoh selesai.");
 }

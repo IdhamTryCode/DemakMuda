@@ -63,6 +63,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:kabar` | Uji asap kanal Kabar |
 | `npm run uji:agenda` | Uji asap kanal Agenda |
 | `npm run uji:peluang` | Uji asap Papan Peluang |
+| `npm run uji:profil` | Uji asap Kartu Talenta dan aturan privasinya |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -125,6 +126,17 @@ Dua aturan yang berlaku di seluruh kanal: isi berstatus draf tidak boleh
 tampil di halaman publik, dan isi milik pengguna lain dibalas **404**, bukan
 403 — 403 memberi tahu penyerang bahwa sebuah id itu nyata.
 
+## Data yang belum lengkap
+
+Tabel `sekolah` masih kosong. Cetak biru menjanjikan daftar SMA, SMK, dan MA
+se-Kabupaten Demak dari pangkalan data pendidikan, tetapi sumber yang dicoba
+tidak mengembalikan hasil untuk Demak. Selama tabelnya kosong, kolom pilihan
+sekolah pada formulir profil disembunyikan — bukan ditampilkan kosong.
+
+Daftar sekolah **tidak boleh dikarang**: itu data lembaga nyata. Bila sumber
+yang sahih sudah ditemukan, semai lewat pola yang sama dengan
+`prisma/seed/ambil-wilayah.ts`, lengkap dengan pemeriksaan jumlah.
+
 ## Catatan keamanan
 
 - NIK tidak pernah disimpan utuh; yang tersimpan hanya sidik HMAC dan empat digit
@@ -143,6 +155,10 @@ tampil di halaman publik, dan isi milik pengguna lain dibalas **404**, bukan
   menganggap `javascript:`, `data:`, dan `vbscript:` sebagai alamat sah, dan
   nilai seperti itu berubah menjadi jalan masuk skrip begitu dipasang sebagai
   `href`. Uji regresinya ada di `scripts/uji-peluang.ts`.
+- Keterbukaan Kartu Talenta diatur `keterbukaanProfil` di `src/lib/profil.ts`:
+  nomor telepon tidak pernah tampil di halaman publik untuk siapa pun, dan bagi
+  pengguna di bawah 18 tahun usia, desa, serta sekolah ikut disembunyikan.
+  Tanggal lahir yang kosong diperlakukan sebagai anak — memilih yang lebih aman.
 - Penampil Markdown (`src/components/markdown.tsx`) tidak memasang plugin
   `rehype-raw`, sehingga HTML mentah dari pengguna tidak pernah menjadi markup
   aktif. Uji regresinya ada di `scripts/uji-kabar.ts` — jangan menambahkan
