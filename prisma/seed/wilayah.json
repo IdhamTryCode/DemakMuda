@@ -1,0 +1,1352 @@
+{
+  "sumber": "https://wilayah.id/api",
+  "kodeKabupaten": "33.21",
+  "diambilPada": "2026-08-19",
+  "jumlahKecamatan": 14,
+  "jumlahDesaKelurahan": 249,
+  "kecamatan": [
+    {
+      "id": "33.21.01",
+      "nama": "Mranggen",
+      "slug": "mranggen",
+      "desa": [
+        {
+          "id": "33.21.01.2001",
+          "nama": "Banyumeneng",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2002",
+          "nama": "Kebonbatur",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2003",
+          "nama": "Sumberejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2004",
+          "nama": "Kalitengah",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2005",
+          "nama": "Kangkung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2006",
+          "nama": "Mranggen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2007",
+          "nama": "Batursari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2008",
+          "nama": "Bandungrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2009",
+          "nama": "Brumbung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2010",
+          "nama": "Kembangarum",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2011",
+          "nama": "Karangsono",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2012",
+          "nama": "Tamansari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2013",
+          "nama": "Ngemplak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2014",
+          "nama": "Menur",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2015",
+          "nama": "Jamus",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2016",
+          "nama": "Wringinjajar",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2017",
+          "nama": "Waru",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2018",
+          "nama": "Tegalarum",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.01.2019",
+          "nama": "Candisari",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.02",
+      "nama": "Karangawen",
+      "slug": "karangawen",
+      "desa": [
+        {
+          "id": "33.21.02.2001",
+          "nama": "Jragung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2002",
+          "nama": "Wonosekar",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2003",
+          "nama": "Margohayu",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2004",
+          "nama": "Teluk",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2005",
+          "nama": "Tlogorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2006",
+          "nama": "Rejosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2007",
+          "nama": "Karangawen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2008",
+          "nama": "Kuripan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2009",
+          "nama": "Bumirejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2010",
+          "nama": "Brambang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2011",
+          "nama": "Sidorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.02.2012",
+          "nama": "Pundenarum",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.03",
+      "nama": "Guntur",
+      "slug": "guntur",
+      "desa": [
+        {
+          "id": "33.21.03.2001",
+          "nama": "Blerong",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2002",
+          "nama": "Banjarejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2003",
+          "nama": "Wonorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2004",
+          "nama": "Sarirejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2005",
+          "nama": "Pamongan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2006",
+          "nama": "Tlogoweru",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2007",
+          "nama": "Bogosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2008",
+          "nama": "Sukorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2009",
+          "nama": "Sidokumpul",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2010",
+          "nama": "Gaji",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2011",
+          "nama": "Krandon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2012",
+          "nama": "Tangkis",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2013",
+          "nama": "Temuroso",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2014",
+          "nama": "Bakalrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2015",
+          "nama": "Guntur",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2016",
+          "nama": "Bumiharjo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2017",
+          "nama": "Tlogorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2018",
+          "nama": "Trimulyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2019",
+          "nama": "Sidoharjo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.03.2020",
+          "nama": "Turitempel",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.04",
+      "nama": "Sayung",
+      "slug": "sayung",
+      "desa": [
+        {
+          "id": "33.21.04.2001",
+          "nama": "Bulusari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2002",
+          "nama": "Dombo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2003",
+          "nama": "Jetaksari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2004",
+          "nama": "Kalisari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2005",
+          "nama": "Karangasem",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2006",
+          "nama": "Prampelan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2007",
+          "nama": "Pilangsari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2008",
+          "nama": "Tambakroto",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2009",
+          "nama": "Loireng",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2010",
+          "nama": "Sayung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2011",
+          "nama": "Sriwulan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2012",
+          "nama": "Bedono",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2013",
+          "nama": "Purwosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2014",
+          "nama": "Sidogemah",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2015",
+          "nama": "Gemulak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2016",
+          "nama": "Timbulsloko",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2017",
+          "nama": "Surodadi",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2018",
+          "nama": "Tugu",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2019",
+          "nama": "Sidorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.04.2020",
+          "nama": "Banjarsari",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.05",
+      "nama": "Karangtengah",
+      "slug": "karangtengah",
+      "desa": [
+        {
+          "id": "33.21.05.2001",
+          "nama": "Ploso",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2002",
+          "nama": "Grogol",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2003",
+          "nama": "Pulosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2004",
+          "nama": "Donorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2005",
+          "nama": "Pidodo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2006",
+          "nama": "Klitih",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2007",
+          "nama": "Sampang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2008",
+          "nama": "Kedunguter",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2009",
+          "nama": "Dukun",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2010",
+          "nama": "Karangsari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2011",
+          "nama": "Karangtowo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2012",
+          "nama": "Wonowoso",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2013",
+          "nama": "Wonokerto",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2014",
+          "nama": "Batu",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2015",
+          "nama": "Rejosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2016",
+          "nama": "Wonoagung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.05.2017",
+          "nama": "Tambakbulusan",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.06",
+      "nama": "Wonosalam",
+      "slug": "wonosalam",
+      "desa": [
+        {
+          "id": "33.21.06.2001",
+          "nama": "Doreng",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2002",
+          "nama": "Kalianyar",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2003",
+          "nama": "Tlogodowo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2004",
+          "nama": "Karangrowo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2005",
+          "nama": "Lempuyang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2006",
+          "nama": "Kendaldoyong",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2007",
+          "nama": "Wonosalam",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2008",
+          "nama": "Karangrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2009",
+          "nama": "Jogoloyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2010",
+          "nama": "Botorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2011",
+          "nama": "Sidomulyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2012",
+          "nama": "Pilangrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2013",
+          "nama": "Tlogorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2014",
+          "nama": "Kerangkulon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2015",
+          "nama": "Bunderan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2016",
+          "nama": "Getas",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2017",
+          "nama": "Mojodemak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2018",
+          "nama": "Kuncir",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2019",
+          "nama": "Trengguli",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2020",
+          "nama": "Mrisen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.06.2021",
+          "nama": "Mranak",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.07",
+      "nama": "Dempet",
+      "slug": "dempet",
+      "desa": [
+        {
+          "id": "33.21.07.2001",
+          "nama": "Merak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2002",
+          "nama": "Karangrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2003",
+          "nama": "Sidomulyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2004",
+          "nama": "Botosengon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2005",
+          "nama": "Jerukgulung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2006",
+          "nama": "Kunir",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2007",
+          "nama": "Brakas",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2008",
+          "nama": "Balerejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2009",
+          "nama": "Baleromo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2010",
+          "nama": "Kedungori",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2011",
+          "nama": "Kuwu",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2012",
+          "nama": "Kebonsari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2013",
+          "nama": "Gempoldenok",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2015",
+          "nama": "Harjowinangun",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2016",
+          "nama": "Kramat",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.07.2017",
+          "nama": "Dempet",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.08",
+      "nama": "Gajah",
+      "slug": "gajah",
+      "desa": [
+        {
+          "id": "33.21.08.2001",
+          "nama": "Surodadi",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2002",
+          "nama": "Jatisono",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2003",
+          "nama": "Kedondong",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2004",
+          "nama": "Gedangalas",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2005",
+          "nama": "Sambiroto",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2006",
+          "nama": "Tanjunganyar",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2007",
+          "nama": "Wilalung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2008",
+          "nama": "Medini",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2009",
+          "nama": "Mlatiharjo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2010",
+          "nama": "Tambirejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2011",
+          "nama": "Banjarsari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2012",
+          "nama": "Boyolali",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2013",
+          "nama": "Gajah",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2014",
+          "nama": "Sari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2015",
+          "nama": "Mlekang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2016",
+          "nama": "Sambung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2017",
+          "nama": "Mojosimo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.08.2018",
+          "nama": "Tlogopandogan",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.09",
+      "nama": "Karanganyar",
+      "slug": "karanganyar",
+      "desa": [
+        {
+          "id": "33.21.09.2001",
+          "nama": "Jatirejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2002",
+          "nama": "Ngaluran",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2003",
+          "nama": "Wonoketingal",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2004",
+          "nama": "Cangkringrembang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2005",
+          "nama": "Cangkring",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2006",
+          "nama": "Tuwang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2007",
+          "nama": "Undaan Kidul",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2008",
+          "nama": "Undaan Lor",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2009",
+          "nama": "Ketanjung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2010",
+          "nama": "Ngemplikwetan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2011",
+          "nama": "Wonorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2012",
+          "nama": "Karanganyar",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2013",
+          "nama": "Kedungwaru Kidul",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2014",
+          "nama": "Kedungwaru Lor",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2015",
+          "nama": "Bandungrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2016",
+          "nama": "Tugu Lor",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.09.2017",
+          "nama": "Kotakan",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.10",
+      "nama": "Mijen",
+      "slug": "mijen",
+      "desa": [
+        {
+          "id": "33.21.10.2001",
+          "nama": "Geneng",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2002",
+          "nama": "Ngelowetan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2003",
+          "nama": "Mlaten",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2004",
+          "nama": "Bantengmati",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2005",
+          "nama": "Ngelokulon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2006",
+          "nama": "Pasir",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2007",
+          "nama": "Rejosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2008",
+          "nama": "Ngegot",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2009",
+          "nama": "Jleper",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2010",
+          "nama": "Pecuk",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2011",
+          "nama": "Tanggul",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2012",
+          "nama": "Bakung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2013",
+          "nama": "Bermi",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2014",
+          "nama": "Mijen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.10.2015",
+          "nama": "Gempolsongo",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.11",
+      "nama": "Demak",
+      "slug": "demak",
+      "desa": [
+        {
+          "id": "33.21.11.1014",
+          "nama": "Mangunjiwan",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.1015",
+          "nama": "Kalicilik",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.1016",
+          "nama": "Singorejo",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.1017",
+          "nama": "Betokan",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.1018",
+          "nama": "Bintoro",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.1019",
+          "nama": "Kadilangu",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2001",
+          "nama": "Bolo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2002",
+          "nama": "Bango",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2003",
+          "nama": "Kedondong",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2004",
+          "nama": "Sedo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2005",
+          "nama": "Mulyorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2006",
+          "nama": "Turirejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2007",
+          "nama": "Raji",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2008",
+          "nama": "Cabean",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2009",
+          "nama": "Tempuran",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2010",
+          "nama": "Karangmlati",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2011",
+          "nama": "Katonsari",
+          "jenis": "KELURAHAN"
+        },
+        {
+          "id": "33.21.11.2012",
+          "nama": "Kalikondang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.11.2013",
+          "nama": "Donorojo",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.12",
+      "nama": "Bonang",
+      "slug": "bonang",
+      "desa": [
+        {
+          "id": "33.21.12.2001",
+          "nama": "Jatimulyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2002",
+          "nama": "Krajanbogo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2003",
+          "nama": "Sukodono",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2004",
+          "nama": "Sumberejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2005",
+          "nama": "Kembangan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2006",
+          "nama": "Karangrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2007",
+          "nama": "Gebangarum",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2008",
+          "nama": "Gebang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2009",
+          "nama": "Margolinduk",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2010",
+          "nama": "Morodemak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2011",
+          "nama": "Purworejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2012",
+          "nama": "Betahwalang",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2013",
+          "nama": "Serangan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2014",
+          "nama": "Tridonorejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2015",
+          "nama": "Tlogoboyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2016",
+          "nama": "Jatirogo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2017",
+          "nama": "Bonangrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2018",
+          "nama": "Poncoharjo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2019",
+          "nama": "Wonosari",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2020",
+          "nama": "Jali",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.12.2021",
+          "nama": "Weding",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.13",
+      "nama": "Wedung",
+      "slug": "wedung",
+      "desa": [
+        {
+          "id": "33.21.13.2001",
+          "nama": "Wedung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2002",
+          "nama": "Ngawen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2003",
+          "nama": "Ruwit",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2004",
+          "nama": "Kenduren",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2005",
+          "nama": "Buko",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2006",
+          "nama": "Mandung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2007",
+          "nama": "Berahan Kulon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2008",
+          "nama": "Berahan Wetan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2009",
+          "nama": "Bungo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2010",
+          "nama": "Tempel",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2011",
+          "nama": "Jetak",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2012",
+          "nama": "Jungsemi",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2013",
+          "nama": "Jungpasir",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2014",
+          "nama": "Mutihwetan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2015",
+          "nama": "Babalan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2016",
+          "nama": "Mutihkulon",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2017",
+          "nama": "Tedunan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2018",
+          "nama": "Kendalasem",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2019",
+          "nama": "Kedungmutih",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.13.2020",
+          "nama": "Kedungkarang",
+          "jenis": "DESA"
+        }
+      ]
+    },
+    {
+      "id": "33.21.14",
+      "nama": "Kebonagung",
+      "slug": "kebonagung",
+      "desa": [
+        {
+          "id": "33.21.14.2001",
+          "nama": "Pilangwetan",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2002",
+          "nama": "Kebonagung",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2003",
+          "nama": "Klampok Lor",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2004",
+          "nama": "Mijen",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2005",
+          "nama": "Werdoyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2006",
+          "nama": "Mangunrejo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2007",
+          "nama": "Babat",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2008",
+          "nama": "Mangunanlor",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2009",
+          "nama": "Tlogosih",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2010",
+          "nama": "Prigi",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2011",
+          "nama": "Sarimulyo",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2012",
+          "nama": "Solowire",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2013",
+          "nama": "Sokokidul",
+          "jenis": "DESA"
+        },
+        {
+          "id": "33.21.14.2014",
+          "nama": "Megonten",
+          "jenis": "DESA"
+        }
+      ]
+    }
+  ]
+}

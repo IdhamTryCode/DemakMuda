@@ -1,0 +1,526 @@
+// DemakMuda — skema basis data
+//
+// Model autentikasi (User, Session, Account, Verification, TwoFactor, RateLimit)
+// dibangkitkan oleh Better Auth CLI agar bentuknya persis cocok dengan versi
+// terpasang, lalu disalin ke berkas ini dan ditambahi relasi ke model domain.
+// Untuk memperbaruinya setelah mengubah konfigurasi plugin:
+//   npx @better-auth/cli generate --config src/lib/auth.ts --output prisma/auth-models.prisma
+//
+// Catatan integritas lomba: tabel untuk Ruang Karya dan Ruang Aspirasi sengaja
+// TIDAK dibuat di sini. Keduanya bagian dari 30% yang dikerjakan di lokasi lomba,
+// jadi migrasinya pun ditulis di sana sebagai migrasi tambah-tabel.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────── Enum ───────────────────────────
+
+enum JenisDesa {
+  DESA
+  KELURAHAN
+}
+
+enum Jenjang {
+  SMA
+  SMK
+  MA
+}
+
+enum JenisKelamin {
+  LAKI_LAKI
+  PEREMPUAN
+}
+
+enum JenisOrganisasi {
+  OKP
+  KARANG_TARUNA
+  SANGGAR
+  KOMUNITAS
+  LAINNYA
+}
+
+enum StatusVerifikasi {
+  MENUNGGU
+  TERVERIFIKASI
+  DITOLAK
+}
+
+enum StatusTerbit {
+  DRAF
+  TERBIT
+  ARSIP
+}
+
+enum PeranKeanggotaan {
+  ANGGOTA
+  PENGURUS
+  KETUA
+}
+
+enum JenisPeluang {
+  LOMBA
+  PELATIHAN
+  BEASISWA
+  MAGANG
+  LOWONGAN
+}
+
+enum StatusPendaftaran {
+  MENUNGGU
+  DITERIMA
+  DITOLAK
+  HADIR
+}
+
+// ──────────────────── Wilayah (data nyata) ────────────────────
+
+model Kecamatan {
+  /// Kode wilayah Kemendagri, mis. "33.21.01"
+  id   String @id
+  nama String
+  slug String @unique
+
+  desa       Desa[]
+  sekolah    Sekolah[]
+  profil     ProfilPemuda[]
+  organisasi Organisasi[]
+  agenda     Agenda[]
+
+  @@map("kecamatan")
+}
+
+model Desa {
+  /// Kode wilayah Kemendagri, mis. "33.21.01.2001"
+  id          String    @id
+  nama        String
+  jenis       JenisDesa
+  kecamatanId String
+  kecamatan   Kecamatan @relation(fields: [kecamatanId], references: [id])
+
+  profil     ProfilPemuda[]
+  organisasi Organisasi[]
+
+  @@index([kecamatanId])
+  @@map("desa")
+}
+
+model Sekolah {
+  id      String  @id @default(cuid())
+  npsn    String? @unique
+  nama    String
+  jenjang Jenjang
+
+  kecamatanId String
+  kecamatan   Kecamatan @relation(fields: [kecamatanId], references: [id])
+
+  profil ProfilPemuda[]
+
+  @@index([kecamatanId])
+  @@map("sekolah")
+}
+
+// ──────────────────── Profil & minat pemuda ────────────────────
+
+model ProfilPemuda {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Dipakai pada alamat profil publik /p/[slug]
+  slug   String @unique
+
+  /// Sidik HMAC dari NIK. NIK utuh TIDAK PERNAH disimpan.
+  nikHash  String? @unique
+  /// Empat digit terakhir NIK, hanya untuk ditampilkan ke pemiliknya.
+  nikEmpat String?
+
+  /// Sumber kebenaran untuk status di bawah umur — dihitung, tidak disimpan.
+  tanggalLahir DateTime?
+  jenisKelamin JenisKelamin?
+  telepon      String?
+  bio          String?
+
+  kecamatanId String?
+  kecamatan   Kecamatan? @relation(fields: [kecamatanId], references: [id])
+  desaId      String?
+  desa        Desa?      @relation(fields: [desaId], references: [id])
+  sekolahId   String?
+  sekolah     Sekolah?   @relation(fields: [sekolahId], references: [id])
+
+  statusVerifikasi StatusVerifikasi @default(MENUNGGU)
+  diverifikasiPada DateTime?
+
+  minat        Minat[]
+  keterampilan Keterampilan[]
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([kecamatanId])
+  @@index([statusVerifikasi])
+  @@map("profil_pemuda")
+}
+
+model Minat {
+  id   String @id @default(cuid())
+  nama String @unique
+  slug String @unique
+
+  profil  ProfilPemuda[]
+  peluang Peluang[]
+
+  @@map("minat")
+}
+
+model Keterampilan {
+  id   String @id @default(cuid())
+  nama String @unique
+  slug String @unique
+
+  profil ProfilPemuda[]
+
+  @@map("keterampilan")
+}
+
+// ──────────────────────── Organisasi ────────────────────────
+
+model Organisasi {
+  id        String          @id @default(cuid())
+  nama      String
+  slug      String          @unique
+  jenis     JenisOrganisasi
+  deskripsi String?
+  logoUrl   String?
+  kontak    String?
+
+  kecamatanId String
+  kecamatan   Kecamatan @relation(fields: [kecamatanId], references: [id])
+  desaId      String?
+  desa        Desa?     @relation(fields: [desaId], references: [id])
+
+  /// Titik pada peta direktori. Opsional karena tidak semua tahu koordinatnya.
+  lintang Float?
+  bujur   Float?
+
+  /// Akun pengelola halaman organisasi ini.
+  pemilikId String
+  pemilik   User   @relation(fields: [pemilikId], references: [id])
+
+  statusVerifikasi StatusVerifikasi @default(MENUNGGU)
+
+  keanggotaan Keanggotaan[]
+  berita      Berita[]
+  agenda      Agenda[]
+  peluang     Peluang[]
+  sertifikat  Sertifikat[]
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([kecamatanId])
+  @@index([pemilikId])
+  @@index([statusVerifikasi])
+  @@map("organisasi")
+}
+
+model Keanggotaan {
+  id           String           @id @default(cuid())
+  organisasiId String
+  organisasi   Organisasi       @relation(fields: [organisasiId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  peran        PeranKeanggotaan @default(ANGGOTA)
+  status       StatusVerifikasi @default(MENUNGGU)
+
+  dibuatPada DateTime @default(now())
+
+  @@unique([organisasiId, userId])
+  @@index([userId])
+  @@map("keanggotaan")
+}
+
+// ──────────────────── Kabar, Agenda, Peluang ────────────────────
+
+model Berita {
+  id        String  @id @default(cuid())
+  judul     String
+  slug      String  @unique
+  ringkasan String
+  /// Ditulis sebagai Markdown. HTML mentah tidak pernah diterima dari pengguna.
+  isi       String
+  gambarUrl String?
+
+  status     StatusTerbit @default(DRAF)
+  terbitPada DateTime?
+
+  penulisId    String
+  penulis      User        @relation(fields: [penulisId], references: [id])
+  organisasiId String?
+  organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([status, terbitPada])
+  @@index([penulisId])
+  @@map("berita")
+}
+
+model Agenda {
+  id        String  @id @default(cuid())
+  judul     String
+  slug      String  @unique
+  deskripsi String
+  lokasi    String?
+
+  mulai   DateTime
+  selesai DateTime?
+
+  kecamatanId String?
+  kecamatan   Kecamatan? @relation(fields: [kecamatanId], references: [id])
+
+  status StatusTerbit @default(DRAF)
+
+  pembuatId    String
+  pembuat      User        @relation(fields: [pembuatId], references: [id])
+  organisasiId String?
+  organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
+  peluang     Peluang?
+  pendaftaran Pendaftaran[]
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([mulai])
+  @@index([kecamatanId])
+  @@map("agenda")
+}
+
+model Peluang {
+  id         String       @id @default(cuid())
+  judul      String
+  slug       String       @unique
+  jenis      JenisPeluang
+  deskripsi  String
+  tautanLuar String?
+
+  tenggat  DateTime?
+  usiaMin  Int?
+  usiaMaks Int?
+
+  status StatusTerbit @default(DRAF)
+
+  /// Bila peluang ini juga sebuah acara berwaktu, ia menunjuk ke agendanya.
+  agendaId String? @unique
+  agenda   Agenda? @relation(fields: [agendaId], references: [id])
+
+  pembuatId    String
+  pembuat      User        @relation(fields: [pembuatId], references: [id])
+  organisasiId String?
+  organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
+  minat       Minat[]
+  pendaftaran Pendaftaran[]
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([jenis, status])
+  @@index([tenggat])
+  @@map("peluang")
+}
+
+model Pendaftaran {
+  id      String            @id @default(cuid())
+  userId  String
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status  StatusPendaftaran @default(MENUNGGU)
+  catatan String?
+
+  agendaId  String?
+  agenda    Agenda?  @relation(fields: [agendaId], references: [id], onDelete: Cascade)
+  peluangId String?
+  peluang   Peluang? @relation(fields: [peluangId], references: [id], onDelete: Cascade)
+
+  sertifikat Sertifikat?
+
+  dibuatPada DateTime @default(now())
+
+  @@unique([userId, agendaId])
+  @@unique([userId, peluangId])
+  @@index([status])
+  @@map("pendaftaran")
+}
+
+// ──────────────────────── Sertifikat ────────────────────────
+
+model Sertifikat {
+  id   String @id @default(cuid())
+  /// Kode publik yang dapat diperiksa siapa pun di /cek/[kode].
+  kode String @unique
+
+  penerimaId String
+  penerima   User     @relation("PenerimaSertifikat", fields: [penerimaId], references: [id])
+  judul      String
+  peringkat  String?
+  berkasUrl  String?
+  terbitPada DateTime @default(now())
+
+  penerbitId   String
+  penerbit     User        @relation("PenerbitSertifikat", fields: [penerbitId], references: [id])
+  organisasiId String?
+  organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
+  pendaftaranId String?      @unique
+  pendaftaran   Pendaftaran? @relation(fields: [pendaftaranId], references: [id])
+
+  /// Sertifikat tidak dihapus, melainkan dibatalkan, agar kode lama tetap dapat ditelusuri.
+  dibatalkanPada   DateTime?
+  alasanPembatalan String?
+
+  @@index([penerimaId])
+  @@map("sertifikat")
+}
+
+// ──────────────────────── Jejak audit ────────────────────────
+
+model AuditLog {
+  id        String  @id @default(cuid())
+  aktorId   String?
+  aktor     User?   @relation(fields: [aktorId], references: [id], onDelete: SetNull)
+  aksi      String
+  /// Jenis dan id sasaran, mis. "organisasi" dan id-nya.
+  sasaran   String?
+  sasaranId String?
+  /// Rincian tambahan dalam bentuk JSON.
+  rincian   Json?
+  alamatIp  String?
+
+  dibuatPada DateTime @default(now())
+
+  @@index([aktorId])
+  @@index([dibuatPada])
+  @@map("audit_log")
+}
+
+// ═══════════════ Autentikasi (dibangkitkan Better Auth CLI) ═══════════════
+// Bagian di bawah ini mengikuti bentuk yang diharapkan Better Auth.
+// Yang ditambahkan tangan hanyalah relasi balik ke model domain di atas.
+
+model User {
+  id               String      @id
+  name             String
+  email            String
+  emailVerified    Boolean     @default(false)
+  image            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  role             String?
+  banned           Boolean?    @default(false)
+  banReason        String?
+  banExpires       DateTime?
+  twoFactorEnabled Boolean?    @default(false)
+  sessions         Session[]
+  accounts         Account[]
+  twofactors       TwoFactor[]
+
+  // Relasi balik ke model domain
+  profil                ProfilPemuda?
+  organisasiDimiliki    Organisasi[]
+  keanggotaan           Keanggotaan[]
+  beritaDitulis         Berita[]
+  agendaDibuat          Agenda[]
+  peluangDibuat         Peluang[]
+  pendaftaran           Pendaftaran[]
+  sertifikatDiterima    Sertifikat[]  @relation("PenerimaSertifikat")
+  sertifikatDiterbitkan Sertifikat[]  @relation("PenerbitSertifikat")
+  auditLog              AuditLog[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id String @id
+  /// Ditulis oleh Better Auth sejak 1.7 untuk memisahkan sumber kredensial.
+  /// Tidak muncul pada keluaran `better-auth generate`, jadi jangan dihapus
+  /// saat menyelaraskan ulang skema — tanpa kolom ini pendaftaran gagal.
+  issuer                String
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([issuer, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model TwoFactor {
+  id                      String    @id
+  secret                  String
+  backupCodes             String
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verified                Boolean?  @default(true)
+  failedVerificationCount Int?      @default(0)
+  lockedUntil             DateTime?
+
+  @@index([secret])
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+model RateLimit {
+  id          String @id
+  key         String
+  count       Int
+  lastRequest BigInt
+
+  @@unique([key])
+  @@map("rateLimit")
+}
