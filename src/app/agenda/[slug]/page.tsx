@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Markdown } from "@/components/markdown";
+import { PanelDaftar } from "@/components/panel-daftar";
 import { prisma } from "@/lib/prisma";
 import { tanggalPanjang, waktuSaja } from "@/lib/teks";
 
@@ -11,6 +12,7 @@ async function ambilAgenda(slug: string) {
   return prisma.agenda.findFirst({
     where: { slug, status: "TERBIT" },
     select: {
+      id: true,
       judul: true,
       deskripsi: true,
       lokasi: true,
@@ -93,6 +95,8 @@ export default async function HalamanAgendaRinci({
         </dl>
 
         <Markdown isi={agenda.deskripsi} />
+
+        {!sudahLewat && <PanelDaftar sasaran={{ jenis: "agenda", id: agenda.id }} />}
       </article>
     </BingkaiPublik>
   );

@@ -32,6 +32,7 @@ export default async function HalamanKelolaPeluang() {
       status: true,
       tenggat: true,
       pembuat: { select: { name: true } },
+      _count: { select: { pendaftaran: true } },
     },
   });
 
@@ -83,6 +84,12 @@ export default async function HalamanKelolaPeluang() {
                 </span>
 
                 <div className="flex gap-2">
+                  <Link
+                    href={`/kelola/peserta/peluang/${p.id}`}
+                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                  >
+                    Peserta ({p._count.pendaftaran})
+                  </Link>
                   {p.status === "TERBIT" && (
                     <Link
                       href={`/peluang/${p.slug}`}

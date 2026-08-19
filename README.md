@@ -64,6 +64,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:agenda` | Uji asap kanal Agenda |
 | `npm run uji:peluang` | Uji asap Papan Peluang |
 | `npm run uji:profil` | Uji asap Kartu Talenta dan aturan privasinya |
+| `npm run uji:pendaftaran` | Uji asap Pendaftaran Kegiatan dan unduhan peserta |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -159,6 +160,11 @@ yang sahih sudah ditemukan, semai lewat pola yang sama dengan
   nomor telepon tidak pernah tampil di halaman publik untuk siapa pun, dan bagi
   pengguna di bawah 18 tahun usia, desa, serta sekolah ikut disembunyikan.
   Tanggal lahir yang kosong diperlakukan sebagai anak — memilih yang lebih aman.
+- Unduhan daftar peserta (`src/lib/csv.ts`) melucuti sel yang diawali `=`, `+`,
+  `-`, atau `@` menjadi teks. Tanpa itu, nama peserta yang ditulis
+  `=HYPERLINK(...)` akan dijalankan Excel sebagai rumus di komputer panitia.
+  Rutenya juga memeriksa sesi dan kepemilikan sendiri, serta memakai
+  `cache-control: no-store` karena isinya data pribadi.
 - Penampil Markdown (`src/components/markdown.tsx`) tidak memasang plugin
   `rehype-raw`, sehingga HTML mentah dari pengguna tidak pernah menjadi markup
   aktif. Uji regresinya ada di `scripts/uji-kabar.ts` — jangan menambahkan

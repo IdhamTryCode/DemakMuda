@@ -39,6 +39,10 @@ export default async function DasborPemuda() {
     select: { id: true, judul: true, slug: true, tenggat: true },
   });
 
+  const jumlahKegiatan = await prisma.pendaftaran.count({
+    where: { userId: sesi.user.id },
+  });
+
   const usia = profil?.tanggalLahir ? umur(profil.tanggalLahir, sekarang) : null;
   const diLuarRentang =
     usia !== null && (usia < USIA_MIN_PESERTA || usia > USIA_MAKS_PESERTA);
@@ -102,6 +106,12 @@ export default async function DasborPemuda() {
                 Lihat kartu publik
               </Link>
             )}
+            <Link
+              href="/pemuda/kegiatan"
+              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+            >
+              Kegiatan saya ({jumlahKegiatan})
+            </Link>
           </div>
         </Kartu>
 

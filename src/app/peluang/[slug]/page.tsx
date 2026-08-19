@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Markdown } from "@/components/markdown";
+import { PanelDaftar } from "@/components/panel-daftar";
 import { LABEL_JENIS } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
 import { sisaWaktu, tanggalPanjang } from "@/lib/teks";
@@ -12,6 +13,7 @@ async function ambilPeluang(slug: string) {
   return prisma.peluang.findFirst({
     where: { slug, status: "TERBIT" },
     select: {
+      id: true,
       judul: true,
       jenis: true,
       deskripsi: true,
@@ -111,6 +113,8 @@ export default async function HalamanPeluangRinci({
         </dl>
 
         <Markdown isi={p.deskripsi} />
+
+        {!sudahTutup && <PanelDaftar sasaran={{ jenis: "peluang", id: p.id }} />}
 
         {p.agenda?.status === "TERBIT" && (
           <p className="text-sm text-ink-soft">
