@@ -20,8 +20,41 @@ import { ac, dinas, organisasi, pemuda, superadmin } from "@/lib/permissions";
  */
 export const MODE_PERAGAAN = process.env.MODE_PERAGAAN === "true";
 
+/**
+ * Alamat yang boleh mengirim permintaan autentikasi.
+ *
+ * Better Auth menolak permintaan yang header Origin-nya tidak dikenal — itu
+ * perlindungan lintas situs yang memang diinginkan. Masalahnya, di Vercel
+ * alamat penerbitan tidak selalu sama dengan yang tertulis di BETTER_AUTH_URL:
+ * setiap deployment pratinjau punya alamatnya sendiri, dan salah ketik satu
+ * huruf pada variabel lingkungan langsung membuat seluruh proses masuk gagal
+ * dengan 403.
+ *
+ * Karena itu alamat yang disediakan Vercel ikut dipercaya secara otomatis.
+ */
+function alamatTepercaya(): string[] {
+  const daftar = [
+    process.env.BETTER_AUTH_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ].filter((a): a is string => Boolean(a));
+
+  return [...new Set(daftar)];
+}
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+
+  // Bila BETTER_AUTH_URL tidak diisi, pakai alamat produksi dari Vercel.
+  baseURL:
+    process.env.BETTER_AUTH_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined),
+
+  trustedOrigins: alamatTepercaya(),
 
   emailAndPassword: {
     enabled: true,
