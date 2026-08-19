@@ -10,6 +10,7 @@ const MENU = [
   { href: "/kabar", label: "Kabar" },
   { href: "/agenda", label: "Agenda" },
   { href: "/peluang", label: "Peluang" },
+  { href: "/cek", label: "Cek sertifikat" },
 ];
 
 /** Bingkai untuk seluruh halaman yang dapat dibuka tanpa masuk. */

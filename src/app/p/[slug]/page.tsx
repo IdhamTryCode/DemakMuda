@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { keterbukaanProfil, umur } from "@/lib/profil";
+import { tanggalPendek } from "@/lib/teks";
 
 /**
  * Kartu Talenta publik.
@@ -24,7 +26,26 @@ async function ambilProfil(slug: string) {
       sekolah: { select: { nama: true } },
       minat: { select: { nama: true }, orderBy: { nama: "asc" } },
       keterampilan: { select: { nama: true }, orderBy: { nama: "asc" } },
-      user: { select: { name: true } },
+      user: {
+        select: {
+          name: true,
+          // Sertifikat yang dibatalkan tidak ikut tampil di kartu publik,
+          // tetapi kodenya tetap dapat diperiksa di halaman /cek.
+          sertifikatDiterima: {
+            where: { dibatalkanPada: null },
+            orderBy: { terbitPada: "desc" },
+            take: 20,
+            select: {
+              kode: true,
+              judul: true,
+              peringkat: true,
+              terbitPada: true,
+              organisasi: { select: { nama: true } },
+              penerbit: { select: { name: true } },
+            },
+          },
+        },
+      },
     },
   });
 }
@@ -129,13 +150,49 @@ export default async function HalamanKartuTalenta({
           </section>
         )}
 
-        <Kartu className="flex flex-col gap-2">
-          <h2 className="text-base font-semibold">Rekam prestasi</h2>
-          <p className="text-sm text-muted">
-            Sertifikat kegiatan yang diikuti akan tampil di sini setelah fitur
-            Rekam Prestasi selesai dibangun.
+        <section className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
+            Rekam prestasi
+          </h2>
+          {p.user.sertifikatDiterima.length === 0 ? (
+            <Kartu>
+              <p className="text-sm text-muted">
+                Belum ada sertifikat yang tercatat.
+              </p>
+            </Kartu>
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {p.user.sertifikatDiterima.map((s) => (
+                <li key={s.kode}>
+                  <Link href={`/cek/${s.kode}`} className="block rounded-sk">
+                    <Kartu className="sk-pressable flex flex-wrap items-center gap-4">
+                      <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <h3 className="font-medium leading-snug">{s.judul}</h3>
+                        <span className="text-xs text-muted">
+                          {tanggalPendek(s.terbitPada)} ·{" "}
+                          {s.organisasi?.nama ?? s.penerbit.name}
+                        </span>
+                      </div>
+                      {s.peringkat && (
+                        <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                          {s.peringkat}
+                        </span>
+                      )}
+                      <span className="font-mono text-xs text-muted">{s.kode}</span>
+                    </Kartu>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="text-xs text-muted">
+            Setiap sertifikat dapat diperiksa keasliannya lewat halaman{" "}
+            <Link href="/cek" className="text-accent underline underline-offset-2">
+              periksa sertifikat
+            </Link>
+            .
           </p>
-        </Kartu>
+        </section>
       </article>
     </BingkaiPublik>
   );

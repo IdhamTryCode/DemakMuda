@@ -65,6 +65,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:peluang` | Uji asap Papan Peluang |
 | `npm run uji:profil` | Uji asap Kartu Talenta dan aturan privasinya |
 | `npm run uji:pendaftaran` | Uji asap Pendaftaran Kegiatan dan unduhan peserta |
+| `npm run uji:sertifikat` | Uji asap Rekam Prestasi dan pemeriksaan keaslian |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -160,6 +161,13 @@ yang sahih sudah ditemukan, semai lewat pola yang sama dengan
   nomor telepon tidak pernah tampil di halaman publik untuk siapa pun, dan bagi
   pengguna di bawah 18 tahun usia, desa, serta sekolah ikut disembunyikan.
   Tanggal lahir yang kosong diperlakukan sebagai anak — memilih yang lebih aman.
+- Kode sertifikat dibangkitkan dengan `randomInt` dari modul `crypto`, bukan
+  `Math.random`, supaya kode berikutnya tidak dapat ditebak dari kode yang sudah
+  terbit. Huruf yang mudah tertukar (`0 O 1 I L`) tidak dipakai karena kode ini
+  akan diketik ulang orang dari lembar cetak.
+- Sertifikat **tidak pernah dihapus**, hanya dibatalkan. Kode yang sudah
+  tercetak tetap dapat diperiksa, dan hasilnya jujur membedakan "pernah terbit
+  lalu dibatalkan" dari "tidak pernah ada".
 - Unduhan daftar peserta (`src/lib/csv.ts`) melucuti sel yang diawali `=`, `+`,
   `-`, atau `@` menjadi teks. Tanpa itu, nama peserta yang ditulis
   `=HYPERLINK(...)` akan dijalankan Excel sebagai rumus di komputer panitia.

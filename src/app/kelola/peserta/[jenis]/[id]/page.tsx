@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PilihStatusPeserta } from "@/app/kelola/peserta/[jenis]/[id]/pilih-status";
+import { TerbitkanSertifikat } from "@/app/kelola/peserta/[jenis]/[id]/terbitkan-sertifikat";
 import { Kartu } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -38,6 +39,7 @@ async function muat(jenis: string, id: string, aktor: { id: string; nama: string
       id: true,
       status: true,
       dibuatPada: true,
+      sertifikat: { select: { kode: true, dibatalkanPada: true } },
       user: {
         select: {
           name: true,
@@ -167,6 +169,22 @@ export default async function HalamanPeserta({
                       </Link>
                     )}
                     <PilihStatusPeserta pendaftaranId={p.id} status={p.status} />
+                  </div>
+
+                  <div className="flex w-full justify-end border-t border-line pt-3">
+                    <TerbitkanSertifikat
+                      pendaftaranId={p.id}
+                      status={p.status}
+                      judulBawaan={data.kegiatan.judul}
+                      sertifikat={
+                        p.sertifikat
+                          ? {
+                              kode: p.sertifikat.kode,
+                              dibatalkan: Boolean(p.sertifikat.dibatalkanPada),
+                            }
+                          : null
+                      }
+                    />
                   </div>
                 </Kartu>
               </li>
