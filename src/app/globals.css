@@ -1,0 +1,239 @@
+@import "tailwindcss";
+
+/*
+ * DemakMuda — sistem permukaan skeuomorfisme modern.
+ *
+ * Aturan yang menjaga gaya ini tetap disiplin (lihat cetak biru Bagian VII):
+ *  1. Cahaya selalu datang dari atas. Sorot di tepi atas, bayangan jatuh ke bawah.
+ *  2. Kedalaman hanya untuk yang bermakna: elemen interaktif dan permukaan utama.
+ *  3. Kontras tidak dikorbankan demi kehalusan — semua pasangan teks/latar AA.
+ *  4. Warna dan bayangan diambil dari token di bawah, tidak pernah ditulis lepas.
+ *
+ * Mode gelap dirancang ulang, bukan dibalik: sorot tepi diturunkan dan
+ * bayangan sekitar diperdalam agar kedalaman tetap terbaca di latar gelap.
+ *
+ * Mode terang adalah bawaan. Mode gelap hanya aktif bila pengguna memilihnya
+ * lewat tombol ganti tema, yang menuliskan data-theme pada elemen html dan
+ * mengingatnya di peramban. Preferensi sistem sengaja tidak dipakai supaya
+ * tampilan awal selalu dapat diduga — penting saat aplikasi diperagakan.
+ */
+
+:root {
+  /* Netral berbias hijau hangat, bukan abu murni. */
+  --sk-ground: #eff2ec;
+  --sk-surface: #fafbf8;
+  --sk-sunk: #e4e8de;
+  --sk-ink: #111a15;
+  --sk-ink-soft: #313f38;
+  --sk-muted: #5a6861;
+  --sk-line: #d3dacd;
+  --sk-line-strong: #b9c3b3;
+
+  /* Hijau kubah Masjid Agung Demak. */
+  --sk-accent: #0d5c4c;
+  --sk-accent-hover: #0a4a3d;
+  --sk-accent-soft: #dfece6;
+  --sk-on-accent: #f4faf7;
+
+  /* Kuningan ornamen. Digelapkan dari #A97527 agar lolos AA di latar terang. */
+  --sk-brass: #7d5416;
+  --sk-brass-soft: #f3ead7;
+
+  --sk-danger: #96301f;
+  --sk-danger-soft: #f8e6e2;
+
+  /* Permukaan timbul: gradien tipis terang-di-atas. */
+  --sk-grad-raised: linear-gradient(180deg, #ffffff 0%, #f1f4ee 100%);
+  --sk-grad-accent: linear-gradient(180deg, #147762 0%, #0b5041 100%);
+
+  /* Bayangan berlapis: sorot tepi + bayangan kunci + bayangan sekitar. */
+  --sk-sh-raise:
+    inset 0 1px 0 rgb(255 255 255 / 0.95), 0 1px 2px rgb(17 26 21 / 0.09),
+    0 8px 20px -10px rgb(17 26 21 / 0.3);
+  --sk-sh-press:
+    inset 0 2px 5px rgb(17 26 21 / 0.2), inset 0 1px 0 rgb(17 26 21 / 0.07);
+  --sk-sh-inset:
+    inset 0 2px 4px rgb(17 26 21 / 0.11), inset 0 1px 0 rgb(17 26 21 / 0.05);
+  --sk-sh-overlay:
+    inset 0 1px 0 rgb(255 255 255 / 0.85), 0 16px 44px -12px rgb(17 26 21 / 0.34);
+  --sk-sh-ring: 0 0 0 3px rgb(13 92 76 / 0.28);
+}
+
+:root[data-theme="dark"] {
+  --sk-ground: #0c1411;
+  --sk-surface: #16211c;
+  --sk-sunk: #0e1815;
+  --sk-ink: #e6ede8;
+  --sk-ink-soft: #c0cbc4;
+  --sk-muted: #90a098;
+  --sk-line: #253229;
+  --sk-line-strong: #37463d;
+
+  --sk-accent: #57c2a5;
+  --sk-accent-hover: #6fd3b7;
+  --sk-accent-soft: #16332b;
+  --sk-on-accent: #06231c;
+
+  --sk-brass: #d7a954;
+  --sk-brass-soft: #2a2317;
+
+  --sk-danger: #e78d7d;
+  --sk-danger-soft: #2e1a17;
+
+  --sk-grad-raised: linear-gradient(180deg, #1e2a25 0%, #141f1a 100%);
+  --sk-grad-accent: linear-gradient(180deg, #5fcbad 0%, #3da487 100%);
+
+  --sk-sh-raise:
+    inset 0 1px 0 rgb(255 255 255 / 0.07), 0 1px 2px rgb(0 0 0 / 0.5),
+    0 8px 20px -8px rgb(0 0 0 / 0.7);
+  --sk-sh-press:
+    inset 0 2px 6px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(0 0 0 / 0.3);
+  --sk-sh-inset:
+    inset 0 2px 5px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(0 0 0 / 0.25);
+  --sk-sh-overlay:
+    inset 0 1px 0 rgb(255 255 255 / 0.06), 0 20px 52px -12px rgb(0 0 0 / 0.8);
+  --sk-sh-ring: 0 0 0 3px rgb(87 194 165 / 0.32);
+}
+
+@theme inline {
+  --color-ground: var(--sk-ground);
+  --color-surface: var(--sk-surface);
+  --color-sunk: var(--sk-sunk);
+  --color-ink: var(--sk-ink);
+  --color-ink-soft: var(--sk-ink-soft);
+  --color-muted: var(--sk-muted);
+  --color-line: var(--sk-line);
+  --color-line-strong: var(--sk-line-strong);
+  --color-accent: var(--sk-accent);
+  --color-accent-hover: var(--sk-accent-hover);
+  --color-accent-soft: var(--sk-accent-soft);
+  --color-on-accent: var(--sk-on-accent);
+  --color-brass: var(--sk-brass);
+  --color-brass-soft: var(--sk-brass-soft);
+  --color-danger: var(--sk-danger);
+  --color-danger-soft: var(--sk-danger-soft);
+
+  --shadow-raise: var(--sk-sh-raise);
+  --shadow-press: var(--sk-sh-press);
+  --shadow-sunk: var(--sk-sh-inset);
+  --shadow-overlay: var(--sk-sh-overlay);
+
+  --radius-sk: 0.625rem;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--sk-ground);
+  color: var(--sk-ink);
+}
+
+/* Penukar isi menurut tema, dipakai tombol ganti tema. Memakai display agar
+   yang tersembunyi juga tidak terbaca pembaca layar. */
+.tema-saat-gelap {
+  display: none;
+}
+:root[data-theme="dark"] .tema-saat-terang {
+  display: none;
+}
+:root[data-theme="dark"] span.tema-saat-gelap {
+  display: inline;
+}
+:root[data-theme="dark"] svg.tema-saat-gelap {
+  display: block;
+}
+
+/* ── Permukaan ──────────────────────────────────────────────── */
+
+@layer components {
+  /* Timbul: kartu, panel, tombol. */
+  .sk-raised {
+    background-image: var(--sk-grad-raised);
+    border: 1px solid var(--sk-line);
+    border-radius: var(--radius-sk);
+    box-shadow: var(--sk-sh-raise);
+  }
+
+  /* Cekung: latar kelompok, area unggah, bilah pencarian. */
+  .sk-inset {
+    background-color: var(--sk-sunk);
+    border: 1px solid var(--sk-line);
+    border-radius: var(--radius-sk);
+    box-shadow: var(--sk-sh-inset);
+  }
+
+  /* Mengambang: dialog, menu, lembar bawah. */
+  .sk-overlay {
+    background-image: var(--sk-grad-raised);
+    border: 1px solid var(--sk-line);
+    border-radius: calc(var(--radius-sk) + 0.25rem);
+    box-shadow: var(--sk-sh-overlay);
+  }
+
+  /* Dapat ditekan: turun 1px dan berganti bayangan dalam saat :active.
+     Hanya transform dan box-shadow yang dianimasikan agar tetap mulus
+     di ponsel kelas bawah. */
+  .sk-pressable {
+    transition:
+      box-shadow 160ms ease-out,
+      transform 160ms ease-out,
+      background-color 160ms ease-out;
+  }
+  .sk-pressable:active {
+    transform: translateY(1px);
+    box-shadow: var(--sk-sh-press);
+  }
+  .sk-pressable:focus-visible {
+    outline: none;
+    box-shadow: var(--sk-sh-raise), var(--sk-sh-ring);
+  }
+
+  /* Tombol utama — satu-satunya permukaan beraksen penuh. */
+  .sk-btn-utama {
+    background-image: var(--sk-grad-accent);
+    color: var(--sk-on-accent);
+    border: 1px solid color-mix(in srgb, var(--sk-accent) 70%, black);
+    border-radius: var(--radius-sk);
+    box-shadow: var(--sk-sh-raise);
+    font-weight: 600;
+  }
+  .sk-btn-utama:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* Kolom isian selalu tampak cekung — sinyal "di sini tempat mengetik". */
+  .sk-field {
+    background-color: var(--sk-sunk);
+    border: 1px solid var(--sk-line-strong);
+    border-radius: var(--radius-sk);
+    box-shadow: var(--sk-sh-inset);
+    color: var(--sk-ink);
+    transition:
+      box-shadow 160ms ease-out,
+      border-color 160ms ease-out;
+  }
+  .sk-field::placeholder {
+    color: var(--sk-muted);
+  }
+  .sk-field:focus {
+    outline: none;
+    border-color: var(--sk-accent);
+    box-shadow: var(--sk-sh-inset), var(--sk-sh-ring);
+  }
+  .sk-field[aria-invalid="true"] {
+    border-color: var(--sk-danger);
+  }
+}
+
+/* Pengguna yang meminta gerak dikurangi tetap mendapat umpan balik tekan,
+   hanya lewat perubahan warna, bukan perpindahan. */
+@media (prefers-reduced-motion: reduce) {
+  .sk-pressable {
+    transition: background-color 100ms linear;
+  }
+  .sk-pressable:active {
+    transform: none;
+  }
+}
