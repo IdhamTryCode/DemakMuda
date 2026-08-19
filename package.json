@@ -11,14 +11,16 @@
     "postinstall": "prisma generate",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d && prisma migrate deploy && npm run db:seed && npm run db:seed:akun",
+    "db:reset": "docker compose down -v && docker compose up -d && prisma migrate deploy && npm run db:seed && npm run db:seed:akun && npm run db:seed:isi",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "auth:schema": "better-auth generate --config src/lib/auth.ts --output prisma/auth-models.prisma",
     "db:seed": "tsx prisma/seed/index.ts",
     "db:seed:akun": "tsx prisma/seed/akun-demo.ts",
     "uji:masuk": "tsx scripts/uji-alur-masuk.ts",
-    "aset:ikon": "tsx scripts/buat-ikon.ts"
+    "aset:ikon": "tsx scripts/buat-ikon.ts",
+    "db:seed:isi": "tsx prisma/seed/isi-demo.ts",
+    "uji:kabar": "tsx scripts/uji-kabar.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
@@ -27,6 +29,8 @@
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
+    "server-only": "^0.0.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

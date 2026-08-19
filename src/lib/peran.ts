@@ -26,8 +26,11 @@ export const LABEL_PERAN: Record<Peran, string> = {
   superadmin: "Administrator Sistem",
 };
 
+/** Area pengelolaan isi, dipakai bersama oleh organisasi, dinas, dan superadmin. */
+export const AWALAN_KELOLA = "/kelola";
+
 /** Seluruh awalan alamat yang menuntut pengguna sudah masuk. */
-export const AWALAN_TERLINDUNGI = Object.values(DASBOR);
+export const AWALAN_TERLINDUNGI = [...Object.values(DASBOR), AWALAN_KELOLA];
 
 export function adalahPeran(nilai: unknown): nilai is Peran {
   return typeof nilai === "string" && (PERAN as readonly string[]).includes(nilai);
