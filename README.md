@@ -34,7 +34,7 @@ npm run db:seed
 # 6. Buat akun demo untuk keempat peran
 npm run db:seed:akun
 
-# 7. Isi kabar dan agenda contoh
+# 7. Isi kabar, agenda, peluang, karya, dan aspirasi contoh
 npm run db:seed:isi
 
 # 8. Jalankan aplikasi
@@ -57,7 +57,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run db:migrate` | Menerapkan perubahan skema |
 | `npm run db:seed` | Mengisi data acuan; aman dijalankan berulang kali |
 | `npm run db:seed:akun` | Membuat akun demo untuk keempat peran |
-| `npm run db:seed:isi` | Mengisi kabar dan agenda contoh untuk peragaan |
+| `npm run db:seed:isi` | Mengisi kabar, agenda, peluang, karya, dan aspirasi contoh untuk peragaan |
 | `npm run uji` | Menjalankan seluruh uji asap |
 | `npm run uji:masuk` | Uji asap alur masuk dan pengarahan peran |
 | `npm run uji:kabar` | Uji asap kanal Kabar |
@@ -72,6 +72,8 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:dualangkah` | Uji asap autentikasi dua langkah, dengan kode TOTP sungguhan |
 | `npm run uji:privasi` | Uji asap perlindungan data dan halaman 404 |
 | `npm run uji:pencarian` | Uji asap pencarian dan status HTTP halaman rinci |
+| `npm run uji:karya` | Uji asap Ruang Karya, termasuk penyaringan tautan |
+| `npm run uji:aspirasi` | Uji asap Ruang Aspirasi, terutama agar isinya tidak bocor ke publik |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -151,6 +153,35 @@ akan membalas 200. Karena itu halaman daftar ditempatkan di grup rute
 sama-sama di-spread sebagai `OR`, yang belakangan menimpa yang pertama tanpa
 peringatan — pernah membuat pencarian di Papan Peluang diabaikan diam-diam.
 Bungkus keduanya di dalam `AND: [...]`.
+
+## Dua kanal yang menyimpang dari pola
+
+**Ruang Karya** pemiliknya pemuda, bukan pengelola isi, sehingga
+pengelolaannya berada di `src/app/pemuda/karya/` — bukan di `/kelola`. Dinas
+dan superadmin tetap boleh menyuntingnya untuk keperluan moderasi, dan itu
+ditangani `bolehMengubah()`, bukan cabang khusus di dalam aksinya.
+
+Alamat luar (`gambarUrl`, `tautanLuar`) diperiksa dua kali: oleh `urlAman()`
+saat masuk, dan oleh `tautanAman()` di `src/lib/tautan.ts` tepat sebelum
+dipasang sebagai `href`. Lapis kedua bukan pengulangan yang sia-sia — baris
+warisan atau hasil impor tidak pernah melewati lapis pertama. Gambar sengaja
+**tidak** dimuat sebagai `<img>`: memuat berkas dari peladen mana pun yang
+ditulis pengguna akan menjadikan aplikasi ini perantara permintaan ke jaringan
+dalam.
+
+**Ruang Aspirasi** adalah satu-satunya kanal yang isinya tidak pernah publik.
+Hanya pengirimnya dan dinas yang boleh membacanya; peran organisasi sengaja
+dikecualikan, karena membiarkan pengelola organisasi membaca keluhan warga
+berarti membuka keluhan itu kepada pihak yang mungkin justru dikeluhkan.
+
+Karena itu `src/server/aksi-aspirasi.ts` tidak memuat satu pun
+`revalidatePath` ke halaman publik. Bila suatu saat ada, itu tanda ada
+kebocoran yang perlu diperiksa. Isi aspirasi juga tidak pernah masuk jejak
+audit — hanya judulnya. Dijaga oleh `npm run uji:aspirasi`, yang menyisir
+seluruh halaman publik mencari kalimat yang hanya ada di dalam aspirasi.
+
+Pengiriman aspirasi dibatasi jeda lima menit antar-kiriman dan lima kiriman
+per akun per hari, dan Ruang Karya dibatasi tiga puluh karya per akun.
 
 ## Data yang belum lengkap
 
@@ -236,6 +267,7 @@ src/lib/peran.ts       Peran dan tujuan dasbornya
 src/lib/sesi.ts        Penjaga sesi dan peran di sisi server
 src/lib/prisma.ts      Klien Prisma
 src/proxy.ts           Pengalihan halaman (bukan penjaga izin)
+src/lib/tautan.ts      Penyaring alamat luar saat dirender
 src/app/               Halaman dan rute
 scripts/               Uji asap
 ```

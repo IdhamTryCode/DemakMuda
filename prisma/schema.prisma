@@ -6,9 +6,8 @@
 // Untuk memperbaruinya setelah mengubah konfigurasi plugin:
 //   npx @better-auth/cli generate --config src/lib/auth.ts --output prisma/auth-models.prisma
 //
-// Catatan integritas lomba: tabel untuk Ruang Karya dan Ruang Aspirasi sengaja
-// TIDAK dibuat di sini. Keduanya bagian dari 30% yang dikerjakan di lokasi lomba,
-// jadi migrasinya pun ditulis di sana sebagai migrasi tambah-tabel.
+// Ruang Karya (model Karya) dan Ruang Aspirasi (model Aspirasi) ada di bagian
+// bawah berkas ini. Keduanya menutup dua kanal terakhir pada cetak biru.
 
 generator client {
   provider = "prisma-client"
@@ -388,6 +387,69 @@ model Sertifikat {
   @@map("sertifikat")
 }
 
+// ─────────────────── Ruang Karya & Ruang Aspirasi ───────────────────
+
+enum JenisKarya {
+  PRODUK
+  SENI
+  TULISAN
+  PROYEK
+  LAINNYA
+}
+
+enum StatusAspirasi {
+  BARU
+  DIPROSES
+  SELESAI
+  DITOLAK
+}
+
+model Karya {
+  id         String     @id @default(cuid())
+  judul      String
+  slug       String     @unique
+  jenis      JenisKarya
+  /// Cerita di balik karya, ditulis sebagai Markdown.
+  deskripsi  String
+  gambarUrl  String?
+  tautanLuar String?
+
+  status StatusTerbit @default(TERBIT)
+
+  pemilikId String
+  pemilik   User   @relation(fields: [pemilikId], references: [id], onDelete: Cascade)
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([status, dibuatPada])
+  @@index([pemilikId])
+  @@map("karya")
+}
+
+model Aspirasi {
+  id     String         @id @default(cuid())
+  judul  String
+  isi    String
+  status StatusAspirasi @default(BARU)
+
+  /// Tanggapan dinas. Kosong berarti belum ditanggapi.
+  tanggapan      String?
+  ditanggapiPada DateTime?
+  penanggapId    String?
+  penanggap      User?     @relation("PenanggapAspirasi", fields: [penanggapId], references: [id], onDelete: SetNull)
+
+  pengirimId String
+  pengirim   User   @relation("PengirimAspirasi", fields: [pengirimId], references: [id], onDelete: Cascade)
+
+  dibuatPada     DateTime @default(now())
+  diperbaruiPada DateTime @updatedAt
+
+  @@index([status, dibuatPada])
+  @@index([pengirimId])
+  @@map("aspirasi")
+}
+
 // ──────────────────────── Jejak audit ────────────────────────
 
 model AuditLog {
@@ -441,6 +503,9 @@ model User {
   sertifikatDiterima    Sertifikat[]  @relation("PenerimaSertifikat")
   sertifikatDiterbitkan Sertifikat[]  @relation("PenerbitSertifikat")
   auditLog              AuditLog[]
+  karya                 Karya[]
+  aspirasiDikirim       Aspirasi[]    @relation("PengirimAspirasi")
+  aspirasiDitanggapi    Aspirasi[]    @relation("PenanggapAspirasi")
 
   @@unique([email])
   @@map("user")
@@ -464,7 +529,7 @@ model Session {
 }
 
 model Account {
-  id String @id
+  id                    String    @id
   /// Ditulis oleh Better Auth sejak 1.7 untuk memisahkan sumber kredensial.
   /// Tidak muncul pada keluaran `better-auth generate`, jadi jangan dihapus
   /// saat menyelaraskan ulang skema — tanpa kolom ini pendaftaran gagal.

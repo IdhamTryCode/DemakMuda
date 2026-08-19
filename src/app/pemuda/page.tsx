@@ -39,9 +39,15 @@ export default async function DasborPemuda() {
     select: { id: true, judul: true, slug: true, tenggat: true },
   });
 
-  const jumlahKegiatan = await prisma.pendaftaran.count({
-    where: { userId: sesi.user.id },
-  });
+  const [jumlahKegiatan, jumlahKarya, jumlahAspirasi, aspirasiDitanggapi] =
+    await Promise.all([
+      prisma.pendaftaran.count({ where: { userId: sesi.user.id } }),
+      prisma.karya.count({ where: { pemilikId: sesi.user.id } }),
+      prisma.aspirasi.count({ where: { pengirimId: sesi.user.id } }),
+      prisma.aspirasi.count({
+        where: { pengirimId: sesi.user.id, tanggapan: { not: null } },
+      }),
+    ]);
 
   const usia = profil?.tanggalLahir ? umur(profil.tanggalLahir, sekarang) : null;
   const diLuarRentang =
@@ -148,6 +154,48 @@ export default async function DasborPemuda() {
           >
             Lihat semua peluang →
           </Link>
+        </Kartu>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Kartu className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold">Ruang Karya</h2>
+          <p className="text-sm text-ink-soft">
+            {jumlahKarya === 0
+              ? "Belum ada karya yang Anda pamerkan. Satu karya saja sudah membuat kartu talenta Anda jauh lebih meyakinkan."
+              : `${jumlahKarya} karya sudah Anda unggah ke etalase pemuda Demak.`}
+          </p>
+          <div className="mt-auto flex flex-wrap gap-2 pt-1">
+            <Link
+              href="/pemuda/karya"
+              className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+            >
+              {jumlahKarya === 0 ? "Unggah karya pertama" : "Kelola karya saya"}
+            </Link>
+            <Link
+              href="/karya"
+              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+            >
+              Lihat Ruang Karya
+            </Link>
+          </div>
+        </Kartu>
+
+        <Kartu className="flex flex-col gap-3">
+          <h2 className="text-base font-semibold">Ruang Aspirasi</h2>
+          <p className="text-sm text-ink-soft">
+            {jumlahAspirasi === 0
+              ? "Punya usulan untuk kepemudaan Demak? Sampaikan langsung kepada Dispora. Isinya hanya dibaca dinas, tidak tampil di halaman publik."
+              : `${jumlahAspirasi} aspirasi terkirim, ${aspirasiDitanggapi} sudah ditanggapi dinas.`}
+          </p>
+          <div className="mt-auto flex flex-wrap gap-2 pt-1">
+            <Link
+              href="/pemuda/aspirasi"
+              className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+            >
+              {jumlahAspirasi === 0 ? "Kirim aspirasi" : "Aspirasi saya"}
+            </Link>
+          </div>
         </Kartu>
       </div>
 

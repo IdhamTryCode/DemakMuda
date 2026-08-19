@@ -71,6 +71,11 @@ export default function Beranda() {
               teks: "Lomba, pelatihan, beasiswa, magang, dan lowongan beserta tenggat pendaftarannya.",
             },
             {
+              href: "/karya",
+              judul: "Ruang Karya",
+              teks: "Etalase karya pemuda Demak — produk, seni, tulisan, dan proyek — beserta cerita di baliknya.",
+            },
+            {
               href: "/direktori",
               judul: "Direktori Organisasi",
               teks: "Karang taruna, OKP, sanggar, dan komunitas di seluruh empat belas kecamatan.",

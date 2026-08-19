@@ -10,6 +10,7 @@ const MENU = [
   { href: "/kabar", label: "Kabar" },
   { href: "/agenda", label: "Agenda" },
   { href: "/peluang", label: "Peluang" },
+  { href: "/karya", label: "Karya" },
   { href: "/direktori", label: "Organisasi" },
   { href: "/cek", label: "Cek sertifikat" },
 ];
@@ -32,7 +33,7 @@ export async function BingkaiPublik({
             <LogoDemak ukuran={40} />
           </Link>
 
-          {/* flex-wrap wajib: lima menu tidak muat pada lebar ponsel, dan tanpa
+          {/* flex-wrap wajib: enam menu tidak muat pada lebar ponsel, dan tanpa
               ini seluruh halaman publik meluber ke samping. whitespace-nowrap
               menjaga satu label tidak patah di tengah kata. */}
           <nav className="order-3 flex w-full flex-wrap gap-1 sm:order-2 sm:w-auto sm:flex-1 sm:pl-4">

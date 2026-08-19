@@ -137,11 +137,64 @@ export const ProfilSkema = z.object({
   { message: "Tanggal lahir tidak masuk akal.", path: ["tanggalLahir"] },
 );
 
+export const JenisKaryaSkema = z.enum([
+  "PRODUK",
+  "SENI",
+  "TULISAN",
+  "PROYEK",
+  "LAINNYA",
+]);
+
+export const KaryaSkema = z.object({
+  judul: teks(6, 160, "Judul"),
+  jenis: JenisKaryaSkema,
+  deskripsi: teks(30, 10000, "Cerita karya"),
+  gambarUrl: urlAman("Alamat gambar").optional().or(z.literal("")),
+  tautanLuar: urlAman("Tautan karya").optional().or(z.literal("")),
+  status: StatusTerbitSkema,
+});
+
+export const AspirasiSkema = z.object({
+  judul: teks(10, 160, "Judul aspirasi"),
+  isi: teks(40, 5000, "Isi aspirasi"),
+});
+
+export const StatusAspirasiSkema = z.enum([
+  "BARU",
+  "DIPROSES",
+  "SELESAI",
+  "DITOLAK",
+]);
+
+/**
+ * Tanggapan dinas atas sebuah aspirasi.
+ *
+ * Statusnya boleh berubah, tetapi tidak boleh berubah diam-diam: begitu
+ * aspirasi digeser dari BARU, pengirimnya berhak tahu alasannya. Karena itu
+ * tanggapan menjadi wajib pada setiap status selain BARU.
+ */
+export const TanggapanSkema = z
+  .object({
+    status: StatusAspirasiSkema,
+    tanggapan: z
+      .string()
+      .trim()
+      .max(5000, "Tanggapan maksimal 5000 karakter.")
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine((n) => n.status === "BARU" || (n.tanggapan?.length ?? 0) >= 10, {
+    message: "Tulis tanggapan minimal 10 karakter sebelum mengubah status.",
+    path: ["tanggapan"],
+  });
+
 export type ProfilMasukan = z.infer<typeof ProfilSkema>;
 
 export type BeritaMasukan = z.infer<typeof BeritaSkema>;
 export type AgendaMasukan = z.infer<typeof AgendaSkema>;
 export type PeluangMasukan = z.infer<typeof PeluangSkema>;
+export type KaryaMasukan = z.infer<typeof KaryaSkema>;
+export type AspirasiMasukan = z.infer<typeof AspirasiSkema>;
 
 /** Bentuk balasan seragam untuk seluruh Server Action pada proyek ini. */
 export type HasilAksi =

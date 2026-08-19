@@ -1,5 +1,6 @@
 /**
- * Menyemai isi contoh untuk peragaan: kabar, agenda, dan peluang.
+ * Menyemai isi contoh untuk peragaan: kabar, agenda, peluang, karya, dan
+ * aspirasi.
  *
  *   npm run db:seed:isi
  *
@@ -631,6 +632,206 @@ async function semaiKeikutsertaan() {
   );
 }
 
+
+/**
+ * Karya contoh untuk Ruang Karya.
+ *
+ * Semuanya karangan sendiri dan dilekatkan pada akun peragaan, bukan pada
+ * orang sungguhan. Slug dipakai sebagai kunci upsert supaya penyemaian ulang
+ * tidak menggandakan isinya.
+ */
+const KARYA = [
+  {
+    slug: "batik-tulis-motif-mangrove-morodemak",
+    judul: "Batik tulis motif mangrove Morodemak",
+    jenis: "SENI" as const,
+    deskripsi: `Motif ini lahir dari kebiasaan menunggu perahu pulang di tanggul Morodemak. Akar mangrove yang saling silang saya sederhanakan menjadi garis lengkung berulang, lalu diberi isen titik yang meniru gelembung lumpur saat air surut.
+
+## Prosesnya
+
+- Sketsa di kertas roti, tiga kali gambar ulang sampai jaraknya rata
+- Canting halus untuk garis akar, canting sedang untuk isen
+- Pewarnaan dua kali celup: indigo untuk air, soga untuk lumpur
+
+Selembar kain dua meter perlu sekitar sebelas hari kerja. Sepuluh lembar pertama sudah dipesan pengunjung pameran kecamatan.`,
+    hariLalu: 24,
+  },
+  {
+    slug: "alat-pengering-bawang-merah-tenaga-surya",
+    judul: "Alat pengering bawang merah bertenaga surya",
+    jenis: "PRODUK" as const,
+    deskripsi: `Petani bawang di lahan sekitar rumah selalu kesulitan ketika panen bertemu musim hujan. Bawang yang dijemur di halaman busuk sebelum sempat kering.
+
+Alat ini berupa kotak kayu berlapis plastik UV dengan rak bertingkat dan satu kipas kecil bertenaga panel surya 20 watt. Udara panas masuk dari bawah dan keluar lewat cerobong di belakang, sehingga uap air tidak mengendap di dalam.
+
+## Hasil uji
+
+Pada tiga kali percobaan dengan muatan 15 kilogram, kadar air turun dari sekitar 80 persen menjadi 12 persen dalam dua hari, dibanding empat sampai lima hari bila dijemur terbuka. Biaya bahan seluruhnya di bawah satu juta rupiah.
+
+Rencana berikutnya: menambah termometer sederhana supaya petani tahu kapan harus membalik rak.`,
+    hariLalu: 12,
+  },
+  {
+    slug: "peta-jalur-sepeda-kota-wali",
+    judul: "Peta jalur sepeda Kota Wali",
+    jenis: "PROYEK" as const,
+    deskripsi: `Bersama enam teman komunitas gowes, kami memetakan jalur sepeda yang aman dari alun-alun sampai kawasan pesisir. Setiap ruas ditelusuri langsung, dicatat lebar bahu jalannya, titik lubang, dan jam paling padat kendaraan.
+
+Hasilnya sebuah peta cetak lipat dan berkas digital yang boleh dipakai siapa saja. Tiga rute disusun menurut jarak: 8 kilometer, 17 kilometer, dan 30 kilometer.
+
+Yang paling banyak menolong justru catatan kecilnya: di mana ada warung yang buka pagi, dan di mana sebaiknya berhenti sebelum jalan menyempit.`,
+    hariLalu: 40,
+  },
+  {
+    slug: "kumpulan-cerpen-anak-tambak",
+    judul: "Anak Tambak, kumpulan sembilan cerpen",
+    jenis: "TULISAN" as const,
+    deskripsi: `Sembilan cerita pendek tentang anak-anak yang tumbuh di antara petak tambak: soal menunggu bapak pulang melaut, soal sekolah yang jauh, soal air pasang yang tiap tahun naik sedikit lagi.
+
+Ditulis selama dua tahun, sebagian besar di teras belakang rumah selepas magrib. Tiga di antaranya pernah dimuat di buletin sekolah, sisanya baru selesai tahun ini.
+
+Naskahnya masih dirapikan sebelum dicetak terbatas untuk perpustakaan desa.`,
+    hariLalu: 5,
+  },
+];
+
+async function semaiKarya() {
+  const pemilikUtama = await prisma.user.findUnique({
+    where: { email: "pemuda@demakmuda.test" },
+    select: { id: true },
+  });
+  if (!pemilikUtama) throw new Error("Akun pemuda@demakmuda.test belum ada.");
+
+  // Karya kedua dan seterusnya disebar ke akun contoh supaya daftar publik
+  // tidak tampak seolah hanya satu orang yang mengisi Ruang Karya.
+  const lain = await prisma.user.findMany({
+    where: { email: { startsWith: "contoh-" } },
+    orderBy: { email: "asc" },
+    take: 3,
+    select: { id: true },
+  });
+
+  let n = 0;
+  for (const k of KARYA) {
+    const pemilikId =
+      n === 0 ? pemilikUtama.id : (lain[(n - 1) % lain.length]?.id ?? pemilikUtama.id);
+
+    await prisma.karya.upsert({
+      where: { slug: k.slug },
+      update: {
+        judul: k.judul,
+        jenis: k.jenis,
+        deskripsi: k.deskripsi,
+        status: "TERBIT",
+      },
+      create: {
+        slug: k.slug,
+        judul: k.judul,
+        jenis: k.jenis,
+        deskripsi: k.deskripsi,
+        status: "TERBIT",
+        pemilikId,
+        dibuatPada: geser(-k.hariLalu, 10),
+      },
+    });
+    n++;
+  }
+
+  const jumlah = await prisma.karya.count({ where: { status: "TERBIT" } });
+  console.log(`Karya terbit: ${jumlah}`);
+  if (jumlah < KARYA.length) {
+    throw new Error(`Karya tersemai ${jumlah}, seharusnya minimal ${KARYA.length}.`);
+  }
+}
+
+/**
+ * Aspirasi contoh, seluruhnya dari akun peragaan pemuda@demakmuda.test.
+ *
+ * Sengaja dibuat bertingkat: satu masih BARU, satu sedang DIPROSES, satu sudah
+ * SELESAI, supaya alur tanggapan dinas dapat diperagakan tanpa perlu mengarang
+ * data di depan juri.
+ */
+const ASPIRASI = [
+  {
+    id: "aspirasi-demo-1",
+    judul: "Lapangan futsal desa perlu penerangan agar bisa dipakai malam hari",
+    isi: `Lapangan di belakang balai desa kami ramai dipakai anak muda setiap sore, tetapi begitu magrib langsung kosong karena gelap total.
+
+Padahal banyak yang baru pulang kerja selepas pukul lima. Kalau ada empat titik lampu saja di sisi lapangan, pemakaiannya bisa bertambah tiga sampai empat jam setiap hari.
+
+Kami dari karang taruna siap ikut menjaga dan membersihkan, asal pemasangan awalnya dibantu.`,
+    status: "BARU" as const,
+    hariLalu: 2,
+    tanggapan: null as string | null,
+  },
+  {
+    id: "aspirasi-demo-2",
+    judul: "Pelatihan pemasaran daring sebaiknya diadakan juga di kecamatan pesisir",
+    isi: `Pelatihan pemasaran digital selama ini hampir selalu diadakan di kota. Bagi kami yang tinggal di kecamatan pesisir, ongkos dan waktu perjalanan pulang pergi sering lebih besar daripada manfaat pelatihan sehariannya.
+
+Usul kami: adakan satu angkatan di kecamatan pesisir, atau sediakan rekaman materinya supaya bisa dipelajari ulang.
+
+Peminatnya ada. Di grup pemuda desa kami saja sudah lebih dari tiga puluh orang yang menyatakan mau ikut.`,
+    status: "DIPROSES" as const,
+    hariLalu: 16,
+    tanggapan: `Terima kasih atas usulannya. Rencana pelatihan angkatan kedua memang sedang disusun, dan lokasi di wilayah pesisir sudah masuk pertimbangan.
+
+Saat ini kami sedang mendata calon peserta per kecamatan. Mohon menunggu pengumuman resminya di kanal Kabar DemakMuda.`,
+  },
+  {
+    id: "aspirasi-demo-3",
+    judul: "Data organisasi kepemudaan desa sulit dicari dan sering tidak mutakhir",
+    isi: `Ketika ingin mengajak kerja sama organisasi pemuda dari desa lain, kami hampir selalu kesulitan mencari kontaknya. Informasi yang beredar biasanya nomor pengurus lama yang sudah tidak menjabat.
+
+Kalau ada satu daftar resmi yang bisa diperbarui sendiri oleh masing-masing organisasi, koordinasi antar-desa akan jauh lebih mudah.`,
+    status: "SELESAI" as const,
+    hariLalu: 30,
+    tanggapan: `Usulan ini sudah ditindaklanjuti. Direktori organisasi kepemudaan kini tersedia di menu Organisasi, dan setiap pengurus dapat memperbarui datanya sendiri setelah akunnya diverifikasi dinas.
+
+Silakan sampaikan kembali bila masih ada organisasi yang belum terdaftar.`,
+  },
+];
+
+async function semaiAspirasi() {
+  const pengirim = await prisma.user.findUnique({
+    where: { email: "pemuda@demakmuda.test" },
+    select: { id: true },
+  });
+  const penanggap = await prisma.user.findUnique({
+    where: { email: "dinas@demakmuda.test" },
+    select: { id: true },
+  });
+  if (!pengirim) throw new Error("Akun pemuda@demakmuda.test belum ada.");
+
+  for (const a of ASPIRASI) {
+    const isiAspirasi = {
+      judul: a.judul,
+      isi: a.isi,
+      status: a.status,
+      tanggapan: a.tanggapan,
+      ditanggapiPada: a.tanggapan ? geser(-a.hariLalu + 3, 11) : null,
+      penanggapId: a.tanggapan ? (penanggap?.id ?? null) : null,
+    };
+
+    await prisma.aspirasi.upsert({
+      where: { id: a.id },
+      update: isiAspirasi,
+      create: {
+        id: a.id,
+        ...isiAspirasi,
+        pengirimId: pengirim.id,
+        dibuatPada: geser(-a.hariLalu, 9),
+      },
+    });
+  }
+
+  const jumlah = await prisma.aspirasi.count();
+  console.log(`Aspirasi: ${jumlah}`);
+  if (jumlah < ASPIRASI.length) {
+    throw new Error(`Aspirasi tersemai ${jumlah}, seharusnya minimal ${ASPIRASI.length}.`);
+  }
+}
+
 async function main() {
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
@@ -676,6 +877,8 @@ async function main() {
   await semaiOrganisasi();
   await semaiPemudaContoh();
   await semaiKeikutsertaan();
+  await semaiKarya();
+  await semaiAspirasi();
 
   console.log("Penyemaian isi contoh selesai.");
 }
