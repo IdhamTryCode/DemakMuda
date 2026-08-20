@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { FormMasuk } from "@/app/masuk/form-masuk";
 import { BingkaiAuth } from "@/components/bingkai-auth";
+import { MODE_PERAGAAN } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Masuk",
@@ -40,7 +41,7 @@ export default async function HalamanMasuk({
         </>
       }
     >
-      <FormMasuk lanjut={tujuanAman(lanjut)} />
+      <FormMasuk lanjut={tujuanAman(lanjut)} modePeragaan={MODE_PERAGAAN} />
     </BingkaiAuth>
   );
 }

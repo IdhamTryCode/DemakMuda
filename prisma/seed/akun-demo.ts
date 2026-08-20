@@ -17,7 +17,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 import { auth } from "../../src/lib/auth";
 import { PrismaClient } from "../../src/generated/prisma/client";
-import { PERAN, type Peran } from "../../src/lib/peran";
+import { AKUN_PERAGAAN, SANDI_PERAGAAN } from "../../src/lib/akun-peragaan";
+import { PERAN } from "../../src/lib/peran";
 
 if (process.env.NODE_ENV === "production") {
   throw new Error("Akun demo tidak boleh dibuat di lingkungan produksi.");
@@ -29,18 +30,10 @@ if (!connectionString) {
 }
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 
-const KATA_SANDI = "DemakMuda2026!";
-
-const AKUN: { peran: Peran; nama: string; email: string }[] = [
-  { peran: "pemuda", nama: "Rani Puspitasari", email: "pemuda@demakmuda.test" },
-  {
-    peran: "organisasi",
-    nama: "Karang Taruna Bintoro",
-    email: "organisasi@demakmuda.test",
-  },
-  { peran: "dinas", nama: "Petugas Dispora Demak", email: "dinas@demakmuda.test" },
-  { peran: "superadmin", nama: "Administrator", email: "admin@demakmuda.test" },
-];
+// Daftar akunnya tinggal di src/lib/akun-peragaan.ts karena halaman masuk juga
+// memerlukannya. Dua daftar yang sama di dua tempat selalu berakhir berbeda.
+const KATA_SANDI = SANDI_PERAGAAN;
+const AKUN = AKUN_PERAGAAN;
 
 async function buatAkun(akun: (typeof AKUN)[number]) {
   const sudahAda = await prisma.user.findUnique({ where: { email: akun.email } });

@@ -17,6 +17,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../src/generated/prisma/client";
+import { AKUN_PERAGAAN, SANDI_PERAGAAN } from "../src/lib/akun-peragaan";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL belum diisi.");
@@ -146,6 +147,32 @@ async function main() {
   }
   periksa(kena429, "pembatasan laju menahan percobaan masuk beruntun");
   await nolkanPembatasLaju();
+
+  // Daftar akun peragaan pada halaman masuk. Kata sandinya memang terbuka —
+  // ini akun contoh — tetapi hanya boleh muncul selama mode peragaan menyala.
+  console.log("\ndaftar akun peragaan");
+  const halamanMasuk = await (await fetch(`${PANGKALAN}/masuk`)).text();
+  const modePeragaan = process.env.MODE_PERAGAAN === "true";
+
+  if (modePeragaan) {
+    periksa(
+      halamanMasuk.includes("Lihat akun peragaan"),
+      "tombol daftar akun peragaan tampil di halaman masuk",
+    );
+    for (const surel of AKUN_PERAGAAN) {
+      periksa(halamanMasuk.includes(surel.email), `${surel.email} tercantum`);
+    }
+    periksa(
+      halamanMasuk.includes(SANDI_PERAGAAN),
+      "kata sandi peragaan tercantum",
+    );
+  } else {
+    periksa(
+      !halamanMasuk.includes("Lihat akun peragaan") &&
+        !halamanMasuk.includes(SANDI_PERAGAAN),
+      "mode peragaan mati: daftar akun tidak muncul sama sekali",
+    );
+  }
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();

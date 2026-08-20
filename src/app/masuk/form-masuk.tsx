@@ -1,15 +1,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 
+import { DialogAkunPeragaan } from "@/components/dialog-akun-peragaan";
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
 import { authClient } from "@/lib/auth-client";
 
-export function FormMasuk({ lanjut }: { lanjut: string }) {
+export function FormMasuk({
+  lanjut,
+  modePeragaan,
+}: {
+  lanjut: string;
+  modePeragaan: boolean;
+}) {
   const router = useRouter();
   const [galat, setGalat] = useState<string | null>(null);
   const [sedang, setSedang] = useState(false);
+
+  // Kedua kolom sengaja dibiarkan tak terkendali (uncontrolled) seperti
+  // semula; mengisinya lewat ref cukup untuk formulir yang dikirim sekali,
+  // dan tidak memaksa seluruh formulir dirender ulang tiap ketukan tombol.
+  const kolomEmail = useRef<HTMLInputElement>(null);
+  const kolomSandi = useRef<HTMLInputElement>(null);
 
   async function kirim(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,6 +58,7 @@ export function FormMasuk({ lanjut }: { lanjut: string }) {
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email">Surel</Label>
         <Kolom
+          ref={kolomEmail}
           id="email"
           name="email"
           type="email"
@@ -57,6 +71,7 @@ export function FormMasuk({ lanjut }: { lanjut: string }) {
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="kataSandi">Kata sandi</Label>
         <Kolom
+          ref={kolomSandi}
           id="kataSandi"
           name="kataSandi"
           type="password"
@@ -69,6 +84,20 @@ export function FormMasuk({ lanjut }: { lanjut: string }) {
       <Tombol type="submit" disabled={sedang} className="mt-1">
         {sedang ? "Memeriksa…" : "Masuk"}
       </Tombol>
+
+      {modePeragaan && (
+        <>
+          <hr className="border-line" />
+          <DialogAkunPeragaan
+            pakai={(email, sandi) => {
+              if (kolomEmail.current) kolomEmail.current.value = email;
+              if (kolomSandi.current) kolomSandi.current.value = sandi;
+              setGalat(null);
+              kolomEmail.current?.focus();
+            }}
+          />
+        </>
+      )}
     </form>
   );
 }

@@ -23,7 +23,7 @@ export default async function TataLetakKelola({
           <Link href="/" className="rounded-sk">
             <LogoDemak ukuran={40} />
           </Link>
-          {/* Aspirasi hanya muncul bagi dinas. Menyembunyikan tautannya bukan
+          {/* Karya dan Aspirasi hanya muncul bagi dinas. Menyembunyikan tautannya bukan
               penjagaan — halamannya sendiri memanggil wajibPeran — tetapi
               tidak ada gunanya menawarkan pintu yang pasti tertutup. */}
           <nav className="flex flex-wrap gap-1 sm:pl-4">
@@ -33,7 +33,10 @@ export default async function TataLetakKelola({
               { href: "/kelola/peluang", label: "Peluang" },
               { href: "/kelola/organisasi", label: "Organisasi" },
               ...(sesi.peran === "dinas" || sesi.peran === "superadmin"
-                ? [{ href: "/kelola/aspirasi", label: "Aspirasi" }]
+                ? [
+                    { href: "/kelola/karya", label: "Karya" },
+                    { href: "/kelola/aspirasi", label: "Aspirasi" },
+                  ]
                 : []),
             ].map((m) => (
               <Link

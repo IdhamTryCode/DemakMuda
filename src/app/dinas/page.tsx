@@ -18,6 +18,15 @@ const LABEL_STATUS: Record<string, string> = {
   HADIR: "Hadir",
 };
 
+/**
+ * Kartu Talenta boleh diisi siapa pun yang sudah masuk — seorang pengelola
+ * organisasi bisa saja sekaligus pemuda Demak. Tetapi Peta Potensi adalah
+ * bahan perencanaan dinas, dan angkanya harus mengukur satu kelompok yang
+ * sama dengan hitungan "pemuda terdaftar" di sebelahnya. Karena itu seluruh
+ * hitungan di halaman ini dibatasi pada profil milik akun berperan pemuda.
+ */
+const HANYA_PEMUDA = { user: { role: "pemuda" } } as const;
+
 export default async function DasborDinas() {
   const sesi = await wajibPeran("dinas", "superadmin");
   const sekarang = new Date();
@@ -37,17 +46,24 @@ export default async function DasborDinas() {
     jumlahSertifikat,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "pemuda" } }),
-    prisma.profilPemuda.count(),
+    prisma.profilPemuda.count({ where: HANYA_PEMUDA }),
     prisma.kecamatan.findMany({ orderBy: { nama: "asc" }, select: { id: true, nama: true } }),
     prisma.profilPemuda.groupBy({
       by: ["kecamatanId"],
+      where: HANYA_PEMUDA,
       _count: { _all: true },
     }),
     prisma.minat.findMany({
-      select: { nama: true, _count: { select: { profil: true } } },
+      select: {
+        nama: true,
+        _count: { select: { profil: { where: HANYA_PEMUDA } } },
+      },
     }),
     prisma.keterampilan.findMany({
-      select: { nama: true, _count: { select: { profil: true } } },
+      select: {
+        nama: true,
+        _count: { select: { profil: { where: HANYA_PEMUDA } } },
+      },
     }),
     prisma.organisasi.count({ where: { statusVerifikasi: "TERVERIFIKASI" } }),
     prisma.organisasi.count({ where: { statusVerifikasi: "MENUNGGU" } }),

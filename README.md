@@ -74,6 +74,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:pencarian` | Uji asap pencarian dan status HTTP halaman rinci |
 | `npm run uji:karya` | Uji asap Ruang Karya, termasuk penyaringan tautan |
 | `npm run uji:aspirasi` | Uji asap Ruang Aspirasi, terutama agar isinya tidak bocor ke publik |
+| `npm run uji:akses` | Matriks akses seluruh halaman terhadap seluruh peran |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
