@@ -4,11 +4,24 @@ import { GantiTema } from "@/components/ganti-tema";
 import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
 import { TombolKeluar } from "@/components/tombol-keluar";
+import { LABEL_KEANGGOTAAN } from "@/lib/organisasi";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { USIA_MAKS_PESERTA, USIA_MIN_PESERTA, umur } from "@/lib/profil";
 import { wajibPeran } from "@/lib/sesi";
 import { sisaWaktu, tanggalPendek } from "@/lib/teks";
+
+const LABEL_STATUS_KEANGGOTAAN: Record<string, string> = {
+  MENUNGGU: "Menunggu persetujuan pengurus",
+  TERVERIFIKASI: "Anggota",
+  DITOLAK: "Tidak disetujui",
+};
+
+const WARNA_KEANGGOTAAN: Record<string, string> = {
+  MENUNGGU: "bg-sunk text-muted",
+  TERVERIFIKASI: "bg-accent-soft text-accent",
+  DITOLAK: "bg-danger-soft text-danger",
+};
 
 export default async function DasborPemuda() {
   const sesi = await wajibPeran("pemuda");
@@ -39,15 +52,35 @@ export default async function DasborPemuda() {
     select: { id: true, judul: true, slug: true, tenggat: true },
   });
 
-  const [jumlahKegiatan, jumlahKarya, jumlahAspirasi, aspirasiDitanggapi] =
-    await Promise.all([
-      prisma.pendaftaran.count({ where: { userId: sesi.user.id } }),
-      prisma.karya.count({ where: { pemilikId: sesi.user.id } }),
-      prisma.aspirasi.count({ where: { pengirimId: sesi.user.id } }),
-      prisma.aspirasi.count({
-        where: { pengirimId: sesi.user.id, tanggapan: { not: null } },
-      }),
-    ]);
+  const [
+    jumlahKegiatan,
+    jumlahKarya,
+    jumlahAspirasi,
+    aspirasiDitanggapi,
+    keanggotaan,
+  ] = await Promise.all([
+    prisma.pendaftaran.count({ where: { userId: sesi.user.id } }),
+    prisma.karya.count({ where: { pemilikId: sesi.user.id } }),
+    prisma.aspirasi.count({ where: { pengirimId: sesi.user.id } }),
+    prisma.aspirasi.count({
+      where: { pengirimId: sesi.user.id, tanggapan: { not: null } },
+    }),
+    // Keputusan pengurus atas pengajuan keanggotaan sebelumnya hanya terlihat
+    // bila pemuda kebetulan membuka lagi halaman organisasi yang bersangkutan.
+    // Di sinilah tempat melihatnya tanpa harus mengingat ke mana dulu ia
+    // pernah mengajukan.
+    prisma.keanggotaan.findMany({
+      where: { userId: sesi.user.id },
+      orderBy: [{ status: "asc" }, { dibuatPada: "desc" }],
+      take: 20,
+      select: {
+        id: true,
+        status: true,
+        peran: true,
+        organisasi: { select: { nama: true, slug: true } },
+      },
+    }),
+  ]);
 
   const usia = profil?.tanggalLahir ? umur(profil.tanggalLahir, sekarang) : null;
   const diLuarRentang =
@@ -198,6 +231,48 @@ export default async function DasborPemuda() {
           </div>
         </Kartu>
       </div>
+
+      <Kartu className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-base font-semibold">Organisasi saya</h2>
+          <Link
+            href="/direktori"
+            className="text-sm text-accent underline underline-offset-2"
+          >
+            Cari organisasi
+          </Link>
+        </div>
+
+        {keanggotaan.length === 0 ? (
+          <p className="text-sm text-muted">
+            Anda belum tergabung di organisasi mana pun. Telusuri Direktori
+            Organisasi, lalu ajukan diri — pengurusnya yang akan menyetujui.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-2.5">
+            {keanggotaan.map((k) => (
+              <li key={k.id} className="flex flex-wrap items-center gap-2">
+                <Link
+                  href={`/direktori/${k.organisasi.slug}`}
+                  className="min-w-0 flex-1 truncate text-sm font-medium hover:text-accent"
+                >
+                  {k.organisasi.nama}
+                </Link>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${WARNA_KEANGGOTAAN[k.status]}`}
+                >
+                  {LABEL_STATUS_KEANGGOTAAN[k.status]}
+                </span>
+                {k.status === "TERVERIFIKASI" && k.peran !== "ANGGOTA" && (
+                  <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs text-muted">
+                    {LABEL_KEANGGOTAAN[k.peran]}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Kartu>
 
       {diLuarRentang && (
         <Kartu className="flex flex-col gap-2 border-l-4 border-l-brass">

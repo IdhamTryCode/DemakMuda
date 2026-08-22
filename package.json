@@ -23,7 +23,7 @@
     "db:seed:gambar": "tsx prisma/seed/gambar-demo.ts",
     "uji:kabar": "tsx scripts/uji-kabar.ts",
     "uji:agenda": "tsx scripts/uji-agenda.ts",
-    "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda && npm run uji:peluang && npm run uji:profil && npm run uji:pendaftaran && npm run uji:sertifikat && npm run uji:direktori && npm run uji:peta && npm run uji:admin && npm run uji:dualangkah && npm run uji:privasi && npm run uji:pencarian && npm run uji:karya && npm run uji:aspirasi && npm run uji:akses && npm run uji:unggah",
+    "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda && npm run uji:peluang && npm run uji:profil && npm run uji:pendaftaran && npm run uji:sertifikat && npm run uji:direktori && npm run uji:peta && npm run uji:admin && npm run uji:dualangkah && npm run uji:privasi && npm run uji:pencarian && npm run uji:karya && npm run uji:aspirasi && npm run uji:akses && npm run uji:unggah && npm run uji:keanggotaan",
     "uji:peluang": "tsx scripts/uji-peluang.ts",
     "uji:profil": "tsx scripts/uji-profil.ts",
     "uji:pendaftaran": "tsx scripts/uji-pendaftaran.ts",
@@ -37,7 +37,8 @@
     "uji:karya": "tsx scripts/uji-karya.ts",
     "uji:aspirasi": "tsx scripts/uji-aspirasi.ts",
     "uji:akses": "tsx scripts/uji-akses.ts",
-    "uji:unggah": "tsx scripts/uji-unggah.ts"
+    "uji:unggah": "tsx scripts/uji-unggah.ts",
+    "uji:keanggotaan": "tsx scripts/uji-keanggotaan.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
