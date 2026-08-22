@@ -257,6 +257,35 @@ async function main() {
     // dan itu memang penjagaan yang benar. Jadi yang diperiksa keterhubungannya
     // — bahwa aturan keanggotaan tinggal di berkas yang sama yang dipanggil
     // Server Action pendaftaran, sehingga keduanya tidak mungkin berbeda.
+    // Keadaan "khusus anggota tanpa penyelenggara" harus mustahil, bukan
+    // sekadar tidak dibuat. Skema Zod dan Server Action hanya menjaga satu
+    // jalur masuk; penyemai dan perbaikan lewat konsol tidak melewatinya.
+    // Batasan di basis datalah yang menutupnya di semua jalur.
+    const pembuat = await prisma.user.findFirstOrThrow({
+      where: { role: "dinas" },
+      select: { id: true },
+    });
+    let ditolak = false;
+    try {
+      await prisma.agenda.create({
+        data: {
+          judul: "Uji batasan khusus anggota",
+          slug: `uji-batasan-${Date.now()}`,
+          deskripsi: "Dibuat uji otomatis; seharusnya ditolak basis data.",
+          mulai: new Date(),
+          khususAnggota: true,
+          organisasiId: null,
+          pembuatId: pembuat.id,
+        },
+      });
+    } catch {
+      ditolak = true;
+    }
+    periksa(
+      ditolak,
+      "basis data menolak kegiatan khusus anggota tanpa penyelenggara",
+    );
+
     const { readFileSync } = await import("node:fs");
     const aturan = readFileSync("src/server/pendaftaran.ts", "utf8");
     const aksi = readFileSync("src/server/aksi-pendaftaran.ts", "utf8");

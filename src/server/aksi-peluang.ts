@@ -84,6 +84,23 @@ export async function buatPeluang(data: FormData): Promise<HasilAksi> {
     const n = hasil.data;
     const minat = await minatSah(data);
 
+    // Izin diperiksa lebih dulu, dan hasilnya menentukan. Bila dibiarkan
+    // dipanggil di tengah objek data, organisasi yang ditolak berubah menjadi
+    // null diam-diam — sementara khususAnggota tetap menyala. Yang tersimpan
+    // adalah kegiatan yang tidak dapat didaftari siapa pun, termasuk oleh yang
+    // membuatnya, tanpa satu pun pesan yang menjelaskan.
+    const organisasiId = await penyelenggaraSah(aktor, n.organisasiId ?? "");
+    if (n.khususAnggota && !organisasiId) {
+      return {
+        ok: false,
+        pesan: "Periksa kembali isian.",
+        kolom: {
+          organisasiId:
+            "Pilih organisasi yang Anda kelola untuk kegiatan khusus anggota.",
+        },
+      };
+    }
+
     const peluang = await prisma.peluang.create({
       data: {
         judul: n.judul,
@@ -95,7 +112,7 @@ export async function buatPeluang(data: FormData): Promise<HasilAksi> {
         usiaMin: n.usiaMin ?? null,
         usiaMaks: n.usiaMaks ?? null,
         status: n.status,
-        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        organisasiId,
         khususAnggota: n.khususAnggota,
         pembuatId: aktor.id,
         minat: { connect: minat.map((id) => ({ id })) },
@@ -142,6 +159,23 @@ export async function ubahPeluang(id: string, data: FormData): Promise<HasilAksi
 
     const minat = await minatSah(data);
 
+    // Izin diperiksa lebih dulu, dan hasilnya menentukan. Bila dibiarkan
+    // dipanggil di tengah objek data, organisasi yang ditolak berubah menjadi
+    // null diam-diam — sementara khususAnggota tetap menyala. Yang tersimpan
+    // adalah kegiatan yang tidak dapat didaftari siapa pun, termasuk oleh yang
+    // membuatnya, tanpa satu pun pesan yang menjelaskan.
+    const organisasiId = await penyelenggaraSah(aktor, n.organisasiId ?? "");
+    if (n.khususAnggota && !organisasiId) {
+      return {
+        ok: false,
+        pesan: "Periksa kembali isian.",
+        kolom: {
+          organisasiId:
+            "Pilih organisasi yang Anda kelola untuk kegiatan khusus anggota.",
+        },
+      };
+    }
+
     await prisma.peluang.update({
       where: { id },
       data: {
@@ -153,7 +187,7 @@ export async function ubahPeluang(id: string, data: FormData): Promise<HasilAksi
         usiaMin: n.usiaMin ?? null,
         usiaMaks: n.usiaMaks ?? null,
         status: n.status,
-        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        organisasiId,
         khususAnggota: n.khususAnggota,
         minat: { set: minat.map((id) => ({ id })) },
       },
