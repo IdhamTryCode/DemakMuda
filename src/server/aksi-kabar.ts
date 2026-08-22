@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { slugUnik } from "@/lib/teks";
 import { BeritaSkema, galatKolom, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { hapusBerkasLama } from "@/server/berkas";
 import {
   bolehMengubah,
   GagalIzin,
@@ -85,7 +86,13 @@ export async function ubahKabar(id: string, data: FormData): Promise<HasilAksi> 
 
     const lama = await prisma.berita.findUnique({
       where: { id },
-      select: { id: true, penulisId: true, status: true, terbitPada: true },
+      select: {
+        id: true,
+        penulisId: true,
+        status: true,
+        terbitPada: true,
+        gambarUrl: true,
+      },
     });
     if (!lama) return { ok: false, pesan: "Kabar tidak ditemukan." };
     if (!bolehMengubah(aktor, lama.penulisId)) {
@@ -106,6 +113,8 @@ export async function ubahKabar(id: string, data: FormData): Promise<HasilAksi> 
           n.status === "TERBIT" ? (lama.terbitPada ?? new Date()) : lama.terbitPada,
       },
     });
+
+    await hapusBerkasLama(lama.gambarUrl, n.gambarUrl || null);
 
     await catat({
       aktorId: aktor.id,

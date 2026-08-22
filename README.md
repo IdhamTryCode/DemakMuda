@@ -58,6 +58,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run db:seed` | Mengisi data acuan; aman dijalankan berulang kali |
 | `npm run db:seed:akun` | Membuat akun demo untuk keempat peran |
 | `npm run db:seed:isi` | Mengisi kabar, agenda, peluang, karya, dan aspirasi contoh untuk peragaan |
+| `npm run db:seed:gambar` | Membangkitkan dan mengunggah gambar contoh untuk kabar, karya, dan organisasi |
 | `npm run uji` | Menjalankan seluruh uji asap |
 | `npm run uji:masuk` | Uji asap alur masuk dan pengarahan peran |
 | `npm run uji:kabar` | Uji asap kanal Kabar |
@@ -75,6 +76,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:karya` | Uji asap Ruang Karya, termasuk penyaringan tautan |
 | `npm run uji:aspirasi` | Uji asap Ruang Aspirasi, terutama agar isinya tidak bocor ke publik |
 | `npm run uji:akses` | Matriks akses seluruh halaman terhadap seluruh peran |
+| `npm run uji:unggah` | Uji asap unggah berkas: penerbitan token, batasnya, dan penyaringan alamat |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |
@@ -216,6 +218,53 @@ sekolah pada formulir profil disembunyikan — bukan ditampilkan kosong.
 Daftar sekolah **tidak boleh dikarang**: itu data lembaga nyata. Bila sumber
 yang sahih sudah ditemukan, semai lewat pola yang sama dengan
 `prisma/seed/ambil-wilayah.ts`, lengkap dengan pemeriksaan jumlah.
+
+## Penyimpanan berkas
+
+Gambar kabar, gambar karya, dan logo organisasi disimpan di Vercel Blob.
+Perlu dua variabel lingkungan, keduanya dipasang otomatis oleh integrasi
+Vercel dan harus disalin ke `.env` untuk pengembangan lokal:
+
+| Variabel | Guna |
+| --- | --- |
+| `BLOB_READ_WRITE_TOKEN` | Rahasia. Dipakai menerbitkan token unggah dan menghapus berkas |
+| `BLOB_STORE_ID` | Bukan rahasia. Menurunkan nama inang yang dipakai `next.config.ts` |
+
+**Store-nya publik dengan sengaja**, karena gambarnya memang tampil di halaman
+yang dapat dibuka tanpa masuk. Konsekuensinya tegas: siapa pun yang memegang
+alamatnya dapat membukanya. Karena itu store ini hanya untuk berkas yang
+ditujukan bagi umum — tidak pernah untuk dokumen pribadi.
+
+Tiga hal yang tidak boleh hilang saat menyentuh bagian ini:
+
+1. **Kolom gambar hanya menerima alamat dari store kita sendiri.** Diperiksa
+   `alamatBlobSah()` di `src/lib/blob.ts`, dipakai skema Zod sebelum menyimpan
+   dan sekali lagi sebelum merender. Tanpa itu, kolom yang dipasang sebagai
+   sumber gambar menjadikan aplikasi ini perantara permintaan ke peladen mana
+   pun yang ditulis pengguna.
+2. **`remotePatterns` dikunci ke satu nama inang**, bukan pola bintang seluruh
+   ranah Vercel Blob. Dengan pola bintang, store milik siapa pun di Vercel
+   dapat disalurkan lewat pengoptimal gambar kita.
+3. **SVG ditolak** di daftar jenis pada token, di saringan peramban, dan lewat
+   `dangerouslyAllowSVG` yang dibiarkan mati. SVG dapat memuat skrip.
+
+Berkas tidak melewati peladen kita: peramban mengunggah langsung ke Vercel Blob
+memakai token berumur pendek dari `/api/unggah`, lalu alamat hasilnya dikirim
+balik lewat formulir dan disimpan Server Action yang sudah ada. `onUploadCompleted`
+sengaja tidak dipakai — callback itu diam-diam mati di localhost kecuali
+`VERCEL_BLOB_CALLBACK_URL` diarahkan ke terowongan, sehingga alurnya akan berbeda
+antara mesin pengembang dan produksi.
+
+### Gambar contoh
+
+`npm run db:seed:gambar` membangkitkan gambar geometris abstrak dari palet
+aplikasi — bukan foto, dan tidak ada yang berpura-pura menjadi rekaman tempat
+atau orang sungguhan. Bentuknya ditentukan slug, jadi satu isi selalu mendapat
+gambar yang sama, dan jalurnya tetap sehingga penyemaian ulang menimpa alih-alih
+menumpuk berkas yatim. Baris yang gambarnya sudah diunggah pengguna dilewati.
+
+Perlu diketahui: alamat blob dilayani dengan cache panjang. Setelah menimpa
+sebuah gambar, salinan lama masih dapat terlihat beberapa saat.
 
 ## Catatan keamanan
 

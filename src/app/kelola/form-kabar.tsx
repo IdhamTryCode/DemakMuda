@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
+import { PemilihGambar } from "@/components/pemilih-gambar";
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
 import type { HasilAksi } from "@/lib/validasi";
 
@@ -106,14 +107,12 @@ export function FormKabar({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="gambarUrl">Alamat gambar (opsional)</Label>
-        <Kolom
-          id="gambarUrl"
-          name="gambarUrl"
-          type="url"
-          defaultValue={awal.gambarUrl}
-          placeholder="https://…"
-          aria-invalid={Boolean(kolom.gambarUrl)}
+        <PemilihGambar
+          nama="gambarUrl"
+          ruang="berita"
+          awal={awal.gambarUrl}
+          label="Gambar kabar (opsional)"
+          keterangan="JPG, PNG, atau WEBP, maksimal 2 MB. Tampil di daftar Kabar dan di atas isinya."
         />
         {kolom.gambarUrl && <p className="text-xs text-danger">{kolom.gambarUrl}</p>}
       </div>

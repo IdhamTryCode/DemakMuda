@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Markdown } from "@/components/markdown";
+import { alamatBlobSah } from "@/lib/blob";
 import { prisma } from "@/lib/prisma";
 import { tanggalPanjang } from "@/lib/teks";
 
@@ -14,6 +16,7 @@ async function ambilKabar(slug: string) {
       judul: true,
       ringkasan: true,
       isi: true,
+      gambarUrl: true,
       terbitPada: true,
       penulis: { select: { name: true } },
       organisasi: { select: { nama: true } },
@@ -41,6 +44,10 @@ export default async function HalamanKabarRinci({
   const kabar = await ambilKabar(slug);
   if (!kabar) notFound();
 
+  // Diperiksa ulang tepat sebelum dirender. Baris warisan dari masa ketika
+  // kolom ini masih menerima alamat sembarang tidak pernah melewati skema.
+  const gambar = alamatBlobSah(kabar.gambarUrl ?? "") ? kabar.gambarUrl : null;
+
   return (
     <BingkaiPublik aktif="/kabar">
       <article className="mx-auto flex max-w-2xl flex-col gap-6">
@@ -60,6 +67,19 @@ export default async function HalamanKabarRinci({
             {kabar.organisasi?.nama ?? kabar.penulis.name}
           </p>
         </header>
+
+        {gambar && (
+          <div className="sk-inset relative aspect-[21/9] w-full overflow-hidden rounded-[10px]">
+            <Image
+              src={gambar}
+              alt={`Gambar untuk kabar ${kabar.judul}`}
+              fill
+              sizes="(min-width: 768px) 42rem, 100vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
         <hr className="border-line" />
 

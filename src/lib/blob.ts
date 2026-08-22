@@ -63,7 +63,7 @@ export const JENIS_GAMBAR = ["image/jpeg", "image/png", "image/webp"] as const;
 export const BATAS_GAMBAR = 2 * 1024 * 1024;
 
 /** Ruang penyimpanan, satu per jenis isi. Menentukan siapa yang boleh mengisi. */
-export const RUANG_BLOB = ["karya", "organisasi"] as const;
+export const RUANG_BLOB = ["karya", "organisasi", "berita"] as const;
 export type RuangBlob = (typeof RUANG_BLOB)[number];
 
 /**
@@ -74,7 +74,7 @@ export type RuangBlob = (typeof RUANG_BLOB)[number];
  * akhiran yang sepadan dengan jenis berkas yang diizinkan.
  */
 export const POLA_JALUR_BLOB =
-  /^(karya|organisasi)\/[a-z0-9][a-z0-9-]{0,59}\.(jpg|jpeg|png|webp)$/;
+  /^(karya|organisasi|berita)\/[a-z0-9][a-z0-9-]{0,59}\.(jpg|jpeg|png|webp)$/;
 
 /** Mengubah nama berkas dari peramban menjadi jalur yang lolos POLA_JALUR_BLOB. */
 export function jalurBlob(ruang: RuangBlob, namaBerkas: string): string {

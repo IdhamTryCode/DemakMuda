@@ -70,7 +70,7 @@ export const BeritaSkema = z.object({
   judul: teks(6, 160, "Judul"),
   ringkasan: teks(20, 300, "Ringkasan"),
   isi: teks(50, 20000, "Isi"),
-  gambarUrl: urlAman("Alamat gambar").optional().or(z.literal("")),
+  gambarUrl: urlUnggahan("Gambar kabar").optional().or(z.literal("")),
   status: StatusTerbitSkema,
 });
 

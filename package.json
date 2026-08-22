@@ -20,6 +20,7 @@
     "uji:masuk": "tsx scripts/uji-alur-masuk.ts",
     "aset:ikon": "tsx scripts/buat-ikon.ts",
     "db:seed:isi": "tsx prisma/seed/isi-demo.ts",
+    "db:seed:gambar": "tsx prisma/seed/gambar-demo.ts",
     "uji:kabar": "tsx scripts/uji-kabar.ts",
     "uji:agenda": "tsx scripts/uji-agenda.ts",
     "uji": "npm run uji:masuk && npm run uji:kabar && npm run uji:agenda && npm run uji:peluang && npm run uji:profil && npm run uji:pendaftaran && npm run uji:sertifikat && npm run uji:direktori && npm run uji:peta && npm run uji:admin && npm run uji:dualangkah && npm run uji:privasi && npm run uji:pencarian && npm run uji:karya && npm run uji:aspirasi && npm run uji:akses && npm run uji:unggah",

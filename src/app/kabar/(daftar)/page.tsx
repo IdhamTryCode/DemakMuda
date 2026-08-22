@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
@@ -44,6 +45,7 @@ export default async function HalamanKabar({
       judul: true,
       slug: true,
       ringkasan: true,
+      gambarUrl: true,
       terbitPada: true,
       penulis: { select: { name: true } },
     },
@@ -90,6 +92,17 @@ export default async function HalamanKabar({
               <li key={kabar.id}>
                 <Link href={`/kabar/${kabar.slug}`} className="block rounded-sk">
                   <Kartu className="sk-pressable flex flex-col gap-2">
+                    {kabar.gambarUrl && (
+                      <div className="sk-inset relative mb-1 aspect-[21/9] w-full overflow-hidden rounded-[8px]">
+                        <Image
+                          src={kabar.gambarUrl}
+                          alt=""
+                          fill
+                          sizes="(min-width: 768px) 46rem, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
                     <span className="text-xs uppercase tracking-wider text-brass">
                       {kabar.terbitPada ? tanggalPanjang(kabar.terbitPada) : "Draf"}
                     </span>
