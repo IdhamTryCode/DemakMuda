@@ -1985,6 +1985,304 @@ async function semaiAspirasi() {
   }
 }
 
+/**
+ * Riwayat dan pemberitahuan untuk akun peragaan.
+ *
+ * Tanpa ini, akun pemuda peragaan tampak seperti akun yang baru dibuat: tidak
+ * tergabung di organisasi mana pun, tidak pernah mendaftar kegiatan, tidak
+ * punya sertifikat, dan loncengnya kosong. Padahal justru riwayat itulah yang
+ * ingin diperlihatkan — aplikasi yang sudah dipakai, bukan yang baru dipasang.
+ *
+ * Pemberitahuannya sengaja dibuat SESUAI dengan keadaan yang benar-benar ada
+ * di basis data. Pemberitahuan "sertifikat terbit" yang tidak berpasangan
+ * dengan sertifikat sungguhan akan ketahuan begitu tautannya ditekan, dan itu
+ * jenis kejanggalan yang paling merusak saat diperagakan.
+ *
+ * Sebagian ditandai sudah dibaca dan sebagian belum, supaya perbedaan
+ * keduanya terlihat pada panel loncengnya.
+ */
+async function semaiKisahPeragaan() {
+  const [rani, pengurus, petugas] = await Promise.all([
+    prisma.user.findUnique({
+      where: { email: "pemuda@demakmuda.test" },
+      select: { id: true, name: true },
+    }),
+    prisma.user.findUnique({
+      where: { email: "organisasi@demakmuda.test" },
+      select: { id: true },
+    }),
+    prisma.user.findMany({
+      where: { email: { in: ["dinas@demakmuda.test", "admin@demakmuda.test"] } },
+      select: { id: true },
+    }),
+  ]);
+  if (!rani || !pengurus) throw new Error("Akun peragaan belum lengkap.");
+
+  // ── Keanggotaan Rani ──
+  const bintoro = await prisma.organisasi.findUniqueOrThrow({
+    where: { slug: "karang-taruna-bintoro" },
+    select: { id: true, nama: true, slug: true },
+  });
+  const pelari = await prisma.organisasi.findUniqueOrThrow({
+    where: { slug: "demak-runners" },
+    select: { id: true, nama: true, slug: true },
+  });
+
+  await prisma.keanggotaan.upsert({
+    where: { organisasiId_userId: { organisasiId: bintoro.id, userId: rani.id } },
+    update: { status: "TERVERIFIKASI", peran: "PENGURUS" },
+    create: {
+      organisasiId: bintoro.id,
+      userId: rani.id,
+      status: "TERVERIFIKASI",
+      peran: "PENGURUS",
+      dibuatPada: geser(-60, 10),
+    },
+  });
+  await prisma.keanggotaan.upsert({
+    where: { organisasiId_userId: { organisasiId: pelari.id, userId: rani.id } },
+    update: { status: "MENUNGGU" },
+    create: {
+      organisasiId: pelari.id,
+      userId: rani.id,
+      status: "MENUNGGU",
+      dibuatPada: geser(-2, 20),
+    },
+  });
+
+  // ── Permintaan gabung yang menunggu tanggapan pengurus ──
+  const calon = await prisma.user.findMany({
+    where: { email: { startsWith: "contoh-" } },
+    orderBy: { email: "asc" },
+    take: 3,
+    select: { id: true, name: true },
+  });
+  const organisasiPengurus = await prisma.organisasi.findMany({
+    where: { pemilikId: pengurus.id, statusVerifikasi: "TERVERIFIKASI" },
+    orderBy: { nama: "asc" },
+    take: 3,
+    select: { id: true, nama: true },
+  });
+  for (const [i, c] of calon.entries()) {
+    const sasaran = organisasiPengurus[i % organisasiPengurus.length];
+    if (!sasaran) continue;
+    await prisma.keanggotaan.upsert({
+      where: { organisasiId_userId: { organisasiId: sasaran.id, userId: c.id } },
+      update: { status: "MENUNGGU" },
+      create: {
+        organisasiId: sasaran.id,
+        userId: c.id,
+        status: "MENUNGGU",
+        dibuatPada: geser(-i - 1, 9),
+      },
+    });
+  }
+
+  // ── Kegiatan yang pernah diikuti Rani ──
+  const badminton = await prisma.peluang.findUniqueOrThrow({
+    where: { slug: "turnamen-bulu-tangkis-pemuda-cup-2026" },
+    select: { id: true, judul: true, pembuatId: true },
+  });
+  const lagu = await prisma.peluang.findUniqueOrThrow({
+    where: { slug: "lomba-cipta-lagu-daerah-2026-lampau" },
+    select: { id: true, judul: true, pembuatId: true },
+  });
+  const mabar = await prisma.agenda.findUniqueOrThrow({
+    where: { slug: "mabar-badminton-gor-demak" },
+    select: { id: true, judul: true },
+  });
+
+  await prisma.pendaftaran.upsert({
+    where: { userId_peluangId: { userId: rani.id, peluangId: badminton.id } },
+    update: { status: "DITERIMA" },
+    create: {
+      userId: rani.id,
+      peluangId: badminton.id,
+      status: "DITERIMA",
+      dibuatPada: geser(-5, 14),
+    },
+  });
+  await prisma.pendaftaran.upsert({
+    where: { userId_agendaId: { userId: rani.id, agendaId: mabar.id } },
+    update: { status: "DITERIMA" },
+    create: {
+      userId: rani.id,
+      agendaId: mabar.id,
+      status: "DITERIMA",
+      dibuatPada: geser(-3, 19),
+    },
+  });
+  const ikutLagu = await prisma.pendaftaran.upsert({
+    where: { userId_peluangId: { userId: rani.id, peluangId: lagu.id } },
+    update: { status: "HADIR" },
+    create: {
+      userId: rani.id,
+      peluangId: lagu.id,
+      status: "HADIR",
+      dibuatPada: geser(-40, 10),
+    },
+    select: { id: true },
+  });
+
+  // ── Sertifikat Rani, berpasangan dengan kehadirannya di atas ──
+  const KODE_RANI = "DM-RANI-2026";
+  await prisma.sertifikat.upsert({
+    where: { pendaftaranId: ikutLagu.id },
+    update: {},
+    create: {
+      kode: KODE_RANI,
+      judul: lagu.judul,
+      peringkat: "Juara 2",
+      penerimaId: rani.id,
+      penerbitId: lagu.pembuatId,
+      pendaftaranId: ikutLagu.id,
+      terbitPada: geser(-12, 11),
+    },
+  });
+
+  // ── Pemberitahuan ──
+  const aspirasiDitanggapi = await prisma.aspirasi.findMany({
+    where: { pengirimId: rani.id, tanggapan: { not: null } },
+    orderBy: { dibuatPada: "desc" },
+    select: { id: true, judul: true },
+  });
+  const aspirasiBaru = await prisma.aspirasi.findMany({
+    where: { status: "BARU" },
+    orderBy: { dibuatPada: "desc" },
+    take: 3,
+    select: { id: true, judul: true },
+  });
+
+  type Kabar = {
+    id: string;
+    penerimaId: string;
+    jenis:
+      | "KEANGGOTAAN_DIAJUKAN"
+      | "KEANGGOTAAN_DIPUTUSKAN"
+      | "ASPIRASI_MASUK"
+      | "ASPIRASI_DITANGGAPI"
+      | "PENDAFTARAN_DIPUTUSKAN"
+      | "SERTIFIKAT_TERBIT"
+      | "ORGANISASI_DIVERIFIKASI";
+    judul: string;
+    pesan: string;
+    tautan: string;
+    jamLalu: number;
+    terbaca: boolean;
+  };
+
+  const kabar: Kabar[] = [
+    {
+      id: "notif-demo-rani-1",
+      penerimaId: rani.id,
+      jenis: "SERTIFIKAT_TERBIT",
+      judul: "Sertifikat Anda terbit",
+      pesan: `${lagu.judul} — kode ${KODE_RANI}`,
+      tautan: `/cek/${KODE_RANI}`,
+      jamLalu: 3,
+      terbaca: false,
+    },
+    {
+      id: "notif-demo-rani-2",
+      penerimaId: rani.id,
+      jenis: "KEANGGOTAAN_DIPUTUSKAN",
+      judul: "Pengajuan keanggotaan diterima",
+      pesan: `Anda kini tercatat sebagai anggota ${bintoro.nama}.`,
+      tautan: `/direktori/${bintoro.slug}`,
+      jamLalu: 20,
+      terbaca: false,
+    },
+    {
+      id: "notif-demo-rani-3",
+      penerimaId: rani.id,
+      jenis: "PENDAFTARAN_DIPUTUSKAN",
+      judul: "Pendaftaran Anda diterima",
+      pesan: badminton.judul,
+      tautan: "/pemuda/kegiatan",
+      jamLalu: 52,
+      terbaca: true,
+    },
+  ];
+
+  aspirasiDitanggapi.forEach((a, i) => {
+    kabar.push({
+      id: `notif-demo-rani-aspirasi-${i + 1}`,
+      penerimaId: rani.id,
+      jenis: "ASPIRASI_DITANGGAPI",
+      judul: "Aspirasi Anda ditanggapi dinas",
+      pesan: a.judul,
+      tautan: "/pemuda/aspirasi",
+      jamLalu: 70 + i * 40,
+      terbaca: i > 0,
+    });
+  });
+
+  calon.forEach((c, i) => {
+    const sasaran = organisasiPengurus[i % organisasiPengurus.length];
+    if (!sasaran) return;
+    kabar.push({
+      id: `notif-demo-pengurus-${i + 1}`,
+      penerimaId: pengurus.id,
+      jenis: "KEANGGOTAAN_DIAJUKAN",
+      judul: "Permintaan bergabung baru",
+      pesan: `${c.name} mengajukan diri sebagai anggota ${sasaran.nama}.`,
+      tautan: `/kelola/organisasi/${sasaran.id}/anggota`,
+      jamLalu: 6 + i * 18,
+      terbaca: i === 2,
+    });
+  });
+
+  kabar.push({
+    id: "notif-demo-pengurus-verifikasi",
+    penerimaId: pengurus.id,
+    jenis: "ORGANISASI_DIVERIFIKASI",
+    judul: "Organisasi Anda terverifikasi",
+    pesan: `${bintoro.nama} kini tampil di Direktori Organisasi.`,
+    tautan: `/kelola/organisasi/${bintoro.id}`,
+    jamLalu: 96,
+    terbaca: true,
+  });
+
+  for (const p of petugas) {
+    aspirasiBaru.forEach((a, i) => {
+      kabar.push({
+        id: `notif-demo-dinas-${p.id.slice(-6)}-${i + 1}`,
+        penerimaId: p.id,
+        jenis: "ASPIRASI_MASUK",
+        judul: "Aspirasi baru masuk",
+        pesan: a.judul,
+        tautan: `/kelola/aspirasi/${a.id}`,
+        jamLalu: 8 + i * 26,
+        terbaca: false,
+      });
+    });
+  }
+
+  for (const k of kabar) {
+    const dibuatPada = new Date(ACUAN.getTime() - k.jamLalu * 60 * 60 * 1000);
+    const isi = {
+      jenis: k.jenis,
+      judul: k.judul,
+      pesan: k.pesan,
+      tautan: k.tautan,
+      dibacaPada: k.terbaca
+        ? new Date(dibuatPada.getTime() + 30 * 60 * 1000)
+        : null,
+    };
+    await prisma.notifikasi.upsert({
+      where: { id: k.id },
+      update: isi,
+      create: { id: k.id, ...isi, penerimaId: k.penerimaId, dibuatPada },
+    });
+  }
+
+  const belum = await prisma.notifikasi.count({ where: { dibacaPada: null } });
+  console.log(
+    `Kisah peragaan: ${await prisma.notifikasi.count()} pemberitahuan ` +
+      `(${belum} belum dibaca), sertifikat ${KODE_RANI}`,
+  );
+}
+
 async function main() {
   console.log(`Acuan tanggal: ${ACUAN.toLocaleDateString("id-ID", { dateStyle: "full" })}`);
   const penulis = await prisma.user.findUnique({
@@ -2033,6 +2331,7 @@ async function main() {
   await semaiKeikutsertaan();
   await semaiKarya();
   await semaiAspirasi();
+  await semaiKisahPeragaan();
 
   console.log("Penyemaian isi contoh selesai.");
 }

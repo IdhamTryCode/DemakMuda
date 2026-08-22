@@ -29,18 +29,29 @@ const KEPALA_JSON = { "content-type": "application/json", origin: PANGKALAN };
 
 const RAHASIA = "Kalimat rahasia uji notifikasi yang tidak boleh terbaca siapa pun";
 
+/**
+ * Uji ini memakai akunnya sendiri, bukan akun peragaan.
+ *
+ * Akun peragaan sudah punya pemberitahuan bawaan supaya loncengnya tidak
+ * kosong saat dipertunjukkan, sehingga pemeriksaan seperti "hitungannya
+ * kembali nol" tidak lagi berlaku di sana. Akun baru selalu bermula dari nol,
+ * dan itu membuat angkanya dapat diperiksa apa adanya.
+ */
+const SUREL_UJI = "uji-notifikasi@demakmuda.test";
+const SANDI_UJI = "UjiNotifikasi2026!";
+
 let gagal = 0;
 function periksa(lulus: boolean, keterangan: string) {
   console.log(`  ${lulus ? "✓" : "✗"} ${keterangan}`);
   if (!lulus) gagal++;
 }
 
-async function masuk(email: string): Promise<string> {
+async function masuk(email: string, sandi = KATA_SANDI): Promise<string> {
   await prisma.rateLimit.deleteMany();
   const res = await fetch(`${PANGKALAN}/api/auth/sign-in/email`, {
     method: "POST",
     headers: KEPALA_JSON,
-    body: JSON.stringify({ email, password: KATA_SANDI }),
+    body: JSON.stringify({ email, password: sandi }),
   });
   if (!res.ok) throw new Error(`gagal masuk sebagai ${email}: ${res.status}`);
   return res.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
@@ -59,26 +70,44 @@ async function ambil(jalur: string, kuki = "") {
   };
 }
 
+async function bersihkan() {
+  const u = await prisma.user.findUnique({
+    where: { email: SUREL_UJI },
+    select: { id: true },
+  });
+  if (!u) return;
+  await prisma.notifikasi.deleteMany({ where: { penerimaId: u.id } });
+  await prisma.session.deleteMany({ where: { userId: u.id } });
+  await prisma.account.deleteMany({ where: { userId: u.id } });
+  await prisma.user.delete({ where: { id: u.id } });
+}
+
 async function main() {
   console.log(`Menguji ${PANGKALAN}\n`);
+  await bersihkan();
   await prisma.rateLimit.deleteMany();
 
-  const [pemuda, organisasi] = await Promise.all([
-    prisma.user.findUniqueOrThrow({
-      where: { email: "pemuda@demakmuda.test" },
-      select: { id: true },
+  const daftar = await fetch(`${PANGKALAN}/api/auth/sign-up/email`, {
+    method: "POST",
+    headers: KEPALA_JSON,
+    body: JSON.stringify({
+      name: "Pemuda Uji Notifikasi",
+      email: SUREL_UJI,
+      password: SANDI_UJI,
     }),
-    prisma.user.findUniqueOrThrow({
-      where: { email: "organisasi@demakmuda.test" },
-      select: { id: true },
-    }),
-  ]);
-
-  await prisma.notifikasi.deleteMany({
-    where: { penerimaId: { in: [pemuda.id, organisasi.id] }, pesan: RAHASIA },
+  });
+  periksa(daftar.status === 200, `akun uji dibuat (${daftar.status})`);
+  const pemuda = await prisma.user.update({
+    where: { email: SUREL_UJI },
+    data: { emailVerified: true, role: "pemuda" },
+    select: { id: true },
+  });
+  const organisasi = await prisma.user.findUniqueOrThrow({
+    where: { email: "organisasi@demakmuda.test" },
+    select: { id: true },
   });
 
-  console.log("kabar sampai ke penerimanya");
+  console.log("\nkabar sampai ke penerimanya");
   const notif = await prisma.notifikasi.create({
     data: {
       penerimaId: pemuda.id,
@@ -90,7 +119,7 @@ async function main() {
     select: { id: true },
   });
 
-  const kukiPemuda = await masuk("pemuda@demakmuda.test");
+  const kukiPemuda = await masuk(SUREL_UJI, SANDI_UJI);
   const kukiOrg = await masuk("organisasi@demakmuda.test");
 
   const halaman = await ambil("/notifikasi", kukiPemuda);
@@ -189,7 +218,7 @@ async function main() {
     periksa(isi.includes(jenis), `${berkas} memancarkan ${jenis}`);
   }
 
-  await prisma.notifikasi.deleteMany({ where: { id: notif.id } });
+  await bersihkan();
   await prisma.rateLimit.deleteMany();
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
