@@ -38,6 +38,27 @@ export default function Beranda() {
           <p className="text-sm italic text-muted">Nyawiji dadi soko.</p>
         </div>
 
+        {/* Pernyataan tema. Aplikasinya sudah menjawab tema lewat fungsinya,
+            tetapi fungsi tidak menjelaskan dirinya sendiri kepada pembaca yang
+            baru pertama membuka — hubungannya perlu dinyatakan. */}
+        <div className="sk-inset flex flex-col gap-2 p-5">
+          <span className="text-xs font-semibold uppercase tracking-wider text-brass">
+            Menyongsong bonus demografi menuju Generasi Emas 2045
+          </span>
+          <p className="max-w-prose text-sm leading-relaxed text-ink-soft">
+            Bonus demografi adalah jendela, bukan hadiah: yang menentukan bukan
+            berapa banyak pemuda Demak, melainkan apakah mereka terdata,
+            tersalurkan, terbukti kemampuannya, dan terdengar suaranya. Empat
+            hal itulah yang dikerjakan aplikasi ini.
+          </p>
+          <Link
+            href="/latar"
+            className="w-fit pt-0.5 text-sm text-accent underline underline-offset-2"
+          >
+            Latar dan tujuan selengkapnya →
+          </Link>
+        </div>
+
         <div className="flex flex-wrap gap-3">
           <Link
             href="/daftar"

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s — DemakMuda",
   },
   description:
-    "Portal talenta dan peluang pemuda Kabupaten Demak: kabar, agenda, peluang, dan portofolio digital dalam satu tempat.",
+    "Aplikasi kepemudaan Kabupaten Demak untuk menyongsong bonus demografi menuju Generasi Emas 2045: pendataan talenta, penyaluran peluang, bukti kompetensi, dan ruang aspirasi.",
 };
 
 /**

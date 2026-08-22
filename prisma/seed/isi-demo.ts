@@ -24,8 +24,29 @@ const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL belum diisi.");
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 
-/** Tanggal acuan tetap supaya kondisi demo selalu sama setiap disemai ulang. */
-const ACUAN = new Date("2026-08-19T00:00:00+07:00");
+/**
+ * Tanggal acuan penyemaian.
+ *
+ * Semula dipatok tetap supaya kondisi peragaan selalu sama. Justru itu yang
+ * membuatnya rapuh: waktu nyata terus berjalan sementara acuannya diam,
+ * sehingga agenda yang disemai sebagai "mendatang" perlahan berpindah menjadi
+ * lampau. Beberapa hari setelah penyemaian, halaman Agenda mulai tampak
+ * kosong dan Papan Peluang penuh peluang yang sudah tutup — persis kebalikan
+ * dari yang ingin diperlihatkan.
+ *
+ * Sekarang acuannya mengikuti hari penyemaian, tengah malam waktu setempat.
+ * Kondisi peragaan tetap dapat diulang persis, hanya saja relatif terhadap
+ * hari itu. Isi ACUAN_SEMAI bila perlu menguji tanggal tertentu.
+ */
+const ACUAN = (() => {
+  const dari = process.env.ACUAN_SEMAI;
+  const d = dari ? new Date(dari) : new Date();
+  if (Number.isNaN(d.getTime())) {
+    throw new Error(`ACUAN_SEMAI bukan tanggal yang sah: ${dari}`);
+  }
+  d.setHours(0, 0, 0, 0);
+  return d;
+})();
 
 function geser(hari: number, jam = 8): Date {
   const d = new Date(ACUAN);
@@ -1965,6 +1986,7 @@ async function semaiAspirasi() {
 }
 
 async function main() {
+  console.log(`Acuan tanggal: ${ACUAN.toLocaleDateString("id-ID", { dateStyle: "full" })}`);
   const penulis = await prisma.user.findUnique({
     where: { email: "dinas@demakmuda.test" },
     select: { id: true },

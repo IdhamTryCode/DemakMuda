@@ -184,6 +184,28 @@ seluruh halaman publik mencari kalimat yang hanya ada di dalam aspirasi.
 Pengiriman aspirasi dibatasi jeda lima menit antar-kiriman dan lima kiriman
 per akun per hari, dan Ruang Karya dibatasi tiga puluh karya per akun.
 
+## Menyegarkan data peragaan sebelum dipertunjukkan
+
+Tanggal pada isi contoh dihitung relatif terhadap **hari penyemaian**, bukan
+terhadap tanggal tetap. Agenda dan peluang disemai tersebar di sekitar hari itu:
+sebagian sudah lewat, sebagian sedang berjalan, sebagian masih jauh.
+
+Karena itu jalankan ulang penyemaian isi menjelang hari peragaan:
+
+```bash
+npm run db:seed:isi
+```
+
+Aman diulang berapa kali pun dan tidak menyentuh akun. Tanpa ini, halaman
+Agenda perlahan menjadi kosong dan Papan Peluang penuh peluang yang sudah
+tutup — persis kebalikan dari yang ingin diperlihatkan.
+
+Untuk menguji keadaan pada tanggal tertentu, isi `ACUAN_SEMAI`:
+
+```bash
+ACUAN_SEMAI=2026-09-14 npm run db:seed:isi
+```
+
 ## Data yang belum lengkap
 
 Tabel `sekolah` masih kosong. Cetak biru menjanjikan daftar SMA, SMK, dan MA

@@ -81,9 +81,14 @@ export async function BingkaiPublik({
 
       <footer className="flex flex-col items-center gap-2 border-t border-line px-6 py-6 text-center text-xs text-muted">
         <span>DemakMuda — Portal talenta dan peluang pemuda Kabupaten Demak</span>
-        <Link href="/privasi" className="text-accent underline underline-offset-2">
-          Perlindungan data
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+          <Link href="/latar" className="text-accent underline underline-offset-2">
+            Latar dan tujuan
+          </Link>
+          <Link href="/privasi" className="text-accent underline underline-offset-2">
+            Perlindungan data
+          </Link>
+        </div>
       </footer>
     </>
   );
