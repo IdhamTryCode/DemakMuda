@@ -64,11 +64,54 @@ export function PanelLonceng({
     };
   }, [buka]);
 
-  async function bukaNotifikasi(n: RingkasNotifikasi) {
+  /**
+   * Menandai terbaca TANPA menahan perpindahan halaman.
+   *
+   * Perpindahannya dikerjakan tautan biasa, bukan router.push sesudah await.
+   * Bila penandaan dan perpindahan dirangkai, kegagalan menandai ikut
+   * membatalkan perpindahan — pengguna menekan sesuatu dan tidak terjadi apa
+   * pun. Yang penting sampai ke tujuan; menandai terbaca boleh menyusul.
+   *
+   * Penyegaran dipanggil setelah penandaan selesai, saat halaman tujuan sudah
+   * tergambar, supaya angka pada loncengnya ikut turun.
+   */
+  function tandaiDiLatar(n: RingkasNotifikasi) {
     setBuka(false);
-    if (!n.terbaca) await tandai(n.id);
-    if (n.tautan) router.push(n.tautan);
-    router.refresh();
+    if (n.terbaca) return;
+    void tandai(n.id).then(() => router.refresh());
+  }
+
+  function isiBaris(n: RingkasNotifikasi) {
+    return (
+      <>
+        {/* Penanda belum dibaca. Yang sudah dibaca tidak diberi apa pun —
+            bedanya justru pada ketiadaannya. */}
+        <span
+          aria-hidden="true"
+          className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+            n.terbaca ? "bg-transparent" : "bg-accent"
+          }`}
+        />
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span
+            className={`text-sm leading-snug ${
+              n.terbaca ? "text-ink-soft" : "font-semibold text-ink"
+            }`}
+          >
+            {n.judul}
+            {!n.terbaca && <span className="sr-only"> (belum dibaca)</span>}
+          </span>
+          <span className="line-clamp-2 text-xs text-ink-soft">{n.pesan}</span>
+          <span className="text-xs text-muted">{n.waktu}</span>
+        </span>
+      </>
+    );
+  }
+
+  function gayaBaris(n: RingkasNotifikasi) {
+    return `flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-sunk ${
+      n.terbaca ? "" : "bg-accent-soft/50"
+    }`;
   }
 
   return (
@@ -120,36 +163,26 @@ export function PanelLonceng({
           <ul className="max-h-[22rem] overflow-y-auto">
             {daftar.map((n) => (
               <li key={n.id} className="border-b border-line last:border-b-0">
-                <button
-                  type="button"
-                  onClick={() => bukaNotifikasi(n)}
-                  className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-sunk ${
-                    n.terbaca ? "" : "bg-accent-soft/50"
-                  }`}
-                >
-                  {/* Penanda belum dibaca. Yang sudah dibaca tidak diberi apa
-                      pun — bedanya justru pada ketiadaannya. */}
-                  <span
-                    aria-hidden="true"
-                    className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                      n.terbaca ? "bg-transparent" : "bg-accent"
-                    }`}
-                  />
-                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span
-                      className={`text-sm leading-snug ${
-                        n.terbaca ? "text-ink-soft" : "font-semibold text-ink"
-                      }`}
-                    >
-                      {n.judul}
-                      {!n.terbaca && <span className="sr-only"> (belum dibaca)</span>}
-                    </span>
-                    <span className="line-clamp-2 text-xs text-ink-soft">
-                      {n.pesan}
-                    </span>
-                    <span className="text-xs text-muted">{n.waktu}</span>
-                  </span>
-                </button>
+                {n.tautan ? (
+                  // Tautan sungguhan, bukan tombol yang meniru tautan: alamatnya
+                  // terlihat di bilah status, dapat dibuka di tab baru, dan tetap
+                  // bekerja sekalipun penandaan terbaca gagal.
+                  <Link
+                    href={n.tautan}
+                    onClick={() => tandaiDiLatar(n)}
+                    className={gayaBaris(n)}
+                  >
+                    {isiBaris(n)}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => tandaiDiLatar(n)}
+                    className={gayaBaris(n)}
+                  >
+                    {isiBaris(n)}
+                  </button>
+                )}
               </li>
             ))}
           </ul>

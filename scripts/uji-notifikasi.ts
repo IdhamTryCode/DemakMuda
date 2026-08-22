@@ -147,6 +147,13 @@ async function main() {
     dasbor.isi.includes("Lihat semua") && dasbor.isi.includes('href="/notifikasi"'),
     "panel menautkan arsip lengkapnya",
   );
+  // Barisnya harus tautan sungguhan. Ketika ia hanya tombol, perpindahan
+  // bergantung pada selesainya penandaan terbaca lebih dulu — satu perjalanan
+  // ke peladen yang tidak perlu, dan terasa seperti aplikasi yang tersendat.
+  periksa(
+    dasbor.isi.includes('href="/pemuda"'),
+    "baris pemberitahuan berupa tautan sungguhan, bukan tombol",
+  );
 
   console.log("\nkabar tidak sampai ke orang lain");
   const orangLain = await ambil("/notifikasi", kukiOrg);
