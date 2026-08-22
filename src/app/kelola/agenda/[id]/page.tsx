@@ -20,6 +20,16 @@ export default async function HalamanUbahAgenda({
   const { id } = await params;
   const sesi = await wajibPeran("organisasi", "dinas", "superadmin");
 
+  // Hanya organisasi yang boleh dikelola pemanggil. Dinas dan superadmin
+  // berwenang atas seluruhnya; pengelola organisasi hanya atas miliknya —
+  // aturan yang sama persis ditegakkan ulang di Server Action-nya.
+  const organisasi = await prisma.organisasi.findMany({
+    where: sesi.peran === "organisasi" ? { pemilikId: sesi.user.id } : undefined,
+    orderBy: { nama: "asc" },
+    select: { id: true, nama: true },
+  });
+
+
   const [agenda, kecamatan] = await Promise.all([
     prisma.agenda.findUnique({
       where: { id },
@@ -33,6 +43,8 @@ export default async function HalamanUbahAgenda({
         kecamatanId: true,
         status: true,
         pembuatId: true,
+      organisasiId: true,
+      khususAnggota: true,
       },
     }),
     prisma.kecamatan.findMany({
@@ -77,6 +89,7 @@ export default async function HalamanUbahAgenda({
 
       <Kartu>
         <FormAgenda
+          organisasi={organisasi}
           kecamatan={kecamatan}
           simpan={simpan}
           awal={{
@@ -87,6 +100,8 @@ export default async function HalamanUbahAgenda({
             selesai: agenda.selesai ? keNilaiWaktuLokal(agenda.selesai) : "",
             kecamatanId: agenda.kecamatanId ?? "",
             status: agenda.status === "TERBIT" ? "TERBIT" : "DRAF",
+            organisasiId: agenda.organisasiId ?? "",
+            khususAnggota: agenda.khususAnggota,
           }}
         />
       </Kartu>

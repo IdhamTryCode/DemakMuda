@@ -214,6 +214,63 @@ async function main() {
     "penolakan pun terbaca dari dasbor pemuda",
   );
 
+  console.log("\nkeanggotaan sebagai syarat mendaftar");
+  // Inilah akibat nyata dari bergabung. Tanpa ini, keanggotaan hanya daftar
+  // nama: yang bergabung tidak memperoleh apa pun yang tidak dimiliki orang
+  // lain, dan pembatasannya tidak pernah benar-benar diuji.
+  const kegiatan = await prisma.agenda.findFirst({
+    where: { khususAnggota: true, status: "TERBIT" },
+    select: { id: true, slug: true, organisasiId: true },
+  });
+
+  if (!kegiatan?.organisasiId) {
+    periksa(false, "ada kegiatan khusus anggota pada data contoh");
+  } else {
+    const halaman = await ambil(`/agenda/${kegiatan.slug}`);
+    periksa(halaman.isi.includes("Khusus anggota"), "pembatasannya dinyatakan terbuka");
+
+    // Rani anggota terverifikasi organisasi penyelenggaranya.
+    const kukiRani = await masuk("pemuda@demakmuda.test");
+    const bagiAnggota = await ambil(`/agenda/${kegiatan.slug}`, kukiRani);
+    periksa(
+      bagiAnggota.isi.includes("Ikut kegiatan ini"),
+      "anggota terverifikasi ditawari mendaftar",
+    );
+
+    // Akun uji belum menjadi anggota organisasi itu.
+    const bukanAnggota = await ambil(`/agenda/${kegiatan.slug}`, kukiPemuda);
+    periksa(
+      bukanAnggota.isi.includes("Belum dapat mendaftar") &&
+        bukanAnggota.isi.includes("khusus anggota"),
+      "yang bukan anggota ditolak, dengan alasan yang jelas",
+    );
+    periksa(
+      !bukanAnggota.isi.includes("Ikut kegiatan ini"),
+      "tombol daftar tidak ditawarkan kepada yang bukan anggota",
+    );
+
+    // Aturannya harus ditegakkan Server Action, bukan sekadar disembunyikan
+    // dari layar — tombol yang hilang tetap dapat dilewati dengan mengirim
+    // permintaannya langsung.
+    //
+    // Modulnya sendiri tidak dapat diimpor ke sini: ia memakai "server-only",
+    // dan itu memang penjagaan yang benar. Jadi yang diperiksa keterhubungannya
+    // — bahwa aturan keanggotaan tinggal di berkas yang sama yang dipanggil
+    // Server Action pendaftaran, sehingga keduanya tidak mungkin berbeda.
+    const { readFileSync } = await import("node:fs");
+    const aturan = readFileSync("src/server/pendaftaran.ts", "utf8");
+    const aksi = readFileSync("src/server/aksi-pendaftaran.ts", "utf8");
+    periksa(
+      aturan.includes("bolehSebagaiAnggota") &&
+        aturan.includes("TERVERIFIKASI"),
+      "aturan keanggotaan tinggal di modul kelayakan bersama",
+    );
+    periksa(
+      aksi.includes("periksaKelayakan") && aksi.includes("kelayakan.boleh"),
+      "Server Action pendaftaran menegakkan aturan yang sama sebelum menyimpan",
+    );
+  }
+
   await bersihkan();
   await prisma.rateLimit.deleteMany();
 

@@ -11,6 +11,7 @@ import {
   GagalIzin,
   PENGELOLA_ISI,
   wajibAktor,
+  type Aktor,
 } from "@/server/penjaga";
 
 /** Server Action untuk Agenda Demak. Urutan pemeriksaannya sama dengan Kabar. */
@@ -25,6 +26,8 @@ function bacaFormulir(data: FormData) {
     selesai: selesai || null,
     kecamatanId: String(data.get("kecamatanId") ?? ""),
     status: String(data.get("status") ?? "DRAF"),
+    organisasiId: String(data.get("organisasiId") ?? ""),
+    khususAnggota: data.get("khususAnggota") === "on",
   };
 }
 
@@ -36,6 +39,31 @@ async function kecamatanSah(id: string): Promise<string | null> {
     select: { id: true },
   });
   return ada?.id ?? null;
+}
+
+
+/**
+ * Memastikan organisasi penyelenggara memang boleh dipakai pemanggil.
+ *
+ * Tanpa pemeriksaan ini, siapa pun yang berwenang membuat kegiatan dapat
+ * menempelkan nama organisasi milik orang lain padanya — dan bila kegiatan itu
+ * ditandai khusus anggota, ia sekaligus mengatur siapa yang boleh mendaftar ke
+ * organisasi yang bukan miliknya.
+ *
+ * Membalas null berarti tanpa penyelenggara, bukan gagal: kegiatan memang boleh
+ * berdiri sendiri tanpa organisasi.
+ */
+async function penyelenggaraSah(
+  aktor: Aktor,
+  organisasiId: string,
+): Promise<string | null> {
+  if (!organisasiId) return null;
+  const organisasi = await prisma.organisasi.findUnique({
+    where: { id: organisasiId },
+    select: { id: true, pemilikId: true },
+  });
+  if (!organisasi) return null;
+  return bolehMengubah(aktor, organisasi.pemilikId) ? organisasi.id : null;
 }
 
 export async function buatAgenda(data: FormData): Promise<HasilAksi> {
@@ -58,6 +86,8 @@ export async function buatAgenda(data: FormData): Promise<HasilAksi> {
         selesai: n.selesai ?? null,
         kecamatanId: await kecamatanSah(n.kecamatanId ?? ""),
         status: n.status,
+        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        khususAnggota: n.khususAnggota,
         pembuatId: aktor.id,
       },
       select: { id: true },
@@ -110,6 +140,8 @@ export async function ubahAgenda(id: string, data: FormData): Promise<HasilAksi>
         selesai: n.selesai ?? null,
         kecamatanId: await kecamatanSah(n.kecamatanId ?? ""),
         status: n.status,
+        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        khususAnggota: n.khususAnggota,
       },
     });
 

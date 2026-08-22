@@ -21,6 +21,7 @@ async function ambilAgenda(slug: string) {
       kecamatan: { select: { nama: true } },
       pembuat: { select: { name: true } },
       organisasi: { select: { nama: true } },
+      khususAnggota: true,
     },
   });
 }
@@ -76,6 +77,11 @@ export default async function HalamanAgendaRinci({
           {sudahLewat && (
             <span className="w-fit rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
               Kegiatan ini sudah berlangsung
+            </span>
+          )}
+          {agenda.khususAnggota && (
+            <span className="w-fit rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+              Khusus anggota
             </span>
           )}
           <h1 className="text-3xl font-semibold leading-tight tracking-tight">

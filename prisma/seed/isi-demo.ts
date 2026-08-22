@@ -2078,6 +2078,35 @@ async function semaiKisahPeragaan() {
     });
   }
 
+  // ── Satu kegiatan khusus anggota, supaya pembatasannya dapat diperagakan ──
+  //
+  // Dilekatkan pada Karang Taruna Bintoro, tempat Rani menjadi pengurus. Jadi
+  // Rani boleh mendaftar sementara pemuda lain ditolak dengan alasan yang jelas
+  // — perbedaan yang tidak akan terlihat bila keduanya sama-sama boleh.
+  const rapatAnggota = await prisma.agenda.findUnique({
+    where: { slug: "nobar-final-liga-pemuda-lapangan-desa" },
+    select: { id: true },
+  });
+  if (rapatAnggota) {
+    await prisma.agenda.update({
+      where: { id: rapatAnggota.id },
+      data: { organisasiId: bintoro.id, khususAnggota: true },
+    });
+  }
+
+  // Sisa kegiatan milik pengurus diberi atribusi organisasi, tanpa dibatasi.
+  // Kolom organisasiId sudah lama ada di skema tetapi tidak pernah terisi,
+  // sehingga halaman kegiatan selalu menyebut nama akun pembuatnya alih-alih
+  // nama organisasinya.
+  for (const [slug, organisasiId] of [
+    ["mabar-badminton-gor-demak", bintoro.id],
+    ["fun-run-pesisir-morodemak", pelari.id],
+    ["gowes-santai-kota-wali", pelari.id],
+  ] as const) {
+    const a = await prisma.agenda.findUnique({ where: { slug }, select: { id: true } });
+    if (a) await prisma.agenda.update({ where: { id: a.id }, data: { organisasiId } });
+  }
+
   // ── Kegiatan yang pernah diikuti Rani ──
   const badminton = await prisma.peluang.findUniqueOrThrow({
     where: { slug: "turnamen-bulu-tangkis-pemuda-cup-2026" },
@@ -2275,6 +2304,15 @@ async function semaiKisahPeragaan() {
       create: { id: k.id, ...isi, penerimaId: k.penerimaId, dibuatPada },
     });
   }
+
+  const khusus = await prisma.agenda.count({ where: { khususAnggota: true } });
+  const beratribusi = await prisma.agenda.count({
+    where: { organisasiId: { not: null } },
+  });
+  console.log(
+    `Penyelenggara: ${beratribusi} agenda beratribusi organisasi ` +
+      `(${khusus} khusus anggota)`,
+  );
 
   const belum = await prisma.notifikasi.count({ where: { dibacaPada: null } });
   console.log(

@@ -14,6 +14,8 @@ type Awal = {
   selesai: string;
   kecamatanId: string;
   status: "DRAF" | "TERBIT";
+  organisasiId: string;
+  khususAnggota: boolean;
 };
 
 const KOSONG: Awal = {
@@ -24,14 +26,18 @@ const KOSONG: Awal = {
   selesai: "",
   kecamatanId: "",
   status: "DRAF",
+  organisasiId: "",
+  khususAnggota: false,
 };
 
 export function FormAgenda({
   awal = KOSONG,
   kecamatan,
+  organisasi,
   simpan,
 }: {
   awal?: Awal;
+  organisasi: { id: string; nama: string }[];
   kecamatan: { id: string; nama: string }[];
   simpan: (data: FormData) => Promise<HasilAksi>;
 }) {
@@ -145,6 +151,48 @@ export function FormAgenda({
           Ditulis dengan Markdown. HTML tidak diterima.
         </p>
         {kolom.deskripsi && <p className="text-xs text-danger">{kolom.deskripsi}</p>}
+      </div>
+
+      <div className="sk-inset flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="organisasiId">Diselenggarakan oleh (opsional)</Label>
+          <select
+            id="organisasiId"
+            name="organisasiId"
+            defaultValue={awal.organisasiId}
+            aria-invalid={Boolean(kolom.organisasiId)}
+            className="sk-field w-full px-3.5 py-2.5 text-sm"
+          >
+            <option value="">Tanpa organisasi</option>
+            {organisasi.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.nama}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-muted">
+            Nama organisasi ikut tampil di halaman kegiatan ini.
+          </p>
+          {kolom.organisasiId && (
+            <p className="text-xs text-danger">{kolom.organisasiId}</p>
+          )}
+        </div>
+
+        <label className="flex items-start gap-2.5 text-sm">
+          <input
+            type="checkbox"
+            name="khususAnggota"
+            defaultChecked={awal.khususAnggota}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--sk-accent)]"
+          />
+          <span className="flex flex-col gap-0.5">
+            <span className="font-medium">Khusus anggota</span>
+            <span className="text-xs text-muted">
+              Hanya anggota terverifikasi organisasi di atas yang boleh
+              mendaftar. Pilih organisasinya lebih dulu.
+            </span>
+          </span>
+        </label>
       </div>
 
       <div className="flex flex-col gap-1.5">

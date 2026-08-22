@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
+import { LABEL_KEANGGOTAAN, LABEL_ORGANISASI } from "@/lib/organisasi";
 import { prisma } from "@/lib/prisma";
 import { keterbukaanProfil, umur } from "@/lib/profil";
 import { tanggalPendek } from "@/lib/teks";
@@ -29,6 +30,25 @@ async function ambilProfil(slug: string) {
       user: {
         select: {
           name: true,
+          // Keanggotaan yang sudah disetujui pengurus saja. Yang masih
+          // menunggu atau ditolak bukan urusan pembaca kartu ini, dan
+          // menampilkannya akan mengumumkan penolakan orang.
+          //
+          // Bukan pembukaan data baru: halaman organisasi memang sudah
+          // memuat daftar anggotanya secara terbuka. Ini hanya arah
+          // sebaliknya, dari orang ke organisasinya.
+          keanggotaan: {
+            where: { status: "TERVERIFIKASI" },
+            orderBy: [{ peran: "asc" }, { dibuatPada: "asc" }],
+            take: 12,
+            select: {
+              id: true,
+              peran: true,
+              organisasi: {
+                select: { nama: true, slug: true, jenis: true },
+              },
+            },
+          },
           // Sertifikat yang dibatalkan tidak ikut tampil di kartu publik,
           // tetapi kodenya tetap dapat diperiksa di halaman /cek.
           sertifikatDiterima: {
@@ -147,6 +167,38 @@ export default async function HalamanKartuTalenta({
                 </span>
               ))}
             </div>
+          </section>
+        )}
+
+        {p.user.keanggotaan.length > 0 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
+              Organisasi
+            </h2>
+            <ul className="flex flex-col gap-2.5">
+              {p.user.keanggotaan.map((k) => (
+                <li key={k.id}>
+                  <Link
+                    href={`/direktori/${k.organisasi.slug}`}
+                    className="block rounded-sk"
+                  >
+                    <Kartu className="sk-pressable flex flex-wrap items-center gap-3">
+                      <span className="min-w-0 flex-1 truncate font-medium">
+                        {k.organisasi.nama}
+                      </span>
+                      <span className="text-xs text-muted">
+                        {LABEL_ORGANISASI[k.organisasi.jenis]}
+                      </span>
+                      {k.peran !== "ANGGOTA" && (
+                        <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                          {LABEL_KEANGGOTAAN[k.peran]}
+                        </span>
+                      )}
+                    </Kartu>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

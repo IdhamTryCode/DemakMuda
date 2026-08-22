@@ -13,6 +13,41 @@ export type Kelayakan =
   | { boleh: true }
   | { boleh: false; alasan: string };
 
+/**
+ * Kegiatan khusus anggota hanya boleh diikuti anggota yang keanggotaannya
+ * sudah disetujui pengurus. Pengajuan yang masih menunggu belum cukup —
+ * kalau cukup, siapa pun bisa mengajukan diri lima menit sebelum acara dan
+ * pembatasannya kehilangan arti.
+ */
+async function bolehSebagaiAnggota(
+  userId: string,
+  kegiatan: { khususAnggota: boolean; organisasiId: string | null },
+): Promise<Kelayakan> {
+  if (!kegiatan.khususAnggota) return { boleh: true };
+
+  if (!kegiatan.organisasiId) {
+    // Tidak seharusnya terjadi — skema menolaknya saat disimpan. Bila toh
+    // ada, kegiatannya ditutup, bukan dibuka untuk semua orang.
+    return { boleh: false, alasan: "Kegiatan ini belum punya organisasi penyelenggara." };
+  }
+
+  const anggota = await prisma.keanggotaan.findUnique({
+    where: {
+      organisasiId_userId: { organisasiId: kegiatan.organisasiId, userId },
+    },
+    select: { status: true },
+  });
+  if (anggota?.status === "TERVERIFIKASI") return { boleh: true };
+
+  return {
+    boleh: false,
+    alasan:
+      anggota?.status === "MENUNGGU"
+        ? "Kegiatan ini khusus anggota. Pengajuan keanggotaan Anda masih menunggu persetujuan pengurus."
+        : "Kegiatan ini khusus anggota organisasi penyelenggaranya.",
+  };
+}
+
 export type SasaranPendaftaran =
   | { jenis: "agenda"; id: string }
   | { jenis: "peluang"; id: string };
@@ -30,7 +65,12 @@ export async function periksaKelayakan(
   if (sasaran.jenis === "agenda") {
     const agenda = await prisma.agenda.findUnique({
       where: { id: sasaran.id },
-      select: { status: true, mulai: true },
+      select: {
+        status: true,
+        mulai: true,
+        khususAnggota: true,
+        organisasiId: true,
+      },
     });
     if (!agenda || agenda.status !== "TERBIT") {
       return { boleh: false, alasan: "Kegiatan ini tidak tersedia." };
@@ -38,12 +78,19 @@ export async function periksaKelayakan(
     if (agenda.mulai < sekarang) {
       return { boleh: false, alasan: "Kegiatan ini sudah berlangsung." };
     }
-    return { boleh: true };
+    return bolehSebagaiAnggota(userId, agenda);
   }
 
   const peluang = await prisma.peluang.findUnique({
     where: { id: sasaran.id },
-    select: { status: true, tenggat: true, usiaMin: true, usiaMaks: true },
+    select: {
+      status: true,
+      tenggat: true,
+      usiaMin: true,
+      usiaMaks: true,
+      khususAnggota: true,
+      organisasiId: true,
+    },
   });
   if (!peluang || peluang.status !== "TERBIT") {
     return { boleh: false, alasan: "Peluang ini tidak tersedia." };
@@ -70,7 +117,7 @@ export async function periksaKelayakan(
     }
   }
 
-  return { boleh: true };
+  return bolehSebagaiAnggota(userId, peluang);
 }
 
 /** Pendaftaran milik pengguna atas satu agenda atau peluang, bila ada. */

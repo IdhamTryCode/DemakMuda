@@ -24,6 +24,7 @@ async function ambilPeluang(slug: string) {
       minat: { select: { nama: true } },
       pembuat: { select: { name: true } },
       organisasi: { select: { nama: true } },
+      khususAnggota: true,
       agenda: { select: { slug: true, judul: true, status: true } },
     },
   });
@@ -67,6 +68,11 @@ export default async function HalamanPeluangRinci({
             {sudahTutup && (
               <span className="rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
                 Pendaftaran sudah ditutup
+              </span>
+            )}
+            {p.khususAnggota && (
+              <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                Khusus anggota
               </span>
             )}
           </div>

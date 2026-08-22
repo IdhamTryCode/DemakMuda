@@ -291,6 +291,10 @@ model Agenda {
   organisasiId String?
   organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
 
+  /// Bila benar, hanya anggota terverifikasi organisasi penyelenggara
+  /// yang boleh mendaftar. Menuntut organisasiId terisi.
+  khususAnggota Boolean @default(false)
+
   peluang     Peluang?
   pendaftaran Pendaftaran[]
 
@@ -324,6 +328,10 @@ model Peluang {
   pembuat      User        @relation(fields: [pembuatId], references: [id])
   organisasiId String?
   organisasi   Organisasi? @relation(fields: [organisasiId], references: [id])
+
+  /// Bila benar, hanya anggota terverifikasi organisasi penyelenggara
+  /// yang boleh mendaftar. Menuntut organisasiId terisi.
+  khususAnggota Boolean @default(false)
 
   minat       Minat[]
   pendaftaran Pendaftaran[]

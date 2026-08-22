@@ -64,6 +64,31 @@ const urlUnggahan = (nama: string) =>
       message: `${nama} harus berupa berkas yang diunggah lewat DemakMuda.`,
     });
 
+/**
+ * Penyelenggara kegiatan dan pembatasannya.
+ *
+ * Keduanya satu paket: "khusus anggota" tidak punya arti tanpa organisasi
+ * yang keanggotaannya diperiksa. Membiarkan tandanya menyala tanpa
+ * penyelenggara akan menghasilkan kegiatan yang tidak dapat diikuti siapa
+ * pun — termasuk oleh yang membuatnya.
+ */
+const penyelenggara = {
+  organisasiId: z.string().trim().max(40).optional().or(z.literal("")),
+  khususAnggota: z.coerce.boolean().default(false),
+};
+
+const wajibPunyaPenyelenggara = (n: {
+  organisasiId?: string;
+  khususAnggota: boolean;
+}) => !n.khususAnggota || Boolean(n.organisasiId);
+
+// Tanpa `as const`: Zod menuntut path yang dapat diubah, dan penegasan const
+// membuatnya readonly sehingga ditolak pemeriksa jenis.
+const PESAN_PENYELENGGARA = {
+  message: "Pilih organisasi penyelenggara lebih dulu untuk kegiatan khusus anggota.",
+  path: ["organisasiId"],
+};
+
 export const StatusTerbitSkema = z.enum(["DRAF", "TERBIT"]);
 
 export const BeritaSkema = z.object({
@@ -83,11 +108,13 @@ export const AgendaSkema = z
     selesai: z.coerce.date().optional().nullable(),
     kecamatanId: z.string().trim().max(20).optional().or(z.literal("")),
     status: StatusTerbitSkema,
+    ...penyelenggara,
   })
   .refine((n) => !n.selesai || n.selesai >= n.mulai, {
     message: "Waktu selesai tidak boleh mendahului waktu mulai.",
     path: ["selesai"],
-  });
+  })
+  .refine(wajibPunyaPenyelenggara, PESAN_PENYELENGGARA);
 
 export const JenisPeluangSkema = z.enum([
   "LOMBA",
@@ -107,11 +134,13 @@ export const PeluangSkema = z
     usiaMin: z.coerce.number().int().min(0).max(99).optional().nullable(),
     usiaMaks: z.coerce.number().int().min(0).max(99).optional().nullable(),
     status: StatusTerbitSkema,
+    ...penyelenggara,
   })
   .refine((n) => !n.usiaMin || !n.usiaMaks || n.usiaMaks >= n.usiaMin, {
     message: "Usia maksimal tidak boleh lebih kecil dari usia minimal.",
     path: ["usiaMaks"],
-  });
+  })
+  .refine(wajibPunyaPenyelenggara, PESAN_PENYELENGGARA);
 
 export const OrganisasiSkema = z.object({
   nama: teks(4, 120, "Nama organisasi"),

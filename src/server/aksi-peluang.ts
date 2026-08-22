@@ -11,6 +11,7 @@ import {
   GagalIzin,
   PENGELOLA_ISI,
   wajibAktor,
+  type Aktor,
 } from "@/server/penjaga";
 
 /** Server Action untuk Papan Peluang. Urutan pemeriksaannya sama dengan Kabar. */
@@ -28,6 +29,8 @@ function bacaFormulir(data: FormData) {
     usiaMin: usiaMin === "" ? null : usiaMin,
     usiaMaks: usiaMaks === "" ? null : usiaMaks,
     status: String(data.get("status") ?? "DRAF"),
+    organisasiId: String(data.get("organisasiId") ?? ""),
+    khususAnggota: data.get("khususAnggota") === "on",
   };
 }
 
@@ -43,6 +46,31 @@ async function minatSah(data: FormData): Promise<string[]> {
     select: { id: true },
   });
   return ada.map((m) => m.id);
+}
+
+
+/**
+ * Memastikan organisasi penyelenggara memang boleh dipakai pemanggil.
+ *
+ * Tanpa pemeriksaan ini, siapa pun yang berwenang membuat kegiatan dapat
+ * menempelkan nama organisasi milik orang lain padanya — dan bila kegiatan itu
+ * ditandai khusus anggota, ia sekaligus mengatur siapa yang boleh mendaftar ke
+ * organisasi yang bukan miliknya.
+ *
+ * Membalas null berarti tanpa penyelenggara, bukan gagal: kegiatan memang boleh
+ * berdiri sendiri tanpa organisasi.
+ */
+async function penyelenggaraSah(
+  aktor: Aktor,
+  organisasiId: string,
+): Promise<string | null> {
+  if (!organisasiId) return null;
+  const organisasi = await prisma.organisasi.findUnique({
+    where: { id: organisasiId },
+    select: { id: true, pemilikId: true },
+  });
+  if (!organisasi) return null;
+  return bolehMengubah(aktor, organisasi.pemilikId) ? organisasi.id : null;
 }
 
 export async function buatPeluang(data: FormData): Promise<HasilAksi> {
@@ -67,6 +95,8 @@ export async function buatPeluang(data: FormData): Promise<HasilAksi> {
         usiaMin: n.usiaMin ?? null,
         usiaMaks: n.usiaMaks ?? null,
         status: n.status,
+        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        khususAnggota: n.khususAnggota,
         pembuatId: aktor.id,
         minat: { connect: minat.map((id) => ({ id })) },
       },
@@ -123,6 +153,8 @@ export async function ubahPeluang(id: string, data: FormData): Promise<HasilAksi
         usiaMin: n.usiaMin ?? null,
         usiaMaks: n.usiaMaks ?? null,
         status: n.status,
+        organisasiId: await penyelenggaraSah(aktor, n.organisasiId ?? ""),
+        khususAnggota: n.khususAnggota,
         minat: { set: minat.map((id) => ({ id })) },
       },
     });
