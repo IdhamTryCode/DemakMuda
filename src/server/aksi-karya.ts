@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { slugUnik } from "@/lib/teks";
 import { KaryaSkema, galatKolom, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { hapusBerkasLama } from "@/server/berkas";
 import { bolehMengubah, GagalIzin, wajibAktor } from "@/server/penjaga";
 
 /**
@@ -98,7 +99,13 @@ export async function ubahKarya(id: string, data: FormData): Promise<HasilAksi> 
 
     const lama = await prisma.karya.findUnique({
       where: { id },
-      select: { id: true, pemilikId: true, slug: true, status: true },
+      select: {
+        id: true,
+        pemilikId: true,
+        slug: true,
+        status: true,
+        gambarUrl: true,
+      },
     });
     // Pesan yang sama untuk "tidak ada" dan "bukan milik Anda": keduanya tidak
     // boleh dipakai menebak karya mana yang ada di basis data.
@@ -117,6 +124,8 @@ export async function ubahKarya(id: string, data: FormData): Promise<HasilAksi> 
         status: n.status,
       },
     });
+
+    await hapusBerkasLama(lama.gambarUrl, n.gambarUrl || null);
 
     await catat({
       aktorId: aktor.id,

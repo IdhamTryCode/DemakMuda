@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
@@ -50,6 +51,7 @@ export default async function HalamanKarya({
       slug: true,
       jenis: true,
       deskripsi: true,
+      gambarUrl: true,
       dibuatPada: true,
       pemilik: {
         select: { name: true, profil: { select: { slug: true } } },
@@ -127,6 +129,17 @@ export default async function HalamanKarya({
               <li key={k.id}>
                 <Link href={`/karya/${k.slug}`} className="block h-full rounded-sk">
                   <Kartu className="sk-pressable flex h-full flex-col gap-2">
+                    {k.gambarUrl && (
+                      <div className="sk-inset relative mb-1 aspect-[16/10] w-full overflow-hidden rounded-[8px]">
+                        <Image
+                          src={k.gambarUrl}
+                          alt=""
+                          fill
+                          sizes="(min-width: 640px) 22rem, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
                         {LABEL_JENIS_KARYA[k.jenis]}

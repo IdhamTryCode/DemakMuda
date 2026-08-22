@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { hostBlob } from "./src/lib/blob";
+
 /**
  * Header keamanan (cetak biru Bagian IV lapis 5).
  *
@@ -31,7 +33,33 @@ const HEADER_KEAMANAN = [
   },
 ];
 
+/**
+ * Pengoptimal gambar hanya boleh mengambil dari satu inang: store blob milik
+ * aplikasi ini. Memakai pola bintang untuk seluruh ranah Vercel Blob akan
+ * membuat store milik siapa pun di Vercel dapat disalurkan lewat pengoptimal
+ * kita — persis pintu yang ingin ditutup.
+ *
+ * dangerouslyAllowSVG sengaja dibiarkan mati (bawaannya memang mati): SVG
+ * dapat memuat skrip, dan jenisnya pun sudah ditolak saat unggah.
+ */
+const INANG_BLOB = hostBlob();
+
+// Tanpa BLOB_STORE_ID, daftar inang menjadi kosong dan SELURUH gambar unggahan
+// dibalas 400 oleh pengoptimal. Kegagalan seperti itu baru ketahuan setelah
+// terbit, jadi diberi peringatan yang terlihat di catatan pembangunan.
+if (!INANG_BLOB) {
+  console.warn(
+    "[next.config] BLOB_STORE_ID kosong — gambar unggahan tidak akan tampil. " +
+      "Pasang variabelnya di Vercel (Storage → Blob) dan di .env lokal.",
+  );
+}
+
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: INANG_BLOB
+      ? [{ protocol: "https", hostname: INANG_BLOB, pathname: "/**", search: "" }]
+      : [],
+  },
   async headers() {
     return [{ source: "/:path*", headers: HEADER_KEAMANAN }];
   },

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 
+import { PemilihGambar } from "@/components/pemilih-gambar";
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
 import {
   JENIS_ORGANISASI,
@@ -178,16 +179,13 @@ export function FormOrganisasi({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="logoUrl">Alamat logo (opsional)</Label>
-        <Kolom
-          id="logoUrl"
-          name="logoUrl"
-          type="url"
-          defaultValue={awal.logoUrl}
-          placeholder="https://…"
-          aria-invalid={Boolean(kolom.logoUrl)}
+        <PemilihGambar
+          nama="logoUrl"
+          ruang="organisasi"
+          awal={awal.logoUrl}
+          label="Logo organisasi (opsional)"
+          keterangan="JPG, PNG, atau WEBP, maksimal 2 MB. Bentuk persegi tampil paling rapi."
         />
-        <p className="text-xs text-muted">Hanya menerima alamat http:// atau https://</p>
         {kolom.logoUrl && <p className="text-xs text-danger">{kolom.logoUrl}</p>}
       </div>
 

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Markdown } from "@/components/markdown";
+import { alamatBlobSah } from "@/lib/blob";
 import { LABEL_JENIS_KARYA } from "@/lib/karya";
 import { prisma } from "@/lib/prisma";
 import { namaInang, tautanAman } from "@/lib/tautan";
@@ -50,11 +52,11 @@ export default async function HalamanKaryaRinci({
   const karya = await ambilKarya(slug);
   if (!karya) notFound();
 
-  // Alamat luar hanya dipasang sebagai tautan, tidak pernah sebagai sumber
-  // gambar yang dimuat langsung. Memuat berkas dari peladen mana pun yang
-  // ditulis pengguna akan menjadikan aplikasi ini perantara permintaan ke
-  // jaringan dalam — risiko yang tidak sepadan dengan sekadar pratinjau.
-  const gambar = tautanAman(karya.gambarUrl);
+  // Gambar kini dirender sungguhan karena kolomnya hanya dapat berisi berkas
+  // yang diunggah lewat aplikasi ini — satu inang yang pasti, bukan alamat
+  // sembarang. Tautan luar tetap hanya berupa tautan: alamatnya memang bebas,
+  // dan yang bebas tidak boleh dimuat sebagai berkas.
+  const gambar = alamatBlobSah(karya.gambarUrl ?? "") ? karya.gambarUrl : null;
   const luar = tautanAman(karya.tautanLuar);
 
   return (
@@ -93,35 +95,36 @@ export default async function HalamanKaryaRinci({
           </p>
         </header>
 
+        {gambar && (
+          <div className="sk-inset relative aspect-[16/9] w-full overflow-hidden rounded-[10px]">
+            <Image
+              src={gambar}
+              alt={`Gambar karya ${karya.judul}`}
+              fill
+              sizes="(min-width: 768px) 42rem, 100vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+
         <hr className="border-line" />
 
         <Markdown isi={karya.deskripsi} />
 
-        {(gambar || luar) && (
+        {luar && (
           <div className="sk-inset flex flex-col gap-2 p-4">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Tautan karya
             </span>
-            {luar && (
-              <a
-                href={luar}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="text-sm text-accent underline underline-offset-2"
-              >
-                Buka karya di {namaInang(luar)} ↗
-              </a>
-            )}
-            {gambar && (
-              <a
-                href={gambar}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="text-sm text-accent underline underline-offset-2"
-              >
-                Lihat gambar di {namaInang(gambar)} ↗
-              </a>
-            )}
+            <a
+              href={luar}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="text-sm text-accent underline underline-offset-2"
+            >
+              Buka karya di {namaInang(luar)} ↗
+            </a>
           </div>
         )}
       </article>

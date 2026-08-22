@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
@@ -48,6 +49,7 @@ export default async function HalamanDirektori({
         slug: true,
         jenis: true,
         deskripsi: true,
+        logoUrl: true,
         kecamatan: { select: { nama: true } },
         desa: { select: { nama: true } },
         _count: { select: { keanggotaan: { where: { status: "TERVERIFIKASI" } } } },
@@ -157,9 +159,22 @@ export default async function HalamanDirektori({
               <li key={o.id}>
                 <Link href={`/direktori/${o.slug}`} className="block h-full rounded-sk">
                   <Kartu className="sk-pressable flex h-full flex-col gap-2">
-                    <span className="w-fit rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
-                      {LABEL_ORGANISASI[o.jenis]}
-                    </span>
+                    <div className="flex items-start gap-3">
+                      {o.logoUrl && (
+                        <div className="sk-inset relative h-12 w-12 shrink-0 overflow-hidden rounded-[8px]">
+                          <Image
+                            src={o.logoUrl}
+                            alt=""
+                            fill
+                            sizes="3rem"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <span className="w-fit rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+                        {LABEL_ORGANISASI[o.jenis]}
+                      </span>
+                    </div>
                     <h2 className="text-lg font-semibold leading-snug">{o.nama}</h2>
                     <p className="text-xs text-muted">
                       {[o.desa?.nama, o.kecamatan.nama].filter(Boolean).join(", ")}

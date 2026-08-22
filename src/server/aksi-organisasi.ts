@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { keSlug } from "@/lib/teks";
 import { galatKolom, OrganisasiSkema, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { hapusBerkasLama } from "@/server/berkas";
 import {
   bolehMengubah,
   GagalIzin,
@@ -128,7 +129,7 @@ export async function ubahOrganisasi(id: string, data: FormData): Promise<HasilA
 
     const lama = await prisma.organisasi.findUnique({
       where: { id },
-      select: { pemilikId: true, nama: true },
+      select: { pemilikId: true, nama: true, logoUrl: true },
     });
     if (!lama) return { ok: false, pesan: "Organisasi tidak ditemukan." };
     if (!bolehMengubah(aktor, lama.pemilikId)) {
@@ -151,6 +152,8 @@ export async function ubahOrganisasi(id: string, data: FormData): Promise<HasilA
         desaId: wilayah.desaId,
       },
     });
+
+    await hapusBerkasLama(lama.logoUrl, n.logoUrl || null);
 
     await catat({
       aktorId: aktor.id,

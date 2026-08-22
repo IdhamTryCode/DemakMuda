@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { alamatBlobSah } from "@/lib/blob";
+
 /**
  * Skema pemeriksaan masukan.
  *
@@ -40,6 +42,27 @@ const urlAman = (nama: string) =>
       },
       { message: `${nama} harus diawali http:// atau https://` },
     );
+
+/**
+ * Alamat berkas hasil unggahan.
+ *
+ * Berbeda dari urlAman() yang menerima alamat http(s) mana pun, skema ini
+ * hanya menerima berkas yang benar-benar berada di penyimpanan milik aplikasi
+ * ini. Bedanya bukan soal kerapian: kolom yang isinya dipasang sebagai sumber
+ * gambar dan menerima alamat sembarang membuat aplikasi ini menjadi perantara
+ * permintaan ke peladen mana pun yang ditulis pengguna.
+ *
+ * Karena batasnya sempit dan pasti, gambarnya kini aman dirender sungguhan —
+ * sesuatu yang sebelumnya sengaja tidak dilakukan.
+ */
+const urlUnggahan = (nama: string) =>
+  z
+    .string()
+    .trim()
+    .max(500, `${nama} maksimal 500 karakter.`)
+    .refine(alamatBlobSah, {
+      message: `${nama} harus berupa berkas yang diunggah lewat DemakMuda.`,
+    });
 
 export const StatusTerbitSkema = z.enum(["DRAF", "TERBIT"]);
 
@@ -112,7 +135,7 @@ export const OrganisasiSkema = z.object({
     .max(120, "Kontak maksimal 120 karakter.")
     .optional()
     .or(z.literal("")),
-  logoUrl: urlAman("Alamat logo").optional().or(z.literal("")),
+  logoUrl: urlUnggahan("Logo organisasi").optional().or(z.literal("")),
   kecamatanId: z.string().trim().min(1, "Kecamatan wajib dipilih.").max(20),
   desaId: z.string().trim().max(30).optional().or(z.literal("")),
 });
@@ -156,7 +179,7 @@ export const KaryaSkema = z.object({
   judul: teks(6, 160, "Judul"),
   jenis: JenisKaryaSkema,
   deskripsi: teks(30, 10000, "Cerita karya"),
-  gambarUrl: urlAman("Alamat gambar").optional().or(z.literal("")),
+  gambarUrl: urlUnggahan("Gambar karya").optional().or(z.literal("")),
   tautanLuar: urlAman("Tautan karya").optional().or(z.literal("")),
   status: StatusTerbitSkema,
 });
