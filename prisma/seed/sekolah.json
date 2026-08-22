@@ -1,0 +1,1577 @@
+[
+  {
+    "npsn": "70026097",
+    "nama": "MA ABWABUN NURUL MAGHFIROH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Dukuh Brawah RT 01 RW 01",
+    "desa": "Tamansari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "69941708",
+    "nama": "MA AL ADZKAR",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Pucang Tama IX Pucang Gading Batursari Mranggen Demak",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362879",
+    "nama": "MA AL ANWAR NGEMPLAK",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "NGEMPLAK",
+    "desa": "Ngemplak",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "70033162",
+    "nama": "MA AL FURQON",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Watunganten RT 04 RW 08",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362876",
+    "nama": "MA AL GHOZALI",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KH. GHOZALI",
+    "desa": "Kebonbatur",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362871",
+    "nama": "MA AL HADI GIRIKUSUMA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "GIRIKUSUMA",
+    "desa": "Banyumeneng",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362874",
+    "nama": "MA AL MA`RUF",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA CANDISARI NO.02",
+    "desa": "Candisari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362865",
+    "nama": "MA ANWARUL QUR`AN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "DESA WARU KECAMATAN MRANGGEN KABUPATEN DEMAK",
+    "desa": "Waru",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362877",
+    "nama": "MA ASY-SYARIFAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Kauman Raya 01/04 Brumbung",
+    "desa": "Brumbung",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362868",
+    "nama": "MA FUTUHIYYAH 1",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. SUBURAN BARAT MRANGGEN",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362869",
+    "nama": "MA FUTUHIYYAH 2",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. SUBURAN TENGAH",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362872",
+    "nama": "MA MIFTAHUL ULUM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. BAHRONIYYAH NO. 35 NGEMPLAK MRANGGEN DEMAK",
+    "desa": "Ngemplak",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362875",
+    "nama": "MA NU MRANGGEN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. Pasar Hewan RT 01 RW 01",
+    "desa": "Bandungrejo",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362867",
+    "nama": "MA NURUL ULUM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Mondosari RT.01 RW. 05",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "70042919",
+    "nama": "MA PP ASY SYARIFAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "BRUMBUNG",
+    "desa": "Brumbung",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362878",
+    "nama": "MA ROUDLOTUL MUTTAQIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. BAITUL IZZAH NO. 20 DS. BANDUNGREJO",
+    "desa": "Bandungrejo",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362880",
+    "nama": "MA SHOLIHIYYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "KALITENGAH",
+    "desa": "Kalitengah",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362864",
+    "nama": "MA TAQWIYATUL WATHON",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jalan Raya Sumberejo 1, Mranggen, Demak",
+    "desa": "Sumberejo",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362866",
+    "nama": "MAS IBROHIMIYYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "BRUMBUNG RT.05 RW.04 MRANGGEN",
+    "desa": "Brumbung",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362873",
+    "nama": "MAS MIFTAHUL HUDA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Dk. Krajan RT. 02 RW. 02 Ds. Kangkung Kec. Mranggen Kab. Demak",
+    "desa": "Kangkung",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362870",
+    "nama": "MAS ROHMANIYYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KH. ABDURROHMAN NO. 01",
+    "desa": "Menur",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "70051596",
+    "nama": "PDF Ulya SEKOLAH ISLAM SALAF (SIS) PESANTREN GIRIKESUMO",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Girikusumo",
+    "desa": "Kec. Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319300",
+    "nama": "SMA NEGERI 2 MRANGGEN",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. PUCANG PENI RAYA",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319303",
+    "nama": "SMAN 1 MRANGGEN",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "Jl. Kyai Santri",
+    "desa": "Menur",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319324",
+    "nama": "SMAS FUTUHIYYAH MRANGGEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA MRANGGEN NO. 89",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319305",
+    "nama": "SMAS KY AGENG GIRI MRANGGEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Girikusumo 04/03",
+    "desa": "Banyumeneng",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319283",
+    "nama": "SMAS PEMBANGUNAN MRANGGEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. KEMBANGARUM NO. 148 MRANGGEN",
+    "desa": "Kembangarum",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20360476",
+    "nama": "SMK AL FURQON MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. WATU NGANTEN NO. 123 DESA BATURSARI KEC. MRANGGEN",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20341388",
+    "nama": "SMK AL KAUTSARIYYAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "KH. HANAFI RT 011 RW 004",
+    "desa": "Jamus",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319297",
+    "nama": "SMK BHAKTI NUSANTARA MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYUNG KUSUMAN IV MRANGGEN",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "69756199",
+    "nama": "SMK BINA NUSANTARA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. MONDOSARI NO. 5 MRANGGEN DEMAK",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "69756202",
+    "nama": "SMK FARMASI TELADAN MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. PUNGKURAN RAYA 144 MRANGGEN DEMAK",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20319294",
+    "nama": "SMK FUTUHIYYAH MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. SUBURAN BARAT",
+    "desa": "Mranggen",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20361943",
+    "nama": "SMK KI AGENG JAGO",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL.KAUMAN RAYA NO.1",
+    "desa": "Wringin Jajar",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20341390",
+    "nama": "SMK KY AGENG GIRI",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "GIRIKUSUMO RAYA",
+    "desa": "Banyumeneng",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20360448",
+    "nama": "SMK MA`ARIF KYAI GADING",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "KH. ABU MIROJ NO. 03",
+    "desa": "Candisari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362388",
+    "nama": "SMK MUHAMMADIYAH 3 PUCANG GADING",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL.RAYA BATUSARI NO.11 A",
+    "desa": "Batursari",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20360477",
+    "nama": "SMK NUSA BANGSA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. TEGUHAN WRINGINJAJAR MRANGGEN",
+    "desa": "Wringin Jajar",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20341391",
+    "nama": "SMK PEMBANGUNAN MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "KEMBANGARUM NO. 148",
+    "desa": "Kembangarum",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20340343",
+    "nama": "SMK SHOLIHIYYAH MRANGGEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. DESA KALITENGAH",
+    "desa": "Kalitengah",
+    "kodeKecamatan": "032101"
+  },
+  {
+    "npsn": "20362858",
+    "nama": "MA AL KHOIRIYYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl Krajan Rt 02 Rw 01Wonosekar Karangawen Demak",
+    "desa": "Wonosekar",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "69788059",
+    "nama": "MA AL WAKHIDIYAH KARANGAWEN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN RIMBU LOR 04/3 REJOSARI KARANGAWEN",
+    "desa": "Rejosari",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20362856",
+    "nama": "MA MANBAUL ULUM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "TLOGOREJO RT 03/02",
+    "desa": "Tlogorejo",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20362857",
+    "nama": "MA MIFTAHUL ULUM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN RT 02 RW 07 JRAGUNG",
+    "desa": "Jragung",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20362859",
+    "nama": "MA SUNAN KALIJAGA KARANGAWEN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA KARANGAWEN NO. 88",
+    "desa": "Brambang",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "69941713",
+    "nama": "MAS NURUL HIDAYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Masjid Dk. Curug",
+    "desa": "Margohayu",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20319327",
+    "nama": "SMAS AL HASANIYYAH KARANGAWEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN NGRAJEK",
+    "desa": "Jragung",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20319304",
+    "nama": "SMAS MAARIF KARANGAWEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JRAGUNG KRAJAN",
+    "desa": "Jragung",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "69964197",
+    "nama": "SMK AL HASANIYYAH JRAGUNG",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jl. Kauman Ngrajek",
+    "desa": "Jragung",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20350979",
+    "nama": "SMK GARUDA NUSANTARA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JALAN RAYA KURIPAN NO 89 KARANGAWEN",
+    "desa": "Kuripan",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "60725432",
+    "nama": "SMK NEGERI 1 KARANGAWEN",
+    "jenjang": "SMK",
+    "status": "NEGERI",
+    "alamat": "KARANGPACING RT.2/11",
+    "desa": "Rejosari",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20319295",
+    "nama": "SMK PATI UNUS",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA KARANGAWEN KM 19,5",
+    "desa": "Karangawen",
+    "kodeKecamatan": "032102"
+  },
+  {
+    "npsn": "20362847",
+    "nama": "MA AN NUR",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Waru Doyong Desa Bakalrejo Guntur",
+    "desa": "Bakalrejo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "20362848",
+    "nama": "MA AS SAMANIYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "TEMUROSO",
+    "desa": "Temuroso",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69941716",
+    "nama": "MA ASSA`ADAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Pamongan-Genuk Km 01",
+    "desa": "Sukorejo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "20362849",
+    "nama": "MA ASY-SYARIFIYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. Raya Pamongan-Genuk KM.2",
+    "desa": "Sarirejo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69788058",
+    "nama": "MA SABILUL HUDA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JALAN RAYA GUNTUR NO 126 KODEPOS 59565",
+    "desa": "Guntur",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "20362846",
+    "nama": "MA SABILUL MUTTAQIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jalan KH.Sholeh Sulaiman Sindon 02/06 Trimulyo Guntur Demak",
+    "desa": "Trimulyo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69941709",
+    "nama": "MA SULTAN FATAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Karang No. 02 RT 01 RW 02",
+    "desa": "Gaji",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69941711",
+    "nama": "MAS AL MUHARIYYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Parboh Indah Rt 12 Rw 03",
+    "desa": "Pamongan",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "70058529",
+    "nama": "PDF ULYA AL HIDAYAT",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Masjid Baitul Izzah",
+    "desa": "Temuroso",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "20319290",
+    "nama": "SMA NEGERI 1 GUNTUR",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. RAYA GUNTUR - DEMAK",
+    "desa": "Guntur",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69756200",
+    "nama": "SMK ADI BANGSA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "PLOSO TEMUROSO RT 04/ RW 07",
+    "desa": "Temuroso",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "20341264",
+    "nama": "SMK AL HIKMAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jln. Bakalrejo No. 2",
+    "desa": "Bakalrejo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69888701",
+    "nama": "SMK BUDI LUHUR",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "BANJAREJO RT. 04 RW. 02 GUNTUR",
+    "desa": "Banjarejo",
+    "kodeKecamatan": "032103"
+  },
+  {
+    "npsn": "69941715",
+    "nama": "MA AL HIKMAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Genuk Pamongan Km 6",
+    "desa": "Karangasem",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362886",
+    "nama": "MA AN NIDHAM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. GENUK PAMONGAN KM 05 KALISARI",
+    "desa": "Kalisari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362885",
+    "nama": "MA DARUL ULUM BULUSARI",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL.RAYA GENUK-PAMONGAN KM 9 BULUSARI SAYUNG DEMAK",
+    "desa": "Bulusari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362884",
+    "nama": "MA FATHUL HUDA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA TAMBAK BULUSAN KM. 04 DS. SIDOREJO KEC. SAYUNG KAB. DEMAK PO. BOX 115",
+    "desa": "Sidorejo",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362882",
+    "nama": "MA HIDAYATUL MUBTADI`IN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL.GENUK - PAMONGAN KM.7 BULUSARI SAYUNG DEMAK",
+    "desa": "Bulusari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "69849454",
+    "nama": "MA HIDAYATUL QURAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "ngepreh rt03 rw06",
+    "desa": "Jetaksari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362887",
+    "nama": "MA NURUL QUR`AN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA SAYUNG NO. 21 KM. 10 RT. 004 RW. 001",
+    "desa": "Purwosari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362881",
+    "nama": "MAS NAHDLATUSY SYUBBAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA SEMARANG DEMAK KM 10 SAYUNG DEMAK",
+    "desa": "Sayung",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20319302",
+    "nama": "SMA NEGERI 1 SAYUNG",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. RAYA ONGGORAWE SAYUNG - DEMAK",
+    "desa": "Gemulak",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20319287",
+    "nama": "SMAS MUHAMMADIYAH SAYUNG",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA SAYUNG NO. 11",
+    "desa": "Purwosari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "69756897",
+    "nama": "SMK HIDAYATUL MUBTADIIN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL GENUK PAMONGAN KM 07 RT 05/02 BULUSARI 59563",
+    "desa": "Bulusari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "69964029",
+    "nama": "SMK ISLAM AL-MADATSIR KARANGASEM",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jl. Genuk-Pamongan KM.5",
+    "desa": "Karangasem",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20319278",
+    "nama": "SMK MUHAMMADIYAH DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA SAYUNG NO. 11",
+    "desa": "Purwosari",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20340339",
+    "nama": "SMK NEGERI 1 SAYUNG",
+    "jenjang": "SMK",
+    "status": "NEGERI",
+    "alamat": "Jl. Raya Semarang - Demak Km 14 di Onggorawe Desa Loireng Kec. Sayung",
+    "desa": "Loireng",
+    "kodeKecamatan": "032104"
+  },
+  {
+    "npsn": "20362851",
+    "nama": "MA AL AHROM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JALAN NANGKA NO 45 Rt.05 Rw.03",
+    "desa": "Karangsari",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20362850",
+    "nama": "MAS AL IKHWAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. PONDOKSARI NO.353 KLITIH KARANGTENGAH DEMAK",
+    "desa": "Klitih",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20319291",
+    "nama": "SMA NEGERI 1 KARANGTENGAH",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. BUYARAN KARANGTENGAH - DEMAK",
+    "desa": "Dukun",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20319328",
+    "nama": "SMAS ABDI NEGARA KARANG TENGAH",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. SULTAN PATAH BUYARAN DEMAK",
+    "desa": "Karangsari",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20319286",
+    "nama": "SMAS NAHDLOTUSY SYUBAN PLOSO",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. TANGGUL TUNTANG",
+    "desa": "Ploso",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20360521",
+    "nama": "SMK AL-ISLAM KARANGTENGAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Tambakbulusan No. 06/II",
+    "desa": "Tambakbulusan",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "60725470",
+    "nama": "SMK ISLAM AL-HIDAYAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL.POS WONOKERTO DS. WONOWOSO RT,02 RW 03",
+    "desa": "Wonowoso",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20354590",
+    "nama": "SMK ISLAM NURUL HADI",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA BATU",
+    "desa": "Batu",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20362281",
+    "nama": "SMK ROBBANI KARANGTENGAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. DESA DUKUN RT 04/ RW 03, KARANGTENGAH",
+    "desa": "Dukun",
+    "kodeKecamatan": "032105"
+  },
+  {
+    "npsn": "20362839",
+    "nama": "MA MIFTAHUL ULUM KARANGREJO",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. GAYANG RT. 03/05 KARANGREJO BONANG DEMAK",
+    "desa": "Karangrejo",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "69788221",
+    "nama": "MA MIFTAHUL ULUM WEDING",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Weding - Demak Km. 5 Desa Weding",
+    "desa": "Weding",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20362835",
+    "nama": "MA NAHDLATUL ULAMA 2 SERANGAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. MELAYU NO. 01 SERANGAN",
+    "desa": "Serangan",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20362837",
+    "nama": "MA NU 3 ITTIHAD BAHARI",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "PURWOREJO",
+    "desa": "Purworejo",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20362838",
+    "nama": "MAS MATHOLIUL FALAH JALI",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL PINTU AIR NO 01 JALI BONANG DEMAK",
+    "desa": "Jali",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20362836",
+    "nama": "MAS TAKHASSUS ALQURAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL KRAJAN DESA SERANGAN",
+    "desa": "Serangan",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "70051671",
+    "nama": "PDF Ulya AL-WAHID",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. Raya Jali-Weding",
+    "desa": "Kec. Bonang",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "69830074",
+    "nama": "SMAS MIFTAHUL FALAH",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN NO. 16E",
+    "desa": "Betahwalang",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20319281",
+    "nama": "SMAS TAKHASSUS AL - QURAN BONANG",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. KRAJAN",
+    "desa": "Serangan",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20360373",
+    "nama": "SMK ASY - SYAIROZI",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "RAYA JALI - DEMAK",
+    "desa": "Jali",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20341392",
+    "nama": "SMK ISLAM AL-AMIN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. MORO-DEMAK NO. 04 Gempol Jatirogo Bonang Demak Jawa Tengah",
+    "desa": "Jatirogo",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "69787364",
+    "nama": "SMK ISLAM DA`WATUL HAQ",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Dk. Klitih Ds. Karangrejo Kec. Bonang Kab. Demak",
+    "desa": "Karangrejo",
+    "kodeKecamatan": "032106"
+  },
+  {
+    "npsn": "20362840",
+    "nama": "MA NU DEMAK",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. GLAGAHWANGI NO. 1 BINTORO DEMAK",
+    "desa": "Bintoro",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "60728099",
+    "nama": "MAS AR RAHMAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "KARANGMLATI",
+    "desa": "Karangmlati",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319280",
+    "nama": "SMA NEGERI 1 DEMAK",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. SULTAN FATAH NO. 85 KATONSARI DEMAK",
+    "desa": "Katonsari",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319301",
+    "nama": "SMA NEGERI 2 DEMAK",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. KUDUS NO. 182 DEMAK TELP. (0291) 685840",
+    "desa": "Bintoro",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319299",
+    "nama": "SMA NEGERI 3 DEMAK",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. SULTAN TRENGGONO NO.81",
+    "desa": "Kalikondang",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319326",
+    "nama": "SMAS AL MAARIF DEMAK",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. SULTAN HADIWIJAYA",
+    "desa": "Mangunjiwan",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319288",
+    "nama": "SMAS MUHAMMADIYAH 1 DEMAK",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JALAN KYAI JEBAT NO. 9 DEMAK",
+    "desa": "Bintoro",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319282",
+    "nama": "SMAS PGRI DEMAK",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. SULTAN HADIWIJAYA N0. 13 DEMAK",
+    "desa": "Mangunjiwan",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20360382",
+    "nama": "SMK AL MA`ARIF DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. SULTAN HADIWIJAYA MANGUNJIWAN DEMAK",
+    "desa": "Mangunjiwan",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20341173",
+    "nama": "SMK ALFATTAAH BOARDING SCHOOL DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "SULTAN FATAH SETINGGIL BINTORO",
+    "desa": "Bintoro",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "69888497",
+    "nama": "SMK FARMASI TUNAS HARAPAN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. YUDHOMENGGOLO 51 BINTORO",
+    "desa": "Bintoro",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319296",
+    "nama": "SMK NEGERI 1 DEMAK",
+    "jenjang": "SMK",
+    "status": "NEGERI",
+    "alamat": "JL. SULTAN TRENGGONO NO. 87",
+    "desa": "Katonsari",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319334",
+    "nama": "SMK NEGERI 2 DEMAK",
+    "jenjang": "SMK",
+    "status": "NEGERI",
+    "alamat": "JL. SULTAN HADIWIJAYA",
+    "desa": "Mangunjiwan",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319375",
+    "nama": "SMK PERIKANAN NUSANTARA DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. ANGSA NO. 11",
+    "desa": "Kalicilik",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20340340",
+    "nama": "SMK PONTREN DARUSSALAM MUHAMMADIYAH DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA DEMAK - BONANG KM. 0,1 KALICILIK DEMAK",
+    "desa": "Kalicilik",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "20319390",
+    "nama": "SMK SUNAN KALIJAGA DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. SULTAN TRENGGONO NO.77",
+    "desa": "Katonsari",
+    "kodeKecamatan": "032107"
+  },
+  {
+    "npsn": "69941710",
+    "nama": "MA NAHDLATUL ULAMA KARANGROWO",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Dk. Ngleles 01/04 Ngleles Karangrowo Wonosalam Demak",
+    "desa": "Karangrowo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20362897",
+    "nama": "MA SHOLAHUDDIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. DEMUNG - TRENGGULI KM 01 KERANGKULON WONOSALAM DEMAK",
+    "desa": "Kerangkulon",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20362895",
+    "nama": "MAN DEMAK",
+    "jenjang": "MA",
+    "status": "NEGERI",
+    "alamat": "JL. DIPONEGORO NO. 27",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20362896",
+    "nama": "MAS MIFTAHUSSALAM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. PANGERAN DIPONEGORO NO. 59",
+    "desa": "Wonosalam",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20340338",
+    "nama": "SMAS ISLAM MIFTAHUL HUDA DEMAK",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. DIPONEGORO NO. 116 DEMAK",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20340665",
+    "nama": "SMAS ISLAMIC CENTRE DEMAK",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. DIPONEGORO NO. 47",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20319285",
+    "nama": "SMAS NURUL ULUM TRENGGULI",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. TRENGGULI -WELAHAN KM 0,2 DEMAK",
+    "desa": "Trengguli",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "69756201",
+    "nama": "SMK AL MADINA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "GANG KRANDON RT 3/ RW 4",
+    "desa": "Botorejo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "69756197",
+    "nama": "SMK ISLAM AL FADHILA DEMAK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. DEMUNG -TRENGGULI KM,0,5 DEMUNG WETAN WONOSALAM",
+    "desa": "Kerangkulon",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20340341",
+    "nama": "SMK MIFTAHUL `ULUM BOARDING SCHOOL",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "DIPONEGORO JOGOLOYO WONOSALAM DEMAK",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20362083",
+    "nama": "SMK PELAYARAN DEMAK BOARDING SCHOOL",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL.DIPONEGORO NO. 1",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "69760707",
+    "nama": "SMK SABILUL HUDA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "DESA PILANGREJO",
+    "desa": "Pilangrejo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20341387",
+    "nama": "SMK SULTAN FATTAH WONOSALAM",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "DIPONEGORO NO. 47 - 49",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20360242",
+    "nama": "SMKS NAWA KARTIKA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "DESA TLOGODOWO KEC. WONOSALAM",
+    "desa": "Tlogodowo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "69992227",
+    "nama": "SPM Miftahul Ulum Ulya",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jalan P. Diponegoro No. 17",
+    "desa": "Jogoloyo",
+    "kodeKecamatan": "032108"
+  },
+  {
+    "npsn": "20362841",
+    "nama": "MA MIFTAHUL HUDA BRAKAS",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL.GODONG - KARANGANYAR KM 5 DESA BRAKAS KEC. DEMPET KAB.DEMAK",
+    "desa": "Brakas",
+    "kodeKecamatan": "032109"
+  },
+  {
+    "npsn": "20362842",
+    "nama": "MAS QODIRIYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN NO.1",
+    "desa": "Harjowinangun",
+    "kodeKecamatan": "032109"
+  },
+  {
+    "npsn": "20319279",
+    "nama": "SMA NEGERI 1 DEMPET",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. RAYA DEMAK GODONG KM. 10 DEMPET",
+    "desa": "Botosengon",
+    "kodeKecamatan": "032109"
+  },
+  {
+    "npsn": "20362844",
+    "nama": "MA AL IRSYAD GAJAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA GAJAH-DEMPET NO. 11 GAJAH DEMAK",
+    "desa": "Gajah",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "70033593",
+    "nama": "MA CAHAYA TASBIH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jalan Raya Demak - Kudus KM. 14",
+    "desa": "Sari",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20362843",
+    "nama": "MA NURUL HUDA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KH ABDUL KARIM NO 3A",
+    "desa": "Medini",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20362845",
+    "nama": "MA TARBIYATUL MUBTADIIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. HONGGOREJO NO.178",
+    "desa": "Wilalung",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20319289",
+    "nama": "SMAS MIFTAHUL HUDA GAJAH",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. TAMAN SISWA NO. 07",
+    "desa": "Jatisono",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20319293",
+    "nama": "SMK GANESA GAJAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Gajah-Dempet No.20 Km. 0,3",
+    "desa": "Gajah",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20341389",
+    "nama": "SMK MIFTAHUL QULUB GAJAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. KAUMAN NO.1 DESA KEDONDONG",
+    "desa": "Kedondong",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20362122",
+    "nama": "SMK MUHAMMADIYAH MLATIHARJO GAJAH",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL.RAYA TEGALOMBO-MEDINI KM.9",
+    "desa": "Mlatiharjo",
+    "kodeKecamatan": "032110"
+  },
+  {
+    "npsn": "20362853",
+    "nama": "MA MAZRO`ATUL HUDA KARANGANYAR",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. NAVIGASI NO. 17",
+    "desa": "Karanganyar",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20362852",
+    "nama": "MA MAZRO`ATUL HUDA WONORENGGO",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. K. HASYIM NO. 69 WONORENGGO-CANGKRINGREMBANG",
+    "desa": "Cangkring Rembang",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20362854",
+    "nama": "MAS MANBA`UL HUDA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. GAJAH - GENENG KM 01 NGALURAN, KARANGANYAR, DEMAK",
+    "desa": "Ngaluran",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20362855",
+    "nama": "MAS NAHDLOTUSSIBYAN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL. KI WIROLEKSONO NO. 53 WONOKETINGAL KARANGANYAR DEMAK",
+    "desa": "Wonoketingal",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20319298",
+    "nama": "SMA NEGERI 1 KARANGANYAR",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. RAYA CANGKRING NO. 8",
+    "desa": "Cangkring",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20340342",
+    "nama": "SMK NURUL MUSHTHOFA BOARDING SCHOOL",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jalan karanganyar-mijen km.03",
+    "desa": "Kedungwaru Kidul",
+    "kodeKecamatan": "032111"
+  },
+  {
+    "npsn": "20362862",
+    "nama": "MA AL ITTIHAD",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL.RAYA TRENGGULI MIJEN KM 10 DEMAK",
+    "desa": "Bakung",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20362863",
+    "nama": "MA MIFTAHUL HUDA JLEPER",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JALAN RAYA KM.03 MIJEN JLEPER",
+    "desa": "Jleper",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "69941712",
+    "nama": "MA UNGGULAN AL-HIKMAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Nakulo Rt 03 Rw 04",
+    "desa": "Pasir",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20319292",
+    "nama": "SMA NEGERI 1 MIJEN",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "JL. RAYA BAKUNG NO. 3",
+    "desa": "Bakung",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20319323",
+    "nama": "SMAS AN NIDHOM MLATEN MIJEN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL. MLATI GANG III MLATEN",
+    "desa": "Mlaten",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20353887",
+    "nama": "SMK AL-MUBAROK",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "SURO WIJOYO SAMPURNO",
+    "desa": "Bermi",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "69888671",
+    "nama": "SMK MIFTAHUL HUDA",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JALAN RAYA MIJEN JLEPER KM 3 MIJEN DEMAK",
+    "desa": "Jleper",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20362096",
+    "nama": "SMK MUHAMMADIYAH 5 MIJEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA MIJEN DEMAK",
+    "desa": "Mijen",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "60725431",
+    "nama": "SMK TUNAS BANGSA MIJEN",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "Jl. Raya Mijen - Demak No. 70",
+    "desa": "Mijen",
+    "kodeKecamatan": "032112"
+  },
+  {
+    "npsn": "20362890",
+    "nama": "MA DARUS SALAM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Gg.III/145 JETAK WEDUNG DEMAK",
+    "desa": "Jetak",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362892",
+    "nama": "MA I`ANATUTH-THULLAB",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Maulana Abdurrahman Mutih Kulon, Wedung, Demak",
+    "desa": "Mutih Kulon",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362889",
+    "nama": "MA NU RAUDLATUL MU`ALLIMIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL RAYA NGAWEN NO 18",
+    "desa": "Ngawen",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362894",
+    "nama": "MA NU SALAFIYAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JLN. RAYA KENDUREN NO. 47 RT. 07 RW. 03 DESA KENDUREN KEC. WEDUNG KAB. DEMAK PR",
+    "desa": "Kenduren",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362888",
+    "nama": "MA NURUL ITTIHAD",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "BABALAN",
+    "desa": "Babalan",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362893",
+    "nama": "MA RIBHUL ULUM",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jln. Raya KedungmutihKec. Wedung Kab. Demak",
+    "desa": "Kedungmutih",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362891",
+    "nama": "MA YPKM RADEN FATAH",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JUNGPASIR RT. 01 RW. 05 KEC. WEDUNG KAB. DEMAK",
+    "desa": "Jungpasir",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "69786248",
+    "nama": "SMA NEGERI 1 WEDUNG",
+    "jenjang": "SMA",
+    "status": "NEGERI",
+    "alamat": "Jl. Raya Bungo Pasir Kecamatan Wedung",
+    "desa": "Bungo",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20319322",
+    "nama": "SMAS ISLAM RAUDHOTUT THOLIBIN",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "Jln. RAYA BUNGO MUTIH",
+    "desa": "Bungo",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20319321",
+    "nama": "SMAS SULTAN FATAH WEDUNG",
+    "jenjang": "SMA",
+    "status": "SWASTA",
+    "alamat": "JL.TPI LAMA (Sidorejo)",
+    "desa": "Wedung",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20362282",
+    "nama": "SMK AL ITTIHAD ISLAMIC BOARDING SCHOOL",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. KH. FAUZI NOOR Gg PP AL - ITTIHAD",
+    "desa": "Jungpasir",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "20361620",
+    "nama": "SMK NU RAUDLATUL MU`ALLIMIN WEDUNG",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. RAYA NGAWEN NO. 23 KEC. WEDUNG",
+    "desa": "Ngawen",
+    "kodeKecamatan": "032113"
+  },
+  {
+    "npsn": "70014160",
+    "nama": "MA HIDAYATUL MUBTADIIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. Buntu RT 02 RW 01",
+    "desa": "Kebonagung",
+    "kodeKecamatan": "032114"
+  },
+  {
+    "npsn": "70061267",
+    "nama": "MA NURUL AZHAR",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Wareng RT 08 RW 03",
+    "desa": "Kebonagung",
+    "kodeKecamatan": "032114"
+  },
+  {
+    "npsn": "20362861",
+    "nama": "MA TERPADU YASIN",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "Jl. KH Yasin RT 01 RW IV Ds. Kebonagung",
+    "desa": "Kebonagung",
+    "kodeKecamatan": "032114"
+  },
+  {
+    "npsn": "20362860",
+    "nama": "MA YASUA",
+    "jenjang": "MA",
+    "status": "SWASTA",
+    "alamat": "JL RAYA PURWODADI-SEMARANG KM 32",
+    "desa": "Pilangwetan",
+    "kodeKecamatan": "032114"
+  },
+  {
+    "npsn": "20341386",
+    "nama": "SMK AL KAUTSAR KEBONAGUNG",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "JL. DEMAK-GODONG KM.13",
+    "desa": "Megonten",
+    "kodeKecamatan": "032114"
+  },
+  {
+    "npsn": "69888747",
+    "nama": "SMK RADEN SAHID",
+    "jenjang": "SMK",
+    "status": "SWASTA",
+    "alamat": "SAMPANG RT. 07 RW. 03",
+    "desa": "Mangunan Lor",
+    "kodeKecamatan": "032114"
+  }
+]

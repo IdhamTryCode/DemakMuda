@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GantiTema } from "@/components/ganti-tema";
+import { Lonceng } from "@/components/lonceng";
 import { LogoDemak } from "@/components/logo-demak";
 import { dasborUntuk } from "@/lib/peran";
 import { wajibPeran } from "@/lib/sesi";
@@ -49,6 +50,7 @@ export default async function TataLetakKelola({
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-3">
+            <Lonceng />
             <GantiTema />
             <Link
               href={dasborUntuk(sesi.peran)}

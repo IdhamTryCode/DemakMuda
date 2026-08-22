@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { kirimNotifikasi } from "@/server/notifikasi";
 import { GagalIzin, bolehMengubah, PENGELOLA_ISI, wajibAktor } from "@/server/penjaga";
 import { periksaKelayakan, type SasaranPendaftaran } from "@/server/pendaftaran";
 
@@ -127,8 +128,9 @@ export async function ubahStatusPeserta(
       where: { id: pendaftaranId },
       select: {
         id: true,
-        agenda: { select: { id: true, pembuatId: true } },
-        peluang: { select: { id: true, pembuatId: true } },
+        userId: true,
+        agenda: { select: { id: true, pembuatId: true, judul: true } },
+        peluang: { select: { id: true, pembuatId: true, judul: true } },
       },
     });
     if (!pendaftaran) return { ok: false, pesan: "Pendaftaran tidak ditemukan." };
@@ -154,7 +156,24 @@ export async function ubahStatusPeserta(
       rincian: { status },
     });
 
+    const kegiatan =
+      pendaftaran.agenda?.judul ?? pendaftaran.peluang?.judul ?? "kegiatan";
+    const KABAR: Record<string, string> = {
+      DITERIMA: "Pendaftaran Anda diterima",
+      DITOLAK: "Pendaftaran Anda tidak diterima",
+      HADIR: "Kehadiran Anda tercatat",
+      MENUNGGU: "Pendaftaran Anda kembali menunggu",
+    };
+    await kirimNotifikasi({
+      penerimaId: pendaftaran.userId,
+      jenis: "PENDAFTARAN_DIPUTUSKAN",
+      judul: KABAR[status] ?? "Status pendaftaran berubah",
+      pesan: kegiatan,
+      tautan: "/pemuda/kegiatan",
+    });
+
     revalidatePath("/kelola");
+    revalidatePath("/pemuda/kegiatan");
     return { ok: true };
   } catch (e) {
     if (e instanceof GagalIzin) return { ok: false, pesan: e.message };

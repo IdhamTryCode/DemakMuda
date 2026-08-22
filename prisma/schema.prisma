@@ -451,6 +451,40 @@ model Aspirasi {
   @@map("aspirasi")
 }
 
+// ──────────────────────── Notifikasi ────────────────────────
+
+enum JenisNotifikasi {
+  KEANGGOTAAN_DIAJUKAN
+  KEANGGOTAAN_DIPUTUSKAN
+  ASPIRASI_MASUK
+  ASPIRASI_DITANGGAPI
+  PENDAFTARAN_DIPUTUSKAN
+  SERTIFIKAT_TERBIT
+  ORGANISASI_DIVERIFIKASI
+  KARYA_DIMODERASI
+}
+
+/// Pemberitahuan dalam aplikasi. Belum ada layanan surel, jadi tidak ada
+/// pengiriman ke luar — pemberitahuan hanya hidup di dalam DemakMuda.
+model Notifikasi {
+  id     String          @id @default(cuid())
+  jenis  JenisNotifikasi
+  judul  String
+  pesan  String
+  /// Alamat dalam aplikasi yang dituju saat pemberitahuan ditekan.
+  tautan String?
+
+  penerimaId String
+  penerima   User   @relation(fields: [penerimaId], references: [id], onDelete: Cascade)
+
+  dibacaPada DateTime?
+  dibuatPada DateTime  @default(now())
+
+  @@index([penerimaId, dibacaPada])
+  @@index([penerimaId, dibuatPada])
+  @@map("notifikasi")
+}
+
 // ──────────────────────── Jejak audit ────────────────────────
 
 model AuditLog {
@@ -507,6 +541,7 @@ model User {
   karya                 Karya[]
   aspirasiDikirim       Aspirasi[]    @relation("PengirimAspirasi")
   aspirasiDitanggapi    Aspirasi[]    @relation("PenanggapAspirasi")
+  notifikasi            Notifikasi[]
 
   @@unique([email])
   @@map("user")

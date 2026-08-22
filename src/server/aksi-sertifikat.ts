@@ -6,6 +6,7 @@ import { buatKodeSertifikat } from "@/lib/kode-sertifikat";
 import { prisma } from "@/lib/prisma";
 import type { HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { kirimNotifikasi } from "@/server/notifikasi";
 import { bolehMengubah, GagalIzin, PENGELOLA_ISI, wajibAktor } from "@/server/penjaga";
 
 /**
@@ -96,6 +97,14 @@ export async function terbitkanSertifikat(data: FormData): Promise<HasilAksi> {
       sasaran: "sertifikat",
       sasaranId: sertifikat.id,
       rincian: { kode: sertifikat.kode, judul, penerimaId: pendaftaran.userId },
+    });
+
+    await kirimNotifikasi({
+      penerimaId: pendaftaran.userId,
+      jenis: "SERTIFIKAT_TERBIT",
+      judul: "Sertifikat Anda terbit",
+      pesan: `${judul} — kode ${sertifikat.kode}`,
+      tautan: `/cek/${sertifikat.kode}`,
     });
 
     revalidatePath("/kelola");

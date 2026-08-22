@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { GantiTema } from "@/components/ganti-tema";
 import { Angka } from "@/components/grafik-batang";
+import { Lonceng } from "@/components/lonceng";
 import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
 import { TombolKeluar } from "@/components/tombol-keluar";
@@ -101,6 +102,7 @@ export default async function DasborOrganisasi() {
       <nav className="flex flex-wrap items-center justify-between gap-4">
         <LogoDemak ukuran={36} />
         <div className="flex items-center gap-3">
+          <Lonceng />
           <GantiTema />
           <Link
             href="/kelola/kabar"

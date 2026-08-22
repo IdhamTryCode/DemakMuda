@@ -7,6 +7,7 @@ import { slugUnik } from "@/lib/teks";
 import { KaryaSkema, galatKolom, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
 import { hapusBerkasLama } from "@/server/berkas";
+import { kirimNotifikasi } from "@/server/notifikasi";
 import { bolehMengubah, GagalIzin, wajibAktor } from "@/server/penjaga";
 
 /**
@@ -159,6 +160,18 @@ export async function arsipkanKarya(id: string): Promise<HasilAksi> {
     }
 
     await prisma.karya.update({ where: { id }, data: { status: "ARSIP" } });
+
+    // Hanya bila diturunkan orang lain. Pemilik yang mengarsipkan karyanya
+    // sendiri tidak perlu diberi tahu tentang perbuatannya sendiri.
+    if (aktor.id !== lama.pemilikId) {
+      await kirimNotifikasi({
+        penerimaId: lama.pemilikId,
+        jenis: "KARYA_DIMODERASI",
+        judul: "Karya Anda diturunkan dari etalase",
+        pesan: `${lama.judul} tidak lagi tampil di Ruang Karya. Hubungi Dispora bila ingin menanyakan alasannya.`,
+        tautan: "/pemuda/karya",
+      });
+    }
 
     await catat({
       aktorId: aktor.id,

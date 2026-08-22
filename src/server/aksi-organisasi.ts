@@ -7,6 +7,7 @@ import { keSlug } from "@/lib/teks";
 import { galatKolom, OrganisasiSkema, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
 import { hapusBerkasLama } from "@/server/berkas";
+import { kirimNotifikasi } from "@/server/notifikasi";
 import {
   bolehMengubah,
   GagalIzin,
@@ -184,7 +185,7 @@ export async function verifikasiOrganisasi(
 
     const organisasi = await prisma.organisasi.findUnique({
       where: { id },
-      select: { nama: true },
+      select: { nama: true, slug: true, pemilikId: true },
     });
     if (!organisasi) return { ok: false, pesan: "Organisasi tidak ditemukan." };
 
@@ -201,6 +202,20 @@ export async function verifikasiOrganisasi(
       sasaran: "organisasi",
       sasaranId: id,
       rincian: { nama: organisasi.nama },
+    });
+
+    await kirimNotifikasi({
+      penerimaId: organisasi.pemilikId,
+      jenis: "ORGANISASI_DIVERIFIKASI",
+      judul:
+        keputusan === "TERVERIFIKASI"
+          ? "Organisasi Anda terverifikasi"
+          : "Verifikasi organisasi belum disetujui",
+      pesan:
+        keputusan === "TERVERIFIKASI"
+          ? `${organisasi.nama} kini tampil di Direktori Organisasi.`
+          : `${organisasi.nama} belum dapat diverifikasi. Lengkapi datanya lalu ajukan kembali.`,
+      tautan: `/kelola/organisasi/${id}`,
     });
 
     revalidatePath("/direktori");

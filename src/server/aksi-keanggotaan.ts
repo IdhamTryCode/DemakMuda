@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { kirimNotifikasi } from "@/server/notifikasi";
 import {
   bolehMengubah,
   GagalIzin,
@@ -26,7 +27,7 @@ export async function ajukanKeanggotaan(organisasiId: string): Promise<HasilAksi
 
     const organisasi = await prisma.organisasi.findUnique({
       where: { id: organisasiId },
-      select: { id: true, nama: true, statusVerifikasi: true },
+      select: { id: true, nama: true, slug: true, statusVerifikasi: true, pemilikId: true },
     });
     if (!organisasi || organisasi.statusVerifikasi !== "TERVERIFIKASI") {
       return { ok: false, pesan: "Organisasi ini tidak tersedia." };
@@ -58,6 +59,14 @@ export async function ajukanKeanggotaan(organisasiId: string): Promise<HasilAksi
       rincian: { nama: organisasi.nama },
     });
 
+    await kirimNotifikasi({
+      penerimaId: organisasi.pemilikId,
+      jenis: "KEANGGOTAAN_DIAJUKAN",
+      judul: "Permintaan bergabung baru",
+      pesan: `${aktor.nama} mengajukan diri sebagai anggota ${organisasi.nama}.`,
+      tautan: `/kelola/organisasi/${organisasiId}/anggota`,
+    });
+
     revalidatePath("/direktori");
     // Halaman rinci punya alamat sendiri; tanpa baris ini jumlah anggota di
     // sana masih menampilkan angka lama sesaat setelah pengajuan ditanggapi.
@@ -81,7 +90,8 @@ export async function tanggapiKeanggotaan(
       where: { id: keanggotaanId },
       select: {
         organisasiId: true,
-        organisasi: { select: { pemilikId: true, nama: true } },
+        userId: true,
+        organisasi: { select: { pemilikId: true, nama: true, slug: true } },
       },
     });
     if (!keanggotaan) return { ok: false, pesan: "Pengajuan tidak ditemukan." };
@@ -100,6 +110,20 @@ export async function tanggapiKeanggotaan(
       sasaran: "keanggotaan",
       sasaranId: keanggotaanId,
       rincian: { organisasi: keanggotaan.organisasi.nama },
+    });
+
+    await kirimNotifikasi({
+      penerimaId: keanggotaan.userId,
+      jenis: "KEANGGOTAAN_DIPUTUSKAN",
+      judul:
+        keputusan === "TERVERIFIKASI"
+          ? "Pengajuan keanggotaan diterima"
+          : "Pengajuan keanggotaan tidak disetujui",
+      pesan:
+        keputusan === "TERVERIFIKASI"
+          ? `Anda kini tercatat sebagai anggota ${keanggotaan.organisasi.nama}.`
+          : `Pengurus ${keanggotaan.organisasi.nama} belum dapat menyetujui pengajuan Anda.`,
+      tautan: `/direktori/${keanggotaan.organisasi.slug}`,
     });
 
     revalidatePath("/direktori");

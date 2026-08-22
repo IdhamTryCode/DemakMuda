@@ -55,7 +55,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run db:down` | Mematikan PostgreSQL |
 | `npm run db:reset` | Menghapus basis data lalu membangunnya ulang dan menyemai dari nol |
 | `npm run db:migrate` | Menerapkan perubahan skema |
-| `npm run db:seed` | Mengisi data acuan; aman dijalankan berulang kali |
+| `npm run db:seed` | Mengisi data acuan (wilayah, minat, keterampilan, 175 sekolah); aman diulang |
 | `npm run db:seed:akun` | Membuat akun demo untuk keempat peran |
 | `npm run db:seed:isi` | Mengisi kabar, agenda, peluang, karya, dan aspirasi contoh untuk peragaan |
 | `npm run db:seed:gambar` | Membangkitkan dan mengunggah gambar contoh untuk kabar, karya, dan organisasi |
@@ -78,6 +78,7 @@ Aplikasi terbuka di http://localhost:3000
 | `npm run uji:akses` | Matriks akses seluruh halaman terhadap seluruh peran |
 | `npm run uji:unggah` | Uji asap unggah berkas: penerbitan token, batasnya, dan penyaringan alamat |
 | `npm run uji:keanggotaan` | Uji asap alur gabung organisasi dari pengajuan sampai keputusan pengurus |
+| `npm run uji:notifikasi` | Uji asap pemberitahuan: sampai ke penerimanya, tidak ke orang lain |
 | `npm run aset:ikon` | Membuat ikon aplikasi dari lambang Kabupaten Demak |
 | `npm run db:studio` | Membuka Prisma Studio untuk melihat isi basis data |
 | `npm run auth:schema` | Membangkitkan ulang model Better Auth setelah plugin berubah |

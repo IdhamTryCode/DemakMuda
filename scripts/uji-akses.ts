@@ -197,6 +197,19 @@ async function main() {
     { jalur: "/masuk/dua-langkah", pola: "/masuk/dua-langkah", harap: publik() },
 
     // ── Butuh masuk, tanpa batasan peran ──
+    // Pemberitahuan milik tiap orang; perannya tidak menentukan boleh atau
+    // tidaknya membuka, isinya yang berbeda.
+    {
+      jalur: "/notifikasi",
+      pola: "/notifikasi",
+      harap: {
+        tamu: "->/masuk",
+        pemuda: "200",
+        organisasi: "200",
+        dinas: "200",
+        superadmin: "200",
+      },
+    },
     {
       jalur: "/keamanan",
       pola: "/keamanan",

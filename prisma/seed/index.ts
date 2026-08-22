@@ -148,9 +148,107 @@ async function semaiMinatDanKeterampilan() {
   );
 }
 
+type BerkasSekolah = {
+  npsn: string;
+  nama: string;
+  jenjang: "SMA" | "SMK" | "MA";
+  status: "NEGERI" | "SWASTA";
+  alamat: string;
+  desa: string;
+  kodeKecamatan: string;
+}[];
+
+/**
+ * Menyemai SMA, SMK, dan MA se-Kabupaten Demak.
+ *
+ * Sumbernya memakai kode wilayahnya sendiri (032101…032114), bukan kode
+ * Kemendagri yang dipakai tabel kecamatan kita. Pemetaan antara keduanya TIDAK
+ * diasumsikan berurutan sama — itu tebakan yang kebetulan sering benar dan
+ * diam-diam salah sekali dua kali. Sebagai gantinya pemetaannya diturunkan
+ * dari datanya sendiri: nama desa tiap sekolah dicocokkan ke tabel desa, lalu
+ * kecamatan yang paling banyak cocok itulah pasangannya.
+ *
+ * Bila kecocokan terkuatnya pun lemah, penyemaian berhenti dan melapor.
+ */
+async function semaiSekolah() {
+  const berkas = join(import.meta.dirname, "sekolah.json");
+  const data = JSON.parse(readFileSync(berkas, "utf8")) as BerkasSekolah;
+
+  const desa = await prisma.desa.findMany({
+    select: { nama: true, kecamatanId: true },
+  });
+  const perDesa = new Map<string, string[]>();
+  for (const d of desa) {
+    const kunci = d.nama.toLowerCase();
+    perDesa.set(kunci, [...(perDesa.get(kunci) ?? []), d.kecamatanId]);
+  }
+
+  // Kode sumber -> berapa kali tiap kecamatan kita muncul di antara desanya.
+  const suara = new Map<string, Map<string, number>>();
+  for (const sekolah of data) {
+    const calon = perDesa.get(sekolah.desa.toLowerCase()) ?? [];
+    const kotak = suara.get(sekolah.kodeKecamatan) ?? new Map<string, number>();
+    for (const kecamatanId of calon) {
+      kotak.set(kecamatanId, (kotak.get(kecamatanId) ?? 0) + 1);
+    }
+    suara.set(sekolah.kodeKecamatan, kotak);
+  }
+
+  const pemetaan = new Map<string, string>();
+  for (const [kode, kotak] of suara) {
+    const urut = [...kotak.entries()].sort((a, b) => b[1] - a[1]);
+    const menang = urut[0];
+    const total = data.filter((x) => x.kodeKecamatan === kode).length;
+    if (!menang || menang[1] < total * 0.4) {
+      throw new Error(
+        `Kecamatan sumber ${kode} tidak dapat dipetakan dengan yakin ` +
+          `(cocok terbaik ${menang?.[1] ?? 0} dari ${total} sekolah).`,
+      );
+    }
+    pemetaan.set(kode, menang[0]);
+  }
+
+  const terpakai = new Set(pemetaan.values());
+  if (terpakai.size !== pemetaan.size) {
+    throw new Error("Dua kecamatan sumber terpetakan ke kecamatan yang sama.");
+  }
+
+  for (const sekolah of data) {
+    const kecamatanId = pemetaan.get(sekolah.kodeKecamatan);
+    if (!kecamatanId) throw new Error(`Kecamatan ${sekolah.kodeKecamatan} tidak dipetakan.`);
+
+    await prisma.sekolah.upsert({
+      where: { npsn: sekolah.npsn },
+      update: { nama: sekolah.nama, jenjang: sekolah.jenjang, kecamatanId },
+      create: {
+        npsn: sekolah.npsn,
+        nama: sekolah.nama,
+        jenjang: sekolah.jenjang,
+        kecamatanId,
+      },
+    });
+  }
+
+  const jumlah = await prisma.sekolah.count();
+  const perJenjang = await prisma.sekolah.groupBy({
+    by: ["jenjang"],
+    _count: { _all: true },
+  });
+  console.log(
+    `Sekolah: ${jumlah} (` +
+      perJenjang.map((j) => `${j.jenjang} ${j._count._all}`).join(", ") +
+      ")",
+  );
+
+  if (jumlah < data.length) {
+    throw new Error(`Sekolah tersemai ${jumlah}, seharusnya ${data.length}.`);
+  }
+}
+
 async function main() {
   await semaiWilayah();
   await semaiMinatDanKeterampilan();
+  await semaiSekolah();
   console.log("Penyemaian selesai.");
 }
 

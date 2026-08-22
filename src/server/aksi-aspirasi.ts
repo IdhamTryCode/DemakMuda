@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { AspirasiSkema, TanggapanSkema, galatKolom, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { kirimKeDinas, kirimNotifikasi } from "@/server/notifikasi";
 import { GagalIzin, wajibAktor } from "@/server/penjaga";
 
 /**
@@ -76,6 +77,15 @@ export async function kirimAspirasi(data: FormData): Promise<HasilAksi> {
       rincian: { judul: n.judul },
     });
 
+    // Hanya judulnya yang dibawa. Isi aspirasi tidak disalin ke pemberitahuan,
+    // sama seperti tidak disalin ke jejak audit.
+    await kirimKeDinas({
+      jenis: "ASPIRASI_MASUK",
+      judul: "Aspirasi baru masuk",
+      pesan: n.judul,
+      tautan: `/kelola/aspirasi/${aspirasi.id}`,
+    });
+
     revalidatePath("/pemuda/aspirasi");
     revalidatePath("/kelola/aspirasi");
     return { ok: true };
@@ -104,7 +114,7 @@ export async function tanggapiAspirasi(id: string, data: FormData): Promise<Hasi
 
     const lama = await prisma.aspirasi.findUnique({
       where: { id },
-      select: { id: true, judul: true, status: true },
+      select: { id: true, judul: true, status: true, pengirimId: true },
     });
     if (!lama) return { ok: false, pesan: "Aspirasi tidak ditemukan." };
 
@@ -126,6 +136,16 @@ export async function tanggapiAspirasi(id: string, data: FormData): Promise<Hasi
       sasaranId: id,
       rincian: { judul: lama.judul, statusLama: lama.status, statusBaru: n.status },
     });
+
+    if (adaTanggapan) {
+      await kirimNotifikasi({
+        penerimaId: lama.pengirimId,
+        jenis: "ASPIRASI_DITANGGAPI",
+        judul: "Aspirasi Anda ditanggapi dinas",
+        pesan: lama.judul,
+        tautan: "/pemuda/aspirasi",
+      });
+    }
 
     revalidatePath("/kelola/aspirasi");
     revalidatePath("/pemuda/aspirasi");
