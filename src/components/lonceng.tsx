@@ -1,39 +1,61 @@
-import Link from "next/link";
-
+import { PanelLonceng, type RingkasNotifikasi } from "@/components/panel-lonceng";
+import { prisma } from "@/lib/prisma";
 import { dapatkanSesi } from "@/lib/sesi";
-import { jumlahBelumDibaca } from "@/server/notifikasi";
+import { sejak } from "@/lib/teks";
+import { tandaiSemuaTerbaca, tandaiTerbaca } from "@/server/aksi-notifikasi";
 
 /**
  * Lonceng pemberitahuan untuk bilah dasbor.
  *
- * Dipasang di seluruh dasbor peran supaya kabar sampai di mana pun pengguna
- * berada, tidak hanya di halaman yang kebetulan berkaitan.
+ * Bagian yang membaca basis data tinggal di sini, di sisi peladen. Yang
+ * diserahkan ke peramban hanya bentuk yang sudah jadi — termasuk keterangan
+ * waktunya, yang dihitung di sini supaya tidak bergantung pada jam mesin
+ * pembaca dan tidak menimbulkan ketidakcocokan hidrasi.
  *
- * Angkanya dibatasi tampil sampai "9+" — yang penting pengguna tahu ada yang
- * menunggu, bukan tahu persis berapa banyak.
+ * Enam terbaru saja. Panel ini untuk melihat sekilas; arsip lengkapnya ada di
+ * /notifikasi.
  */
+const BANYAK_DITAMPILKAN = 6;
+
 export async function Lonceng() {
   const sesi = await dapatkanSesi();
   if (!sesi) return null;
 
-  const belum = await jumlahBelumDibaca(sesi.user.id);
+  const sekarang = new Date();
+  const [belum, terbaru] = await Promise.all([
+    prisma.notifikasi.count({
+      where: { penerimaId: sesi.user.id, dibacaPada: null },
+    }),
+    prisma.notifikasi.findMany({
+      where: { penerimaId: sesi.user.id },
+      orderBy: [{ dibacaPada: "asc" }, { dibuatPada: "desc" }],
+      take: BANYAK_DITAMPILKAN,
+      select: {
+        id: true,
+        judul: true,
+        pesan: true,
+        tautan: true,
+        dibacaPada: true,
+        dibuatPada: true,
+      },
+    }),
+  ]);
+
+  const daftar: RingkasNotifikasi[] = terbaru.map((n) => ({
+    id: n.id,
+    judul: n.judul,
+    pesan: n.pesan,
+    tautan: n.tautan,
+    terbaca: n.dibacaPada !== null,
+    waktu: sejak(n.dibuatPada, sekarang),
+  }));
 
   return (
-    <Link
-      href="/notifikasi"
-      aria-label={
-        belum > 0
-          ? `Pemberitahuan, ${belum} belum dibaca`
-          : "Pemberitahuan"
-      }
-      className="sk-raised sk-pressable relative rounded-sk px-3 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
-    >
-      <span aria-hidden="true">🔔</span>
-      {belum > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 min-w-5 rounded-full bg-accent px-1.5 py-0.5 text-center text-[11px] font-semibold leading-none text-on-accent">
-          {belum > 9 ? "9+" : belum}
-        </span>
-      )}
-    </Link>
+    <PanelLonceng
+      belum={belum}
+      daftar={daftar}
+      tandai={tandaiTerbaca}
+      tandaiSemua={tandaiSemuaTerbaca}
+    />
   );
 }

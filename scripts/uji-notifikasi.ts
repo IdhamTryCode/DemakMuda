@@ -100,8 +100,23 @@ async function main() {
 
   const dasbor = await ambil("/pemuda", kukiPemuda);
   periksa(
-    dasbor.isi.includes("belum dibaca"),
+    dasbor.isi.includes("Pemberitahuan, 1 belum dibaca"),
     "lonceng di dasbor menghitung yang belum dibaca",
+  );
+
+  console.log("\npanel mengapung di dasbor");
+  // Panel ini yang dibaca orang sehari-hari; halaman arsipnya jarang dibuka.
+  // Karena itu isinya harus benar-benar ada di dasbor, bukan hanya di
+  // /notifikasi.
+  periksa(dasbor.isi.includes("Pusat Aktivitas"), "panel lonceng ikut tergambar");
+  periksa(dasbor.isi.includes(RAHASIA), "pemberitahuannya terbaca dari panel");
+  periksa(
+    dasbor.isi.includes("(belum dibaca)"),
+    "yang belum dibaca diberi penanda, juga bagi pembaca layar",
+  );
+  periksa(
+    dasbor.isi.includes("Lihat semua") && dasbor.isi.includes('href="/notifikasi"'),
+    "panel menautkan arsip lengkapnya",
   );
 
   console.log("\nkabar tidak sampai ke orang lain");
@@ -138,6 +153,20 @@ async function main() {
   periksa(
     sesudah.isi.includes("Tidak ada yang belum dibaca"),
     "hitungan belum dibaca kembali nol setelah ditandai",
+  );
+
+  const dasborSesudah = await ambil("/pemuda", kukiPemuda);
+  periksa(
+    !dasborSesudah.isi.includes("(belum dibaca)"),
+    "penanda hilang setelah dibaca — bedanya justru pada ketiadaannya",
+  );
+  periksa(
+    dasborSesudah.isi.includes(RAHASIA),
+    "yang sudah dibaca tetap tercantum, hanya tanpa penanda",
+  );
+  periksa(
+    !dasborSesudah.isi.includes("Pemberitahuan, 1 belum dibaca"),
+    "lonceng tidak lagi menunjukkan angka",
   );
 
   console.log("\npemancar terpasang di aksi");
