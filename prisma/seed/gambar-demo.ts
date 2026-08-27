@@ -206,6 +206,59 @@ function svgFoto(slug: string, nama: string): string {
 </svg>`;
 }
 
+/**
+ * Piagam contoh untuk bukti prestasi.
+ *
+ * Sengaja bertuliskan CONTOH sebesar-besarnya dan tanpa nama, lembaga, atau
+ * tanda tangan apa pun. Gambar yang menyerupai piagam sungguhan, tanpa penanda,
+ * adalah dokumen palsu — sekalipun dibuat hanya untuk peragaan, ia dapat
+ * dicomot dan dipakai di tempat lain.
+ */
+function svgPiagam(kunci: string): string {
+  const n = angkaDari(kunci);
+  const p = PALET[n % PALET.length];
+  const L = 640;
+  const T = 452;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${L}" height="${T}" viewBox="0 0 ${L} ${T}">
+  <rect width="${L}" height="${T}" fill="#f7f5ef"/>
+  <rect x="16" y="16" width="${L - 32}" height="${T - 32}" fill="none" stroke="${p.aksen}" stroke-width="6"/>
+  <rect x="30" y="30" width="${L - 60}" height="${T - 60}" fill="none" stroke="${p.garis}" stroke-width="1.5"/>
+  <circle cx="${L - 96}" cy="${T - 96}" r="42" fill="none" stroke="${p.aksen}" stroke-width="3" opacity="0.7"/>
+  <circle cx="${L - 96}" cy="${T - 96}" r="30" fill="none" stroke="${p.aksen}" stroke-width="1.5" opacity="0.7"/>
+  ${Array.from({ length: 4 }, (_, i) => `<rect x="86" y="${196 + i * 26}" width="${i === 3 ? 190 : 330 - i * 24}" height="8" rx="4" fill="${p.garis}" opacity="0.35"/>`).join("")}
+  <rect x="86" y="104" width="240" height="20" rx="6" fill="${p.aksen}" opacity="0.55"/>
+  <text x="${L / 2}" y="${T / 2 + 26}" text-anchor="middle" font-family="sans-serif" font-size="86" font-weight="700" fill="${p.aksen}" opacity="0.18" letter-spacing="14">CONTOH</text>
+</svg>`;
+}
+
+async function semaiPiagam() {
+  const prestasi = await prisma.prestasi.findMany({
+    select: { id: true, buktiUrl: true, judul: true },
+  });
+
+  let dibuat = 0;
+  let dilewati = 0;
+  for (const s of prestasi) {
+    if (!bolehDiganti(s.buktiUrl)) {
+      dilewati++;
+      continue;
+    }
+    // Sepertiga sengaja dibiarkan tanpa bukti. Justru itu yang memperagakan
+    // bedanya di layar penyaringan dinas — kalau semuanya berbukti, saringan
+    // "hanya yang melampirkan bukti" tidak pernah kelihatan gunanya.
+    if (angkaDari(s.id) % 3 === 0) continue;
+    const url = await unggah(`prestasi/${s.id}`, svgPiagam(s.id + s.judul));
+    await prisma.prestasi.update({ where: { id: s.id }, data: { buktiUrl: url } });
+    dibuat++;
+  }
+
+  console.log(
+    `Piagam contoh: ${dibuat}` +
+      (dilewati > 0 ? ` (${dilewati} dilewati, sudah diunggah sendiri)` : ""),
+  );
+}
+
 async function semaiFoto() {
   const profil = await prisma.profilPemuda.findMany({
     select: { id: true, slug: true, fotoUrl: true, user: { select: { name: true } } },
@@ -278,6 +331,7 @@ async function main() {
   console.log(`Organisasi berlogo: ${organisasi.length - lewatOrg}`);
 
   await semaiFoto();
+  await semaiPiagam();
 
   const total = dilewati + lewatKarya + lewatOrg;
   if (total > 0) {

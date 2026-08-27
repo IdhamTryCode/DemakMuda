@@ -46,6 +46,11 @@ export function keterbukaanProfil(tanggalLahir: Date | null) {
     // seorang anak di halaman yang dapat dibuka siapa saja jauh lebih berat
     // akibatnya daripada nama kecamatannya.
     tampilkanFoto: !anak,
+    // Prestasinya sendiri tetap tampil — menyembunyikannya justru mengubur
+    // hal yang paling pantas dibanggakan seorang anak. Yang disembunyikan
+    // gambar piagamnya, karena piagam hampir selalu memuat nama sekolah, dan
+    // kadang alamat, yang sudah disembunyikan di tempat lain di halaman ini.
+    tampilkanBukti: !anak,
     tampilkanTelepon: false,
   };
 }

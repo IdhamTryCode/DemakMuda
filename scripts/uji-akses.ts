@@ -240,6 +240,11 @@ async function main() {
     // isi, dan memaksanya berganti akun hanya untuk melihat angka tidak ada
     // gunanya.
     { jalur: "/dinas", pola: "/dinas", harap: hanya("dinas", "superadmin") },
+    {
+      jalur: "/dinas/talenta",
+      pola: "/dinas/talenta",
+      harap: hanya("dinas", "superadmin"),
+    },
     { jalur: "/admin", pola: "/admin", harap: hanya("superadmin") },
     { jalur: "/admin/pengguna", pola: "/admin/pengguna", harap: hanya("superadmin") },
     { jalur: "/admin/audit", pola: "/admin/audit", harap: hanya("superadmin") },
@@ -252,6 +257,21 @@ async function main() {
     {
       jalur: "/pemuda/profil",
       pola: "/pemuda/profil",
+      harap: {
+        tamu: "->/masuk",
+        pemuda: "200",
+        organisasi: "200",
+        dinas: "200",
+        superadmin: "200",
+      },
+    },
+    // Rekam jejak mengikuti Kartu Talenta, bukan area pemuda: keduanya
+      // mengisi kartu yang sama, jadi izinnya harus sama pula. Menjaganya
+      // lebih ketat daripada kartunya sendiri hanya akan membuat pengelola
+      // organisasi punya kartu yang tidak bisa ia isi.
+    {
+      jalur: "/pemuda/rekam-jejak",
+      pola: "/pemuda/rekam-jejak",
       harap: {
         tamu: "->/masuk",
         pemuda: "200",

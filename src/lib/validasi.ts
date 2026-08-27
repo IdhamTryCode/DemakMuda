@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 import { alamatBlobSah } from "@/lib/blob";
+import {
+  TAHUN_PALING_AWAL,
+  TINGKAT_PRESTASI,
+  tahunMasukAkal,
+} from "@/lib/prestasi";
 
 /**
  * Skema pemeriksaan masukan.
@@ -249,6 +254,74 @@ export const TanggapanSkema = z
   });
 
 export type ProfilMasukan = z.infer<typeof ProfilSkema>;
+
+/**
+ * Tahun sebagai isian formulir.
+ *
+ * Kolomnya bertipe number di peramban, tetapi FormData selalu menyerahkan teks,
+ * jadi pemaksaan tipenya dilakukan di sini. Batas atasnya dihitung dari tahun
+ * berjalan lewat tahunMasukAkal(), bukan ditulis tetap.
+ */
+const tahun = (nama: string) =>
+  z.coerce
+    .number()
+    .refine((n) => tahunMasukAkal(n), {
+      message: `${nama} harus antara ${TAHUN_PALING_AWAL} dan tahun depan.`,
+    });
+
+export const PengalamanSkema = z
+  .object({
+    judul: teks(4, 160, "Nama pengalaman"),
+    peran: z.string().trim().max(80, "Peran maksimal 80 karakter.").optional().or(z.literal("")),
+    penyelenggara: z
+      .string()
+      .trim()
+      .max(120, "Penyelenggara maksimal 120 karakter.")
+      .optional()
+      .or(z.literal("")),
+    tahunMulai: tahun("Tahun mulai"),
+    tahunSelesai: z.union([tahun("Tahun selesai"), z.literal("")]).optional(),
+    keterangan: z
+      .string()
+      .trim()
+      .max(500, "Keterangan maksimal 500 karakter.")
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine(
+    (n) => !n.tahunSelesai || Number(n.tahunSelesai) >= n.tahunMulai,
+    { message: "Tahun selesai tidak boleh sebelum tahun mulai.", path: ["tahunSelesai"] },
+  );
+
+/**
+ * Prestasi yang diisi sendiri.
+ *
+ * Tidak ada kolom status verifikasi, dan itu keputusan sadar pemilik produk.
+ * Karena tidak ada yang memeriksanya, buktinya yang menggantikan peran itu —
+ * karena itu buktiUrl diperiksa dengan urlUnggahan(), sehingga tidak dapat
+ * diarahkan ke gambar di peladen mana pun di luar penyimpanan aplikasi ini.
+ */
+export const PrestasiSkema = z.object({
+  judul: teks(4, 160, "Nama prestasi"),
+  tingkat: z.enum(TINGKAT_PRESTASI),
+  peringkat: z
+    .string()
+    .trim()
+    .max(60, "Peringkat maksimal 60 karakter.")
+    .optional()
+    .or(z.literal("")),
+  penyelenggara: z
+    .string()
+    .trim()
+    .max(120, "Penyelenggara maksimal 120 karakter.")
+    .optional()
+    .or(z.literal("")),
+  tahun: tahun("Tahun"),
+  buktiUrl: urlUnggahan("Bukti prestasi").optional().or(z.literal("")),
+});
+
+export type PengalamanMasukan = z.infer<typeof PengalamanSkema>;
+export type PrestasiMasukan = z.infer<typeof PrestasiSkema>;
 
 export type BeritaMasukan = z.infer<typeof BeritaSkema>;
 export type AgendaMasukan = z.infer<typeof AgendaSkema>;

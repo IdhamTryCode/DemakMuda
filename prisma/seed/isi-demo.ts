@@ -2006,6 +2006,125 @@ async function semaiAspirasi() {
  * Sebagian ditandai sudah dibaca dan sebagian belum, supaya perbedaan
  * keduanya terlihat pada panel loncengnya.
  */
+/**
+ * Rekam jejak contoh: prestasi dan pengalaman yang "diisi sendiri".
+ *
+ * Tanpa ini, layar Cari Talenta selalu kosong dan fiturnya tidak dapat
+ * diperagakan sama sekali. Sebarannya disengaja tidak merata — sebagian besar
+ * di tingkat kecamatan dan kabupaten, sedikit di provinsi, dan hanya dua di
+ * tingkat nasional. Sebaran yang rata akan membuat saringan "provinsi ke atas"
+ * mengembalikan hampir semua orang, sehingga saringannya tampak tidak bekerja.
+ */
+const PRESTASI_CONTOH: {
+  bidang: string;
+  judul: string;
+  peringkat: string;
+  tingkat: "DESA" | "KECAMATAN" | "KABUPATEN" | "PROVINSI" | "NASIONAL";
+  penyelenggara: string;
+}[] = [
+  { bidang: "olahraga", judul: "Kejuaraan Bulu Tangkis Tunggal Putra POPDA", peringkat: "Juara 2", tingkat: "KABUPATEN", penyelenggara: "Dinpora Kabupaten Demak" },
+  { bidang: "olahraga", judul: "Turnamen Futsal Antarkecamatan Piala Bupati", peringkat: "Juara 1", tingkat: "KABUPATEN", penyelenggara: "Pemerintah Kabupaten Demak" },
+  { bidang: "olahraga", judul: "Kejuaraan Tenis Meja Pelajar Jawa Tengah", peringkat: "Juara 3", tingkat: "PROVINSI", penyelenggara: "Dispora Provinsi Jawa Tengah" },
+  { bidang: "olahraga", judul: "Lomba Lari 10K Hari Jadi Demak", peringkat: "Finalis", tingkat: "KABUPATEN", penyelenggara: "Pemerintah Kabupaten Demak" },
+  { bidang: "olahraga", judul: "Kejuaraan Pencak Silat Antarpelajar", peringkat: "Juara 1", tingkat: "KECAMATAN", penyelenggara: "IPSI Kabupaten Demak" },
+  { bidang: "olahraga", judul: "Turnamen Bola Voli Karang Taruna", peringkat: "Juara 2", tingkat: "KECAMATAN", penyelenggara: "Karang Taruna Kecamatan" },
+  { bidang: "seni", judul: "Festival Tari Tradisional Pelajar", peringkat: "Juara 1", tingkat: "KABUPATEN", penyelenggara: "Dinas Kebudayaan dan Pariwisata" },
+  { bidang: "seni", judul: "Lomba Cipta Lagu Bertema Daerah", peringkat: "Juara 2", tingkat: "PROVINSI", penyelenggara: "Taman Budaya Jawa Tengah" },
+  { bidang: "seni", judul: "Festival Rebana Tingkat Kabupaten", peringkat: "Juara 1", tingkat: "KABUPATEN", penyelenggara: "Kementerian Agama Kabupaten Demak" },
+  { bidang: "seni", judul: "Pameran Batik Pesisiran Pemuda", peringkat: "Peserta terpilih", tingkat: "KABUPATEN", penyelenggara: "Dekranasda Kabupaten Demak" },
+  { bidang: "teknologi", judul: "Lomba Kompetensi Siswa Bidang Perangkat Lunak", peringkat: "Juara 2", tingkat: "PROVINSI", penyelenggara: "Dinas Pendidikan Provinsi Jawa Tengah" },
+  { bidang: "teknologi", judul: "Olimpiade Sains Bidang Informatika", peringkat: "Medali Perunggu", tingkat: "NASIONAL", penyelenggara: "Pusat Prestasi Nasional" },
+  { bidang: "teknologi", judul: "Hackathon Pelayanan Publik Daerah", peringkat: "Juara 3", tingkat: "KABUPATEN", penyelenggara: "Diskominfo Kabupaten Demak" },
+  { bidang: "teknologi", judul: "Lomba Robotik Pelajar", peringkat: "Finalis", tingkat: "PROVINSI", penyelenggara: "Universitas negeri di Jawa Tengah" },
+  { bidang: "wirausaha", judul: "Lomba Rencana Usaha Pemuda", peringkat: "Juara 1", tingkat: "KABUPATEN", penyelenggara: "Dinas Koperasi dan UKM" },
+  { bidang: "wirausaha", judul: "Festival Produk Olahan Hasil Laut", peringkat: "Juara 2", tingkat: "KECAMATAN", penyelenggara: "Kecamatan setempat" },
+  { bidang: "wirausaha", judul: "Kompetisi Wirausaha Muda Nasional", peringkat: "20 besar", tingkat: "NASIONAL", penyelenggara: "Kementerian Koperasi dan UKM" },
+  { bidang: "keagamaan", judul: "Musabaqah Tilawatil Quran Tingkat Kabupaten", peringkat: "Juara 1", tingkat: "KABUPATEN", penyelenggara: "LPTQ Kabupaten Demak" },
+  { bidang: "keagamaan", judul: "Lomba Kaligrafi Antarpondok", peringkat: "Juara 3", tingkat: "KECAMATAN", penyelenggara: "Pondok pesantren setempat" },
+  { bidang: "lingkungan", judul: "Lomba Karya Tulis Lingkungan Pesisir", peringkat: "Juara 2", tingkat: "KABUPATEN", penyelenggara: "Dinas Lingkungan Hidup" },
+  { bidang: "lingkungan", judul: "Lomba Kampung Bersih Antardesa", peringkat: "Juara 1", tingkat: "DESA", penyelenggara: "Pemerintah Desa" },
+];
+
+const PENGALAMAN_CONTOH: {
+  judul: string;
+  peran: string;
+  penyelenggara: string;
+  keterangan: string;
+}[] = [
+  { judul: "Kepanitiaan Jambore Pemuda Kabupaten", peran: "Koordinator acara", penyelenggara: "Dinpora Kabupaten Demak", keterangan: "Menyusun rundown dan mengatur pembagian tugas panitia lapangan." },
+  { judul: "Pengurus Karang Taruna Desa", peran: "Sekretaris", penyelenggara: "Karang Taruna Desa", keterangan: "Mencatat kegiatan dan menyusun laporan pertanggungjawaban tahunan." },
+  { judul: "Relawan Penanganan Banjir Rob", peran: "Relawan logistik", penyelenggara: "BPBD Kabupaten Demak", keterangan: "Membantu penyaluran bantuan ke rumah warga yang terdampak." },
+  { judul: "Magang di Kantor Kecamatan", peran: "Peserta magang", penyelenggara: "Kecamatan setempat", keterangan: "Membantu pelayanan administrasi kependudukan di loket depan." },
+  { judul: "Pelatihan Kepemimpinan Pemuda", peran: "Peserta", penyelenggara: "Dinpora Kabupaten Demak", keterangan: "Pelatihan tiga hari tentang pengelolaan organisasi kepemudaan." },
+  { judul: "Pendamping Belajar Anak Pesisir", peran: "Pengajar sukarela", penyelenggara: "Komunitas belajar desa", keterangan: "Mengajar membaca dan berhitung dua kali sepekan." },
+  { judul: "Kepanitiaan Festival Budaya Demak", peran: "Anggota seksi dokumentasi", penyelenggara: "Dinas Kebudayaan dan Pariwisata", keterangan: "Mendokumentasikan seluruh rangkaian acara selama empat hari." },
+  { judul: "Pengelola Media Sosial Komunitas", peran: "Admin", penyelenggara: "Komunitas setempat", keterangan: "Menyusun jadwal unggahan dan menjawab pertanyaan calon anggota." },
+];
+
+async function semaiRekamJejak() {
+  const profil = await prisma.profilPemuda.findMany({
+    orderBy: { slug: "asc" },
+    select: { id: true, slug: true, minat: { select: { slug: true } } },
+  });
+  if (profil.length === 0) return;
+
+  await prisma.prestasi.deleteMany();
+  await prisma.pengalaman.deleteMany();
+
+  const tahunIni = ACUAN.getFullYear();
+  let jumlahPrestasi = 0;
+  let jumlahPengalaman = 0;
+
+  for (const [i, p] of profil.entries()) {
+    // Tidak semua orang punya prestasi tercatat, dan memang tidak seharusnya.
+    // Profil yang seluruhnya berprestasi membuat Peta Potensi berbohong.
+    if (i % 5 === 3) continue;
+
+    // Diusahakan sesuai bidang minatnya bila cocok; bila tidak, dipilih dari
+    // seluruh daftar supaya tetap ada isinya.
+    const minat = p.minat.map((m) => m.slug).join(" ");
+    const cocok = PRESTASI_CONTOH.filter((s) => minat.includes(s.bidang));
+    const sumber = cocok.length > 0 ? cocok : PRESTASI_CONTOH;
+
+    const banyak = i % 7 === 0 ? 3 : i % 3 === 0 ? 2 : 1;
+    for (let k = 0; k < banyak; k++) {
+      const s = sumber[(i * 3 + k * 5) % sumber.length];
+      await prisma.prestasi.create({
+        data: {
+          profilId: p.id,
+          judul: s.judul,
+          tingkat: s.tingkat,
+          peringkat: s.peringkat,
+          penyelenggara: s.penyelenggara,
+          tahun: tahunIni - ((i + k) % 4),
+        },
+      });
+      jumlahPrestasi++;
+    }
+
+    if (i % 2 === 0) {
+      const g = PENGALAMAN_CONTOH[i % PENGALAMAN_CONTOH.length];
+      const mulai = tahunIni - (1 + (i % 3));
+      await prisma.pengalaman.create({
+        data: {
+          profilId: p.id,
+          judul: g.judul,
+          peran: g.peran,
+          penyelenggara: g.penyelenggara,
+          keterangan: g.keterangan,
+          tahunMulai: mulai,
+          tahunSelesai: i % 4 === 0 ? null : mulai + 1,
+        },
+      });
+      jumlahPengalaman++;
+    }
+  }
+
+  console.log(
+    `Rekam jejak contoh: ${jumlahPrestasi} prestasi, ${jumlahPengalaman} pengalaman`,
+  );
+}
+
 async function semaiKisahPeragaan() {
   const [rani, pengurus, petugas] = await Promise.all([
     prisma.user.findUnique({
@@ -2374,6 +2493,7 @@ async function main() {
   await semaiKeikutsertaan();
   await semaiKarya();
   await semaiAspirasi();
+  await semaiRekamJejak();
   await semaiKisahPeragaan();
 
   console.log("Penyemaian isi contoh selesai.");

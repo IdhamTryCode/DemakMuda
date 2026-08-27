@@ -29,6 +29,7 @@ export const MENU_PERAN: Record<Peran, ButirMenu[]> = {
     { href: "/pemuda/kegiatan", label: "Kegiatan saya" },
     { href: "/pemuda/karya", label: "Karya saya" },
     { href: "/pemuda/aspirasi", label: "Aspirasi saya" },
+    { href: "/pemuda/rekam-jejak", label: "Rekam jejak" },
     { href: "/pemuda/profil", label: "Kartu Talenta" },
   ],
   organisasi: [
@@ -40,6 +41,7 @@ export const MENU_PERAN: Record<Peran, ButirMenu[]> = {
   ],
   dinas: [
     { href: "/dinas", label: "Peta Potensi" },
+    { href: "/dinas/talenta", label: "Cari Talenta" },
     { href: "/kelola/aspirasi", label: "Aspirasi" },
     { href: "/kelola/karya", label: "Karya" },
     { href: "/kelola/kabar", label: "Kabar" },
@@ -52,6 +54,7 @@ export const MENU_PERAN: Record<Peran, ButirMenu[]> = {
     { href: "/admin/pengguna", label: "Pengguna" },
     { href: "/admin/audit", label: "Jejak audit" },
     { href: "/dinas", label: "Peta Potensi" },
+    { href: "/dinas/talenta", label: "Cari Talenta" },
     { href: "/kelola/aspirasi", label: "Aspirasi" },
     { href: "/kelola/karya", label: "Karya" },
     { href: "/kelola/kabar", label: "Kabar" },

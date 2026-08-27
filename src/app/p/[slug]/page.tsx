@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -9,6 +10,7 @@ import { BingkaiPublik } from "@/components/bingkai-publik";
 import { KartuTalenta } from "@/components/kartu-talenta";
 import { Kartu } from "@/components/sk";
 import { LABEL_KEANGGOTAAN, LABEL_ORGANISASI } from "@/lib/organisasi";
+import { LABEL_TINGKAT } from "@/lib/prestasi";
 import { prisma } from "@/lib/prisma";
 import { keterbukaanProfil, umur } from "@/lib/profil";
 import { tanggalPendek } from "@/lib/teks";
@@ -34,6 +36,36 @@ async function ambilProfil(slug: string) {
       sekolah: { select: { nama: true } },
       minat: { select: { nama: true }, orderBy: { nama: "asc" } },
       keterampilan: { select: { nama: true }, orderBy: { nama: "asc" } },
+      // Rekam jejak yang diisi sendiri. Sengaja diambil terpisah dari
+      // sertifikat, dan ditampilkan terpisah pula: keduanya tidak sama
+      // bobotnya, dan menggabungkannya dalam satu daftar akan membuat klaim
+      // tanpa pemeriksa tampak setara dengan sertifikat berkode.
+      prestasi: {
+        orderBy: [{ tahun: "desc" }, { dibuatPada: "desc" }],
+        take: 30,
+        select: {
+          id: true,
+          judul: true,
+          tingkat: true,
+          peringkat: true,
+          penyelenggara: true,
+          tahun: true,
+          buktiUrl: true,
+        },
+      },
+      pengalaman: {
+        orderBy: [{ tahunMulai: "desc" }, { dibuatPada: "desc" }],
+        take: 20,
+        select: {
+          id: true,
+          judul: true,
+          peran: true,
+          penyelenggara: true,
+          tahunMulai: true,
+          tahunSelesai: true,
+          keterangan: true,
+        },
+      },
       user: {
         select: {
           name: true,
@@ -206,10 +238,119 @@ export default async function HalamanKartuTalenta({
           </section>
         )}
 
+        {p.prestasi.length > 0 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
+              Prestasi
+            </h2>
+
+            {/* Peringatan ini bukan basa-basi hukum, dan sengaja diletakkan di
+                ATAS daftarnya, bukan sebagai catatan kaki. Isian yang tidak
+                diperiksa siapa pun, dipajang tanpa keterangan pada halaman yang
+                menyerupai kartu resmi, akan terbaca sebagai sesuatu yang sudah
+                disahkan. Pembaca berhak tahu sebelum membacanya, bukan setelah. */}
+            <p className="max-w-prose text-sm text-muted">
+              Bagian ini diisi sendiri oleh pemilik kartu dan tidak diperiksa
+              Dinas Kepemudaan dan Olahraga. Yang dapat Anda periksa adalah
+              buktinya — buka piagamnya dan nilai sendiri.
+            </p>
+
+            <ul className="flex flex-col gap-3">
+              {p.prestasi.map((s) => (
+                <li key={s.id}>
+                  <Kartu className="flex flex-wrap items-center gap-4">
+                    {buka.tampilkanBukti && s.buktiUrl && (
+                      <a
+                        href={s.buktiUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 rounded-[6px]"
+                      >
+                        <Image
+                          src={s.buktiUrl}
+                          alt={`Bukti ${s.judul}`}
+                          width={96}
+                          height={72}
+                          className="h-16 w-24 rounded-[6px] object-cover"
+                        />
+                      </a>
+                    )}
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <h3 className="font-medium leading-snug">{s.judul}</h3>
+                      <span className="text-xs text-muted">
+                        {[
+                          `Tingkat ${LABEL_TINGKAT[s.tingkat].toLowerCase()}`,
+                          s.tahun,
+                          s.penyelenggara,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    </div>
+                    {s.peringkat && (
+                      <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                        {s.peringkat}
+                      </span>
+                    )}
+                    <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs text-muted">
+                      {s.buktiUrl
+                        ? buka.tampilkanBukti
+                          ? "Diisi sendiri · ada bukti"
+                          : "Diisi sendiri"
+                        : "Diisi sendiri · tanpa bukti"}
+                    </span>
+                  </Kartu>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {p.pengalaman.length > 0 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
+              Pengalaman
+            </h2>
+            <p className="max-w-prose text-sm text-muted">
+              Diisi sendiri oleh pemilik kartu.
+            </p>
+            <ul className="flex flex-col gap-3">
+              {p.pengalaman.map((g) => (
+                <li key={g.id}>
+                  <Kartu className="flex flex-col gap-1">
+                    <h3 className="font-medium leading-snug">{g.judul}</h3>
+                    <span className="text-xs text-muted">
+                      {[
+                        g.peran,
+                        g.penyelenggara,
+                        g.tahunSelesai
+                          ? g.tahunSelesai === g.tahunMulai
+                            ? String(g.tahunMulai)
+                            : `${g.tahunMulai}–${g.tahunSelesai}`
+                          : `${g.tahunMulai}–sekarang`,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                    {g.keterangan && (
+                      <p className="pt-1 text-sm text-ink-soft">{g.keterangan}</p>
+                    )}
+                  </Kartu>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
-            Rekam prestasi
+            Sertifikat terbitan DemakMuda
           </h2>
+          <p className="max-w-prose text-sm text-muted">
+            Berbeda dari bagian di atas: sertifikat ini diterbitkan penyelenggara
+            kegiatan di dalam aplikasi, punya kode, dan keasliannya dapat
+            diperiksa siapa pun.
+          </p>
           {p.user.sertifikatDiterima.length === 0 ? (
             <Kartu>
               <p className="text-sm text-muted">

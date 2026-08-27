@@ -35,6 +35,8 @@ const IZIN_RUANG: Record<string, Peran[]> = {
   // Kartu Talenta terbuka bagi peran mana pun — seorang pengelola
   // organisasi bisa saja sekaligus pemuda Demak.
   profil: ["pemuda", "organisasi", "dinas", "superadmin"],
+  // Bukti prestasi menempel pada profil, jadi mengikuti aturan yang sama.
+  prestasi: ["pemuda", "organisasi", "dinas", "superadmin"],
 };
 
 export async function POST(request: Request): Promise<NextResponse> {
