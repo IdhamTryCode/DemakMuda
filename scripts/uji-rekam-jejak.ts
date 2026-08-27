@@ -145,7 +145,18 @@ async function main() {
     const asli = belia.tanggalLahir;
     const bukti = belia.prestasi[0].buktiUrl;
     const judul = belia.prestasi[0].judul;
+    const usia = (tahun: number) =>
+      new Date(Date.now() - tahun * 365.25 * 24 * 3600 * 1000);
 
+    // Usianya DISETEL, bukan diterima apa adanya dari penyemaian. Versi
+    // sebelumnya memungut profil berbukti pertama yang ditemukan lalu
+    // menganggapnya dewasa; setelah penyemaian ulang mengubah urutan, yang
+    // terpungut kebetulan berusia 17 tahun dan ujinya merah tanpa ada yang
+    // rusak. Fikstur yang bergantung pada urutan data bukan fikstur.
+    await prisma.profilPemuda.update({
+      where: { id: belia.id },
+      data: { tanggalLahir: usia(25) },
+    });
     const sebagaiDewasa = await ambil(`/p/${belia.slug}`);
     periksa(
       sebagaiDewasa.isi.includes(encodeURIComponent(bukti).slice(0, 40)),
@@ -154,7 +165,7 @@ async function main() {
 
     await prisma.profilPemuda.update({
       where: { id: belia.id },
-      data: { tanggalLahir: new Date(Date.now() - 15 * 365.25 * 24 * 3600 * 1000) },
+      data: { tanggalLahir: usia(15) },
     });
     const sebagaiAnak = await ambil(`/p/${belia.slug}`);
     periksa(
