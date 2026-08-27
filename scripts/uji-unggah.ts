@@ -22,6 +22,8 @@
  */
 import "dotenv/config";
 
+import { readdir, readFile } from "node:fs/promises";
+
 import { PrismaPg } from "@prisma/adapter-pg";
 import { del, put } from "@vercel/blob";
 
@@ -244,6 +246,39 @@ async function main() {
   await prisma.karya.delete({ where: { id: karya.id } });
   await del(berkas.url);
   await prisma.rateLimit.deleteMany();
+
+  // Kolom unggahan gagal tanpa bersuara. Skemanya menandainya opsional — dan
+  // memang harus, karena gambar boleh dikosongkan — sehingga Zod tidak
+  // mengeluh sedikit pun ketika kolomnya tidak pernah dibaca dari FormData.
+  // Nilainya menjadi undefined, tersimpan sebagai null, dan aksinya tetap
+  // menjawab "berhasil". Lebih buruk lagi, berkas lama ikut dihapus karena
+  // dianggap sengaja diganti dengan kosong.
+  //
+  // Persis itu yang menimpa foto profil: satu baris data.get("fotoUrl") yang
+  // tidak pernah ditulis. Pemeriksaan ini membaca setiap aksi dan menuntut
+  // setiap kolom yang dipakainya sebagai n.<kolom> memang pernah diambil dari
+  // FormData di berkas yang sama.
+  console.log("\nsetiap kolom skema benar-benar dibaca dari formulirnya");
+  const berkasAksi = (await readdir("src/server")).filter(
+    (f) => f.startsWith("aksi-") && f.endsWith(".ts"),
+  );
+  for (const f of berkasAksi) {
+    const isi = await readFile(`src/server/${f}`, "utf8");
+    const dipakai = new Set(
+      [...isi.matchAll(/\bn\.([a-zA-Z][a-zA-Z0-9]*)\b/g)].map((m) => m[1]),
+    );
+    if (dipakai.size === 0) continue;
+    const dibaca = new Set(
+      [...isi.matchAll(/data\.get(?:All)?\("([^"]+)"\)/g)].map((m) => m[1]),
+    );
+    const hilang = [...dipakai].filter((k) => !dibaca.has(k));
+    periksa(
+      hilang.length === 0,
+      hilang.length === 0
+        ? `${f}: semua kolom terbaca`
+        : `${f}: kolom TIDAK PERNAH dibaca dari formulir — ${hilang.join(", ")}`,
+    );
+  }
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();

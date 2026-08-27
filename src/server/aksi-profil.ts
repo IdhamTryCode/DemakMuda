@@ -76,6 +76,7 @@ export async function simpanProfil(data: FormData): Promise<HasilAksi> {
     const tanggalLahir = String(data.get("tanggalLahir") ?? "");
     const hasil = ProfilSkema.safeParse({
       nama: String(data.get("nama") ?? ""),
+      fotoUrl: String(data.get("fotoUrl") ?? ""),
       bio: String(data.get("bio") ?? ""),
       telepon: String(data.get("telepon") ?? ""),
       tanggalLahir: tanggalLahir || null,
