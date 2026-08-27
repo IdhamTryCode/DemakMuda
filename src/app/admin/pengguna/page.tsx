@@ -45,7 +45,7 @@ export default async function HalamanPengguna({
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Kelola Pengguna</h1>
@@ -56,13 +56,13 @@ export default async function HalamanPengguna({
         </div>
         <Link
           href="/admin"
-          className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
         >
           Kembali
         </Link>
       </div>
 
-      <div className="sk-inset flex flex-col gap-4 p-4">
+      <div className="sk-redup flex flex-col gap-4 p-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted">
             Peran
@@ -70,7 +70,7 @@ export default async function HalamanPengguna({
           <Link
             href="/admin/pengguna"
             className={`rounded-full px-3 py-1.5 text-sm ${
-              !peran ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+              !peran ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
             }`}
           >
             Semua
@@ -80,7 +80,7 @@ export default async function HalamanPengguna({
               key={p}
               href={`/admin/pengguna?peran=${p}`}
               className={`rounded-full px-3 py-1.5 text-sm ${
-                peran === p ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+                peran === p ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
               }`}
             >
               {LABEL_PERAN[p]}
@@ -99,7 +99,7 @@ export default async function HalamanPengguna({
           />
           <button
             type="submit"
-            className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+            className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
           >
             Cari
           </button>
@@ -147,6 +147,6 @@ export default async function HalamanPengguna({
           Menampilkan {BATAS} pengguna. Persempit dengan saringan atau pencarian.
         </p>
       )}
-    </main>
+    </div>
   );
 }

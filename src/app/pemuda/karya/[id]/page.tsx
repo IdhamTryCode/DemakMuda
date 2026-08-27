@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { FormKarya } from "@/app/pemuda/form-karya";
@@ -47,14 +46,7 @@ export default async function HalamanUbahKarya({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-6 py-8">
-      <Link
-        href="/pemuda/karya"
-        className="text-sm text-accent underline underline-offset-2"
-      >
-        ← Karya saya
-      </Link>
-
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight">Ubah karya</h1>
         {karya.status !== "ARSIP" && (
@@ -79,6 +71,6 @@ export default async function HalamanUbahKarya({
           }}
         />
       </Kartu>
-    </main>
+    </div>
   );
 }

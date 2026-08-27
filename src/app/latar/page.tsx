@@ -190,7 +190,7 @@ export default async function HalamanLatar() {
           </Kartu>
         </section>
 
-        <section className="sk-inset flex flex-col gap-3 p-6">
+        <section className="sk-redup flex flex-col gap-3 p-6">
           <h2 className="text-base font-semibold">Mulai dari mana</h2>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -201,13 +201,13 @@ export default async function HalamanLatar() {
             </Link>
             <Link
               href="/peluang"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Papan Peluang
             </Link>
             <Link
               href="/karya"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Ruang Karya
             </Link>

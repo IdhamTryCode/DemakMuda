@@ -83,14 +83,14 @@ export default async function HalamanKelolaKabar() {
                   {kabar.status === "TERBIT" && (
                     <Link
                       href={`/kabar/${kabar.slug}`}
-                      className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                      className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                     >
                       Lihat
                     </Link>
                   )}
                   <Link
                     href={`/kelola/kabar/${kabar.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Ubah
                   </Link>

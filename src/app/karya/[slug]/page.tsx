@@ -96,7 +96,7 @@ export default async function HalamanKaryaRinci({
         </header>
 
         {gambar && (
-          <div className="sk-inset relative aspect-[16/9] w-full overflow-hidden rounded-[10px]">
+          <div className="sk-redup relative aspect-[16/9] w-full overflow-hidden rounded-[10px]">
             <Image
               src={gambar}
               alt={`Gambar karya ${karya.judul}`}
@@ -113,7 +113,7 @@ export default async function HalamanKaryaRinci({
         <Markdown isi={karya.deskripsi} />
 
         {luar && (
-          <div className="sk-inset flex flex-col gap-2 p-4">
+          <div className="sk-redup flex flex-col gap-2 p-4">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Tautan karya
             </span>

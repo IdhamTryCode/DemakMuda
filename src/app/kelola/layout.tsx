@@ -1,68 +1,20 @@
-import Link from "next/link";
-
-import { GantiTema } from "@/components/ganti-tema";
-import { Lonceng } from "@/components/lonceng";
-import { LogoDemak } from "@/components/logo-demak";
-import { dasborUntuk } from "@/lib/peran";
+import { BingkaiMasuk } from "@/components/bingkai-masuk";
 import { wajibPeran } from "@/lib/sesi";
 
 /**
- * Area pengelolaan isi. Penjagaan peran dilakukan di sini sekali untuk seluruh
- * halaman di bawahnya, dan diulang lagi di tiap Server Action lewat
- * server/penjaga.ts — halaman dan aksi dijaga terpisah, tidak saling
- * mengandalkan.
+ * Area pengelolaan isi.
+ *
+ * Bilahnya sendiri sudah dibongkar: BingkaiMasuk yang menggambar keduanya, dan
+ * isi bilah kedua menyesuaikan peran — pengelola organisasi melihat menu
+ * miliknya, dinas melihat menu dinas. Sebelumnya menu di sini ditulis tetap,
+ * sehingga peran yang berbeda melihat daftar yang sama.
+ *
+ * Penjagaan peran tetap diulang di tiap halaman dan tiap Server Action; tata
+ * letak ini bukan penjaga satu-satunya.
  */
 export default async function TataLetakKelola({
   children,
 }: LayoutProps<"/kelola">) {
-  const sesi = await wajibPeran("organisasi", "dinas", "superadmin");
-
-  return (
-    <>
-      <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-4 px-6 py-4">
-          <Link href="/" className="rounded-sk">
-            <LogoDemak ukuran={40} />
-          </Link>
-          {/* Karya dan Aspirasi hanya muncul bagi dinas. Menyembunyikan tautannya bukan
-              penjagaan — halamannya sendiri memanggil wajibPeran — tetapi
-              tidak ada gunanya menawarkan pintu yang pasti tertutup. */}
-          <nav className="flex flex-wrap gap-1 sm:pl-4">
-            {[
-              { href: "/kelola/kabar", label: "Kabar" },
-              { href: "/kelola/agenda", label: "Agenda" },
-              { href: "/kelola/peluang", label: "Peluang" },
-              { href: "/kelola/organisasi", label: "Organisasi" },
-              ...(sesi.peran === "dinas" || sesi.peran === "superadmin"
-                ? [
-                    { href: "/kelola/karya", label: "Karya" },
-                    { href: "/kelola/aspirasi", label: "Aspirasi" },
-                  ]
-                : []),
-            ].map((m) => (
-              <Link
-                key={m.href}
-                href={m.href}
-                className="whitespace-nowrap rounded-sk px-3 py-2 text-sm font-medium text-ink-soft hover:text-ink"
-              >
-                {m.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="ml-auto flex items-center gap-3">
-            <Lonceng />
-            <GantiTema />
-            <Link
-              href={dasborUntuk(sesi.peran)}
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-            >
-              Dasbor
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-8">{children}</main>
-    </>
-  );
+  await wajibPeran("organisasi", "dinas", "superadmin");
+  return <BingkaiMasuk>{children}</BingkaiMasuk>;
 }

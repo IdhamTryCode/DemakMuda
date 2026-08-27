@@ -88,7 +88,7 @@ export function PemilihGambar({
       <input type="hidden" name={nama} value={alamat} />
 
       {alamat && (
-        <div className="sk-inset w-fit p-2">
+        <div className="sk-redup w-fit p-2">
           <Image
             src={alamat}
             alt="Pratinjau gambar yang diunggah"
@@ -112,7 +112,7 @@ export function PemilihGambar({
           type="button"
           disabled={sedang}
           onClick={() => berkas.current?.click()}
-          className="sk-raised sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft disabled:opacity-60"
+          className="sk-kartu sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft disabled:opacity-60"
         >
           {sedang
             ? `Mengunggah… ${kemajuan}%`
@@ -125,7 +125,7 @@ export function PemilihGambar({
           <button
             type="button"
             onClick={() => setAlamat("")}
-            className="sk-raised sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft"
+            className="sk-kartu sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft"
           >
             Hapus gambar
           </button>
@@ -133,7 +133,7 @@ export function PemilihGambar({
       </div>
 
       {sedang && (
-        <div className="sk-inset h-1.5 w-full max-w-xs overflow-hidden rounded-full">
+        <div className="sk-redup h-1.5 w-full max-w-xs overflow-hidden rounded-full">
           <div
             className="h-full rounded-full bg-accent transition-all"
             style={{ width: `${kemajuan}%` }}

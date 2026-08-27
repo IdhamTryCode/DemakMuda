@@ -112,7 +112,7 @@ export function PasangDuaLangkah() {
 
         {tahap.qr ? (
           <div
-            className="sk-inset w-fit bg-white p-3"
+            className="sk-redup w-fit bg-white p-3"
             aria-label="Kode QR untuk aplikasi autentikator"
             dangerouslySetInnerHTML={{ __html: tahap.qr }}
           />
@@ -194,7 +194,7 @@ function KodeCadangan({ kode }: { kode: string[] }) {
         Simpan atau cetak sekarang. Bila ponsel Anda hilang, hanya kode inilah
         jalan masuk yang tersisa — dan tidak akan ditampilkan lagi.
       </p>
-      <ul className="sk-inset grid grid-cols-2 gap-1.5 p-4 font-mono text-sm sm:grid-cols-3">
+      <ul className="sk-redup grid grid-cols-2 gap-1.5 p-4 font-mono text-sm sm:grid-cols-3">
         {kode.map((k) => (
           <li key={k} className="tabular-nums text-ink-soft">
             {k}

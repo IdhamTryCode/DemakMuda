@@ -153,7 +153,7 @@ export function FormAgenda({
         {kolom.deskripsi && <p className="text-xs text-danger">{kolom.deskripsi}</p>}
       </div>
 
-      <div className="sk-inset flex flex-col gap-3 p-4">
+      <div className="sk-redup flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="organisasiId">Diselenggarakan oleh (opsional)</Label>
           <select

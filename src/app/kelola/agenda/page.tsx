@@ -82,21 +82,21 @@ export default async function HalamanKelolaAgenda() {
                 <div className="flex gap-2">
                   <Link
                     href={`/kelola/peserta/agenda/${a.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Peserta ({a._count.pendaftaran})
                   </Link>
                   {a.status === "TERBIT" && (
                     <Link
                       href={`/agenda/${a.slug}`}
-                      className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                      className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                     >
                       Lihat
                     </Link>
                   )}
                   <Link
                     href={`/kelola/agenda/${a.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Ubah
                   </Link>

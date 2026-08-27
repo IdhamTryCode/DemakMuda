@@ -10,7 +10,7 @@ export function Kartu({
   className = "",
   ...sisa
 }: ComponentProps<"div">) {
-  return <div className={`sk-raised p-6 ${className}`} {...sisa} />;
+  return <div className={`sk-kartu p-6 ${className}`} {...sisa} />;
 }
 
 export function Tombol({
@@ -22,7 +22,7 @@ export function Tombol({
   const gaya =
     variasi === "utama"
       ? "sk-btn-utama"
-      : "sk-raised font-medium text-ink-soft hover:text-ink";
+      : "sk-kartu font-medium text-ink-soft hover:text-ink";
   return <button className={`${dasar} ${gaya} ${className}`} {...sisa} />;
 }
 

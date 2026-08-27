@@ -20,7 +20,7 @@ export function BarisRangka({ lebar = "100%" }: { lebar?: string }) {
 export function KartuRangka({ baris = 3 }: { baris?: number }) {
   const lebar = ["35%", "85%", "70%", "55%"];
   return (
-    <div className="sk-raised flex flex-col gap-2.5 p-6">
+    <div className="sk-kartu flex flex-col gap-2.5 p-6">
       {Array.from({ length: baris }, (_, i) => (
         <BarisRangka key={i} lebar={lebar[i % lebar.length]} />
       ))}
@@ -51,7 +51,7 @@ export function RangkaDaftar({
         <BarisRangka lebar="min(28rem, 90%)" />
       </div>
 
-      <div className="sk-inset flex flex-col gap-3 p-4">
+      <div className="sk-redup flex flex-col gap-3 p-4">
         <BarisRangka lebar="8rem" />
         <BarisRangka lebar="min(20rem, 70%)" />
       </div>

@@ -27,16 +27,16 @@ export async function BingkaiPublik({
 
   return (
     <>
-      <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-4 px-6 py-4">
+      <header className="sk-bilah sticky top-0 z-40">
+        <div className="mx-auto flex w-full max-w-[78rem] flex-wrap items-center gap-x-5 gap-y-2 px-6 py-2.5">
           <Link href="/" className="rounded-sk">
-            <LogoDemak ukuran={40} />
+            <LogoDemak ukuran={34} />
           </Link>
 
           {/* flex-wrap wajib: enam menu tidak muat pada lebar ponsel, dan tanpa
               ini seluruh halaman publik meluber ke samping. whitespace-nowrap
               menjaga satu label tidak patah di tengah kata. */}
-          <nav className="order-3 flex w-full flex-wrap gap-1 sm:order-2 sm:w-auto sm:flex-1 sm:pl-4">
+          <nav className="order-3 -mx-6 flex w-[calc(100%+3rem)] gap-1 overflow-x-auto px-6 pb-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1 sm:overflow-visible sm:px-0 sm:pb-0">
             {MENU.map((m) => {
               const sedangAktif = aktif === m.href;
               return (
@@ -44,10 +44,10 @@ export async function BingkaiPublik({
                   key={m.href}
                   href={m.href}
                   aria-current={sedangAktif ? "page" : undefined}
-                  className={`whitespace-nowrap rounded-sk px-2.5 py-2 text-sm font-medium transition-colors sm:px-3 ${
+                  className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     sedangAktif
-                      ? "bg-accent-soft text-accent"
-                      : "text-ink-soft hover:text-ink"
+                      ? "bg-accent text-on-accent font-medium"
+                      : "text-ink-soft hover:bg-accent-soft hover:text-accent"
                   }`}
                 >
                   {m.label}
@@ -61,14 +61,14 @@ export async function BingkaiPublik({
             {sesi ? (
               <Link
                 href={dasborUntuk(sesi.user.role)}
-                className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+                className="sk-kartu sk-pressable rounded-full px-4 py-2 text-sm font-medium text-ink-soft"
               >
                 Dasbor
               </Link>
             ) : (
               <Link
                 href="/masuk"
-                className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+                className="sk-btn-utama sk-pressable px-4 py-2 text-sm"
               >
                 Masuk
               </Link>
@@ -77,7 +77,7 @@ export async function BingkaiPublik({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-[78rem] flex-1 px-6 py-8">{children}</main>
 
       <footer className="flex flex-col items-center gap-2 border-t border-line px-6 py-6 text-center text-xs text-muted">
         <span>DemakMuda — Portal talenta dan peluang pemuda Kabupaten Demak</span>

@@ -81,7 +81,7 @@ export default async function HalamanPeluangRinci({
           </h1>
         </header>
 
-        <dl className="sk-inset grid gap-4 p-5 sm:grid-cols-2">
+        <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
             <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
               Tenggat pendaftaran

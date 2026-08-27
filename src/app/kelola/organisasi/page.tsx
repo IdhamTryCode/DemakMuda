@@ -98,7 +98,7 @@ export default async function HalamanKelolaOrganisasi() {
                   )}
                   <Link
                     href={`/kelola/organisasi/${o.id}/anggota`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Anggota
                     {o._count.keanggotaan > 0 && (
@@ -110,14 +110,14 @@ export default async function HalamanKelolaOrganisasi() {
                   {o.statusVerifikasi === "TERVERIFIKASI" && (
                     <Link
                       href={`/direktori/${o.slug}`}
-                      className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                      className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                     >
                       Lihat
                     </Link>
                   )}
                   <Link
                     href={`/kelola/organisasi/${o.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Ubah
                   </Link>

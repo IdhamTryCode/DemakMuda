@@ -1,11 +1,7 @@
 import Link from "next/link";
 
-import { GantiTema } from "@/components/ganti-tema";
 import { Angka } from "@/components/grafik-batang";
-import { Lonceng } from "@/components/lonceng";
-import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
-import { TombolKeluar } from "@/components/tombol-keluar";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
@@ -98,21 +94,7 @@ export default async function DasborOrganisasi() {
   );
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
-      <nav className="flex flex-wrap items-center justify-between gap-4">
-        <LogoDemak ukuran={36} />
-        <div className="flex items-center gap-3">
-          <Lonceng />
-          <GantiTema />
-          <Link
-            href="/kelola/kabar"
-            className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-          >
-            Kelola isi
-          </Link>
-          <TombolKeluar />
-        </div>
-      </nav>
+    <div className="flex flex-col gap-6">
 
       <header className="flex flex-col gap-1">
         <span className="text-xs font-semibold uppercase tracking-wider text-brass">
@@ -268,13 +250,13 @@ export default async function DasborOrganisasi() {
             <Link
               key={p.href}
               href={p.href}
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               {p.label}
             </Link>
           ))}
         </div>
       </Kartu>
-    </main>
+    </div>
   );
 }

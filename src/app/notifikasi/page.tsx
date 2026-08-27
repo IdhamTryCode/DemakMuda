@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { TombolTerbaca } from "@/app/notifikasi/tombol-terbaca";
-import { GantiTema } from "@/components/ganti-tema";
-import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
-import { TombolKeluar } from "@/components/tombol-keluar";
-import { dasborUntuk } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibMasuk } from "@/lib/sesi";
 import { tanggalPendek, waktuSaja } from "@/lib/teks";
@@ -45,20 +41,7 @@ export default async function HalamanNotifikasi() {
   const belum = daftar.filter((n) => !n.dibacaPada).length;
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-8">
-      <nav className="flex flex-wrap items-center justify-between gap-4">
-        <LogoDemak ukuran={36} />
-        <div className="flex items-center gap-3">
-          <GantiTema />
-          <Link
-            href={dasborUntuk(sesi.peran)}
-            className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-          >
-            Dasbor
-          </Link>
-          <TombolKeluar />
-        </div>
-      </nav>
+    <div className="flex flex-col gap-6">
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
@@ -112,7 +95,7 @@ export default async function HalamanNotifikasi() {
                     {n.tautan && (
                       <Link
                         href={n.tautan}
-                        className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                        className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                       >
                         Buka
                       </Link>
@@ -125,6 +108,6 @@ export default async function HalamanNotifikasi() {
           })}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

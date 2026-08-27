@@ -55,14 +55,14 @@ export default async function HalamanKelolaAspirasi({
         </p>
       </div>
 
-      <div className="sk-inset flex flex-wrap items-center gap-2 p-4">
+      <div className="sk-redup flex flex-wrap items-center gap-2 p-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted">
           Status
         </span>
         <Link
           href="/kelola/aspirasi"
           className={`rounded-full px-3 py-1.5 text-sm ${
-            !saring ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+            !saring ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
           }`}
         >
           Semua
@@ -72,7 +72,7 @@ export default async function HalamanKelolaAspirasi({
             key={s}
             href={`/kelola/aspirasi?status=${s}`}
             className={`rounded-full px-3 py-1.5 text-sm ${
-              saring === s ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+              saring === s ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
             }`}
           >
             {LABEL_STATUS_ASPIRASI[s]}

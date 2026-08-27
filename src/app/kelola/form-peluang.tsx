@@ -154,7 +154,7 @@ export function FormPeluang({
           {minat.map((m) => (
             <label
               key={m.id}
-              className="sk-raised sk-pressable flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft has-checked:bg-accent-soft has-checked:text-accent"
+              className="sk-kartu sk-pressable flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft has-checked:bg-accent-soft has-checked:text-accent"
             >
               <input
                 type="checkbox"
@@ -200,7 +200,7 @@ export function FormPeluang({
         {kolom.tautanLuar && <p className="text-xs text-danger">{kolom.tautanLuar}</p>}
       </div>
 
-      <div className="sk-inset flex flex-col gap-3 p-4">
+      <div className="sk-redup flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="organisasiId">Diselenggarakan oleh (opsional)</Label>
           <select

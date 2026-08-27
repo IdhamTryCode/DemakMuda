@@ -118,7 +118,7 @@ export default async function HalamanPeserta({
           )}
           <Link
             href={`/kelola/${jenis}`}
-            className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+            className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
           >
             Kembali
           </Link>
@@ -163,7 +163,7 @@ export default async function HalamanPeserta({
                     {profil?.slug && (
                       <Link
                         href={`/p/${profil.slug}`}
-                        className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                        className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                       >
                         Kartu Talenta
                       </Link>

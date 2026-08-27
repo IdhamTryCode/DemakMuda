@@ -1,11 +1,7 @@
 import Link from "next/link";
 
-import { GantiTema } from "@/components/ganti-tema";
 import { Angka } from "@/components/grafik-batang";
-import { Lonceng } from "@/components/lonceng";
-import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
-import { TombolKeluar } from "@/components/tombol-keluar";
 import { LABEL_PERAN, PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -37,21 +33,7 @@ export default async function DasborAdmin() {
   const hitungPeran = new Map(perPeran.map((p) => [p.role ?? "pemuda", p._count._all]));
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
-      <nav className="flex items-center justify-between gap-4">
-        <LogoDemak ukuran={36} />
-        <div className="flex items-center gap-3">
-          <Lonceng />
-          <GantiTema />
-          <Link
-            href="/dinas"
-            className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-          >
-            Peta Potensi
-          </Link>
-          <TombolKeluar />
-        </div>
-      </nav>
+    <div className="flex flex-col gap-6">
 
       <header className="flex flex-col gap-1">
         <span className="text-xs font-semibold uppercase tracking-wider text-brass">
@@ -137,6 +119,6 @@ export default async function DasborAdmin() {
         Masuk sebagai {sesi.user.name}. Setiap tindakan Anda di halaman ini ikut
         tercatat pada jejak audit.
       </p>
-    </main>
+    </div>
   );
 }

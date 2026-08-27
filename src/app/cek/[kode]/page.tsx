@@ -110,7 +110,7 @@ export default async function HalamanCekKode({
             </div>
 
             <div
-              className="sk-inset shrink-0 p-2"
+              className="sk-redup shrink-0 p-2"
               aria-label="Kode QR untuk halaman pemeriksaan ini"
               dangerouslySetInnerHTML={{ __html: qr }}
             />

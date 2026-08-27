@@ -27,7 +27,7 @@ export function TerbitkanSertifikat({
     return (
       <Link
         href={`/cek/${sertifikat.kode}`}
-        className="sk-raised sk-pressable rounded-sk px-3 py-2 font-mono text-xs text-ink-soft"
+        className="sk-kartu sk-pressable rounded-sk px-3 py-2 font-mono text-xs text-ink-soft"
         title={sertifikat.dibatalkan ? "Sertifikat dibatalkan" : "Lihat sertifikat"}
       >
         {sertifikat.dibatalkan ? "dibatalkan" : sertifikat.kode}

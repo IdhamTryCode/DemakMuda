@@ -1,10 +1,6 @@
 import Link from "next/link";
 
-import { GantiTema } from "@/components/ganti-tema";
-import { Lonceng } from "@/components/lonceng";
-import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
-import { TombolKeluar } from "@/components/tombol-keluar";
 import { LABEL_KEANGGOTAAN } from "@/lib/organisasi";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
@@ -96,17 +92,9 @@ export default async function DasborPemuda() {
   const terisi = kelengkapan.filter(Boolean).length;
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
-      <nav className="flex items-center justify-between gap-4">
-        <LogoDemak ukuran={36} />
-        <div className="flex items-center gap-3">
-          <Lonceng />
-          <GantiTema />
-          <TombolKeluar />
-        </div>
-      </nav>
+    <div className="flex flex-col gap-6">
 
-      <header className="sk-raised flex flex-wrap items-center gap-4 px-6 py-5">
+      <header className="sk-kartu flex flex-wrap items-center gap-4 px-6 py-5">
         <div className="flex flex-col gap-1">
           <span className="text-xs font-semibold uppercase tracking-wider text-brass">
             {LABEL_PERAN.pemuda}
@@ -126,7 +114,7 @@ export default async function DasborPemuda() {
               ? "Profil Anda sudah lengkap."
               : `Profil terisi ${terisi} dari ${kelengkapan.length} bagian. Melengkapinya membuat peluang yang muncul lebih sesuai.`}
           </p>
-          <div className="sk-inset h-2 w-full overflow-hidden rounded-full">
+          <div className="sk-redup h-2 w-full overflow-hidden rounded-full">
             <div
               className="h-full rounded-full bg-accent transition-all"
               style={{ width: `${(terisi / kelengkapan.length) * 100}%` }}
@@ -142,14 +130,14 @@ export default async function DasborPemuda() {
             {profil?.slug && (
               <Link
                 href={`/p/${profil.slug}`}
-                className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+                className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
               >
                 Lihat kartu publik
               </Link>
             )}
             <Link
               href="/pemuda/kegiatan"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Kegiatan saya ({jumlahKegiatan})
             </Link>
@@ -209,7 +197,7 @@ export default async function DasborPemuda() {
             </Link>
             <Link
               href="/karya"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Lihat Ruang Karya
             </Link>
@@ -286,6 +274,6 @@ export default async function DasborPemuda() {
           </p>
         </Kartu>
       )}
-    </main>
+    </div>
   );
 }

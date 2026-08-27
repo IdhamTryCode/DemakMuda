@@ -74,7 +74,7 @@ export function Angka({
   keterangan?: string;
 }) {
   return (
-    <div className="sk-raised flex flex-col gap-1 p-5">
+    <div className="sk-kartu flex flex-col gap-1 p-5">
       <span className="text-xs font-semibold uppercase tracking-wider text-muted">
         {label}
       </span>

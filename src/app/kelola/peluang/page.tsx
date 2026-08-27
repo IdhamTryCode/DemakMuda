@@ -86,21 +86,21 @@ export default async function HalamanKelolaPeluang() {
                 <div className="flex gap-2">
                   <Link
                     href={`/kelola/peserta/peluang/${p.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Peserta ({p._count.pendaftaran})
                   </Link>
                   {p.status === "TERBIT" && (
                     <Link
                       href={`/peluang/${p.slug}`}
-                      className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                      className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                     >
                       Lihat
                     </Link>
                   )}
                   <Link
                     href={`/kelola/peluang/${p.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Ubah
                   </Link>

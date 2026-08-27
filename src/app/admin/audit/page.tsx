@@ -41,7 +41,7 @@ export default async function HalamanAudit({
   const kelompok = [...new Set(semuaAksi.map((a) => a.aksi.split(".")[0]))].sort();
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Jejak Audit</h1>
@@ -53,20 +53,20 @@ export default async function HalamanAudit({
         </div>
         <Link
           href="/admin"
-          className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
         >
           Kembali
         </Link>
       </div>
 
-      <div className="sk-inset flex flex-wrap items-center gap-2 p-4">
+      <div className="sk-redup flex flex-wrap items-center gap-2 p-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted">
           Jenis tindakan
         </span>
         <Link
           href="/admin/audit"
           className={`rounded-full px-3 py-1.5 text-sm ${
-            !aksi ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+            !aksi ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
           }`}
         >
           Semua
@@ -76,7 +76,7 @@ export default async function HalamanAudit({
             key={k}
             href={`/admin/audit?aksi=${encodeURIComponent(k)}`}
             className={`rounded-full px-3 py-1.5 text-sm ${
-              aksi === k ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+              aksi === k ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
             }`}
           >
             {k}
@@ -125,6 +125,6 @@ export default async function HalamanAudit({
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }

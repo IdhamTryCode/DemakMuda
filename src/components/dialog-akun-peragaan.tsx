@@ -51,7 +51,7 @@ export function DialogAkunPeragaan({
       <button
         type="button"
         onClick={() => dialog.current?.showModal()}
-        className="sk-raised sk-pressable w-full rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
+        className="sk-kartu sk-pressable w-full rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
       >
         Lihat akun peragaan
       </button>
@@ -73,7 +73,7 @@ export function DialogAkunPeragaan({
             </p>
           </div>
 
-          <div className="sk-inset flex items-center justify-between gap-3 px-3.5 py-2.5">
+          <div className="sk-redup flex items-center justify-between gap-3 px-3.5 py-2.5">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Kata sandi
             </span>
@@ -82,7 +82,7 @@ export function DialogAkunPeragaan({
 
           <ul className="flex flex-col gap-3">
             {AKUN_PERAGAAN.map((akun) => (
-              <li key={akun.email} className="sk-raised flex flex-col gap-2 p-4">
+              <li key={akun.email} className="sk-kartu flex flex-col gap-2 p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
                     {LABEL_PERAN[akun.peran]}
@@ -107,7 +107,7 @@ export function DialogAkunPeragaan({
                   <button
                     type="button"
                     onClick={() => salin(akun.email)}
-                    className="sk-raised sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3.5 py-2 text-xs font-medium text-ink-soft"
                   >
                     {disalin === akun.email ? "Tersalin" : "Salin"}
                   </button>

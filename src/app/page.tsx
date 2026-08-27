@@ -2,19 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 import lambang from "../../public/lambang-demak.png";
-import { GantiTema } from "@/components/ganti-tema";
+import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
 
-export default function Beranda() {
+export default async function Beranda() {
   return (
-    <>
-      {/* Lambang tampil di hero, jadi header cukup memuat tombol tema. */}
-      <header className="mx-auto flex w-full max-w-3xl items-center justify-end px-6 pt-6">
-        <GantiTema />
-      </header>
-
-      <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-6 pb-16 pt-12 sm:pt-16">
-        <div className="flex flex-col gap-4">
+    // Sebelumnya beranda memakai kerangkanya sendiri dan hanya memuat tombol
+    // tema — pengunjung yang baru mendarat tidak melihat satu pun menu sampai
+    // ia menggulir. Padahal seluruh halaman publik lain punya bilahnya.
+    <BingkaiPublik>
+      <div className="flex flex-col gap-8 pb-8">
+        <div className="flex max-w-2xl flex-col gap-4">
           <Image
             src={lambang}
             alt="Lambang Kabupaten Demak"
@@ -41,7 +39,7 @@ export default function Beranda() {
         {/* Pernyataan tema. Aplikasinya sudah menjawab tema lewat fungsinya,
             tetapi fungsi tidak menjelaskan dirinya sendiri kepada pembaca yang
             baru pertama membuka — hubungannya perlu dinyatakan. */}
-        <div className="sk-inset flex flex-col gap-2 p-5">
+        <div className="sk-redup flex max-w-2xl flex-col gap-2 p-5">
           <span className="text-xs font-semibold uppercase tracking-wider text-brass">
             Menyongsong bonus demografi menuju Generasi Emas 2045
           </span>
@@ -68,13 +66,13 @@ export default function Beranda() {
           </Link>
           <Link
             href="/masuk"
-            className="sk-pressable sk-raised rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
+            className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
           >
             Masuk
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[
             {
               href: "/kabar",
@@ -111,7 +109,7 @@ export default function Beranda() {
           ))}
         </div>
 
-        <Kartu className="flex flex-col gap-2">
+        <Kartu className="flex max-w-2xl flex-col gap-2">
           <h2 className="text-base font-semibold">Punya sertifikat DemakMuda?</h2>
           <p className="text-sm text-ink-soft">
             Setiap sertifikat kegiatan punya kode unik yang dapat diperiksa
@@ -124,7 +122,7 @@ export default function Beranda() {
             Periksa sertifikat →
           </Link>
         </Kartu>
-      </main>
-    </>
+      </div>
+    </BingkaiPublik>
   );
 }

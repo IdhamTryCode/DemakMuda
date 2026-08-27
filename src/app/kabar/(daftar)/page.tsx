@@ -63,7 +63,7 @@ export default async function HalamanKabar({
           </p>
         </div>
 
-        <div className="sk-inset p-4">
+        <div className="sk-redup p-4">
           <KotakCari
             aksi="/kabar"
             nilai={kunci}
@@ -87,13 +87,13 @@ export default async function HalamanKabar({
             </p>
           </Kartu>
         ) : (
-          <ul className="flex flex-col gap-4">
+          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {daftar.map((kabar) => (
               <li key={kabar.id}>
-                <Link href={`/kabar/${kabar.slug}`} className="block rounded-sk">
-                  <Kartu className="sk-pressable flex flex-col gap-2">
+                <Link href={`/kabar/${kabar.slug}`} className="block h-full rounded-sk">
+                  <Kartu className="sk-pressable flex h-full flex-col gap-2">
                     {kabar.gambarUrl && (
-                      <div className="sk-inset relative mb-1 aspect-[21/9] w-full overflow-hidden rounded-[8px]">
+                      <div className="sk-redup relative mb-1 aspect-[21/9] w-full overflow-hidden rounded-[8px]">
                         <Image
                           src={kabar.gambarUrl}
                           alt=""

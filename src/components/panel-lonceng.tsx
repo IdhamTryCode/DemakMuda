@@ -124,7 +124,7 @@ export function PanelLonceng({
         aria-label={
           belum > 0 ? `Pemberitahuan, ${belum} belum dibaca` : "Pemberitahuan"
         }
-        className="sk-raised sk-pressable relative rounded-sk px-3 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
+        className="sk-kartu sk-pressable relative rounded-sk px-3 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
       >
         <span aria-hidden="true">🔔</span>
         {belum > 0 && (

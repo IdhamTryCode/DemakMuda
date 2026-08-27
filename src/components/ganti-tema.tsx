@@ -31,7 +31,7 @@ export function GantiTema() {
     <button
       type="button"
       onClick={ganti}
-      className="sk-raised sk-pressable inline-flex h-10 w-10 items-center justify-center rounded-sk text-ink-soft"
+      className="sk-kartu sk-pressable inline-flex h-10 w-10 items-center justify-center rounded-sk text-ink-soft"
     >
       <span className="sr-only tema-saat-terang">Ganti ke mode gelap</span>
       <span className="sr-only tema-saat-gelap">Ganti ke mode terang</span>

@@ -7,7 +7,7 @@ import { RangkaDaftar } from "@/components/rangka";
  */
 export default function Memuat() {
   return (
-    <div className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+    <div className="mx-auto w-full max-w-[78rem] flex-1 px-6 py-8">
       <RangkaDaftar judul="Papan Peluang" />
     </div>
   );

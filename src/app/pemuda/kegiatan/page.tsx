@@ -49,7 +49,7 @@ export default async function HalamanKegiatanSaya() {
         </div>
         <Link
           href="/pemuda"
-          className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
         >
           Dasbor
         </Link>
@@ -63,7 +63,7 @@ export default async function HalamanKegiatanSaya() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/agenda"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Lihat agenda
             </Link>

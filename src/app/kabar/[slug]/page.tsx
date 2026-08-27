@@ -69,7 +69,7 @@ export default async function HalamanKabarRinci({
         </header>
 
         {gambar && (
-          <div className="sk-inset relative aspect-[21/9] w-full overflow-hidden rounded-[10px]">
+          <div className="sk-redup relative aspect-[21/9] w-full overflow-hidden rounded-[10px]">
             <Image
               src={gambar}
               alt={`Gambar untuk kabar ${kabar.judul}`}

@@ -96,7 +96,7 @@ export default async function HalamanOrganisasi({
           </p>
         </header>
 
-        <dl className="sk-inset grid gap-4 p-5 sm:grid-cols-2">
+        <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">
           {rincian.map((r) => (
             <div key={r.label} className="flex flex-col gap-1">
               <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
@@ -139,7 +139,7 @@ export default async function HalamanOrganisasi({
                     {k.user.profil?.slug ? (
                       <Link
                         href={`/p/${k.user.profil.slug}`}
-                        className="sk-raised sk-pressable inline-block rounded-full px-3 py-1.5 text-sm text-ink-soft"
+                        className="sk-kartu sk-pressable inline-block rounded-full px-3 py-1.5 text-sm text-ink-soft"
                       >
                         {isi}
                       </Link>

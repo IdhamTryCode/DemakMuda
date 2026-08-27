@@ -29,11 +29,7 @@ export default async function HalamanAspirasiSaya() {
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-8">
-      <Link href="/pemuda" className="text-sm text-accent underline underline-offset-2">
-        ← Dasbor
-      </Link>
-
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Aspirasi saya</h1>
@@ -77,7 +73,7 @@ export default async function HalamanAspirasiSaya() {
                 <p className="whitespace-pre-wrap text-sm text-ink-soft">{a.isi}</p>
 
                 {a.tanggapan ? (
-                  <div className="sk-inset flex flex-col gap-1.5 p-4">
+                  <div className="sk-redup flex flex-col gap-1.5 p-4">
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                       Tanggapan dinas
                       {a.ditanggapiPada && ` · ${tanggalPendek(a.ditanggapiPada)}`}
@@ -99,6 +95,6 @@ export default async function HalamanAspirasiSaya() {
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

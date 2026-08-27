@@ -81,7 +81,7 @@ export default async function HalamanKarya({
           </p>
         </div>
 
-        <div className="sk-inset flex flex-col gap-4 p-4">
+        <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Jenis
@@ -89,7 +89,7 @@ export default async function HalamanKarya({
             <Link
               href={tautan({ jenis: "" })}
               className={`rounded-full px-3 py-1.5 text-sm ${
-                !jenis ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+                !jenis ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
               }`}
             >
               Semua
@@ -99,7 +99,7 @@ export default async function HalamanKarya({
                 key={j}
                 href={tautan({ jenis: j })}
                 className={`rounded-full px-3 py-1.5 text-sm ${
-                  jenis === j ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+                  jenis === j ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
                 }`}
               >
                 {LABEL_JENIS_KARYA[j]}
@@ -124,13 +124,13 @@ export default async function HalamanKarya({
             </p>
           </Kartu>
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2">
+          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {daftar.map((k) => (
               <li key={k.id}>
                 <Link href={`/karya/${k.slug}`} className="block h-full rounded-sk">
                   <Kartu className="sk-pressable flex h-full flex-col gap-2">
                     {k.gambarUrl && (
-                      <div className="sk-inset relative mb-1 aspect-[16/10] w-full overflow-hidden rounded-[8px]">
+                      <div className="sk-redup relative mb-1 aspect-[16/10] w-full overflow-hidden rounded-[8px]">
                         <Image
                           src={k.gambarUrl}
                           alt=""

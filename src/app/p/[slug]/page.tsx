@@ -122,7 +122,7 @@ export default async function HalamanKartuTalenta({
         </header>
 
         {rincian.length > 0 && (
-          <dl className="sk-inset grid gap-4 p-5 sm:grid-cols-2">
+          <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">
             {rincian.map((r) => (
               <div key={r.label} className="flex flex-col gap-1">
                 <dt className="text-xs font-semibold uppercase tracking-wider text-muted">

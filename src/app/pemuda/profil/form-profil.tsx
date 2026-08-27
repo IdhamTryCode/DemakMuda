@@ -262,7 +262,7 @@ function PilihBanyak({
         {pilihan.map((p) => (
           <label
             key={p.id}
-            className="sk-raised sk-pressable flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft has-checked:bg-accent-soft has-checked:text-accent"
+            className="sk-kartu sk-pressable flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft has-checked:bg-accent-soft has-checked:text-accent"
           >
             <input
               type="checkbox"

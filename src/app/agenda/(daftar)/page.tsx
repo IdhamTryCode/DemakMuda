@@ -81,7 +81,7 @@ export default async function HalamanAgenda({
           </p>
         </div>
 
-        <div className="sk-inset flex flex-col gap-4 p-4">
+        <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Waktu
@@ -98,7 +98,7 @@ export default async function HalamanAgenda({
                   className={`rounded-full px-3 py-1.5 text-sm ${
                     aktif
                       ? "bg-accent text-on-accent"
-                      : "sk-raised text-ink-soft"
+                      : "sk-kartu text-ink-soft"
                   }`}
                 >
                   {p.label}
@@ -132,7 +132,7 @@ export default async function HalamanAgenda({
             </div>
             <button
               type="submit"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Terapkan
             </button>
@@ -162,11 +162,11 @@ export default async function HalamanAgenda({
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-brass">
                   {k.bulan}
                 </h2>
-                <ul className="flex flex-col gap-4">
+                <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {k.isi.map((a) => (
                     <li key={a.id}>
-                      <Link href={`/agenda/${a.slug}`} className="block rounded-sk">
-                        <Kartu className="sk-pressable flex flex-col gap-2">
+                      <Link href={`/agenda/${a.slug}`} className="block h-full rounded-sk">
+                        <Kartu className="sk-pressable flex h-full flex-col gap-2">
                           <span className="text-xs uppercase tracking-wider text-muted">
                             {tanggalPanjang(a.mulai)} · {waktuSaja(a.mulai)}
                             {a.selesai ? `–${waktuSaja(a.selesai)}` : ""} WIB

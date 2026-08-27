@@ -52,7 +52,7 @@ export default function HalamanGalat({
         </Tombol>
         <Link
           href="/"
-          className="sk-raised sk-pressable rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
+          className="sk-kartu sk-pressable rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
         >
           Ke beranda
         </Link>

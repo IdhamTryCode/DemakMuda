@@ -35,11 +35,7 @@ export default async function HalamanKaryaSaya() {
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
-      <Link href="/pemuda" className="text-sm text-accent underline underline-offset-2">
-        ← Dasbor
-      </Link>
-
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Karya saya</h1>
@@ -84,14 +80,14 @@ export default async function HalamanKaryaSaya() {
                   {k.status === "TERBIT" && (
                     <Link
                       href={`/karya/${k.slug}`}
-                      className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                      className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                     >
                       Lihat
                     </Link>
                   )}
                   <Link
                     href={`/pemuda/karya/${k.id}`}
-                    className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                    className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                   >
                     Ubah
                   </Link>
@@ -101,6 +97,6 @@ export default async function HalamanKaryaSaya() {
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

@@ -74,14 +74,14 @@ export default async function HalamanModerasiKarya({
         </p>
       </div>
 
-      <div className="sk-inset flex flex-wrap items-center gap-2 p-4">
+      <div className="sk-redup flex flex-wrap items-center gap-2 p-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted">
           Tampilkan
         </span>
         <Link
           href="/kelola/karya"
           className={`rounded-full px-3 py-1.5 text-sm ${
-            !tampilkanArsip ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+            !tampilkanArsip ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
           }`}
         >
           Terbit ({jumlahTerbit})
@@ -89,7 +89,7 @@ export default async function HalamanModerasiKarya({
         <Link
           href="/kelola/karya?arsip=1"
           className={`rounded-full px-3 py-1.5 text-sm ${
-            tampilkanArsip ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+            tampilkanArsip ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
           }`}
         >
           Arsip ({jumlahArsip})
@@ -136,7 +136,7 @@ export default async function HalamanModerasiKarya({
                     {k.status === "TERBIT" && (
                       <Link
                         href={`/karya/${k.slug}`}
-                        className="sk-raised sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
+                        className="sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft"
                       >
                         Lihat
                       </Link>

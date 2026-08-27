@@ -81,7 +81,7 @@ export default async function HalamanDirektori({
           </p>
         </div>
 
-        <div className="sk-inset flex flex-col gap-4 p-4">
+        <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">
               Jenis
@@ -89,7 +89,7 @@ export default async function HalamanDirektori({
             <Link
               href={tautan({ jenis: "" })}
               className={`rounded-full px-3 py-1.5 text-sm ${
-                !jenis ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+                !jenis ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
               }`}
             >
               Semua
@@ -99,7 +99,7 @@ export default async function HalamanDirektori({
                 key={j}
                 href={tautan({ jenis: j })}
                 className={`rounded-full px-3 py-1.5 text-sm ${
-                  jenis === j ? "bg-accent text-on-accent" : "sk-raised text-ink-soft"
+                  jenis === j ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
                 }`}
               >
                 {LABEL_ORGANISASI[j]}
@@ -132,7 +132,7 @@ export default async function HalamanDirektori({
             </div>
             <button
               type="submit"
-              className="sk-raised sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Terapkan
             </button>
@@ -154,14 +154,14 @@ export default async function HalamanDirektori({
             </p>
           </Kartu>
         ) : (
-          <ul className="grid gap-4 sm:grid-cols-2">
+          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {organisasi.map((o) => (
               <li key={o.id}>
                 <Link href={`/direktori/${o.slug}`} className="block h-full rounded-sk">
                   <Kartu className="sk-pressable flex h-full flex-col gap-2">
                     <div className="flex items-start gap-3">
                       {o.logoUrl && (
-                        <div className="sk-inset relative h-12 w-12 shrink-0 overflow-hidden rounded-[8px]">
+                        <div className="sk-redup relative h-12 w-12 shrink-0 overflow-hidden rounded-[8px]">
                           <Image
                             src={o.logoUrl}
                             alt=""
