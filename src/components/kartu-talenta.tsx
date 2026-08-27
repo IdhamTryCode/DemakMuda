@@ -60,7 +60,7 @@ export function KartuTalenta({
 
   return (
     <div
-      className="flex w-full max-w-2xl flex-col overflow-hidden rounded-[18px] text-[#eaf3ef] shadow-melayang sm:aspect-[1.586]"
+      className="flex w-full max-w-2xl flex-col overflow-hidden rounded-[18px] text-[#eaf3ef] shadow-melayang sm:min-h-[23rem]"
       style={{ backgroundColor: "#0b3f34" }}
     >
       {/* Pita kepala. Warna kuningan mengambil ornamen yang sama dipakai
@@ -152,12 +152,17 @@ export function KartuTalenta({
           </div>
 
           {qr && (
-            <div
-              className="h-[58px] w-[58px] shrink-0 rounded-[4px] bg-white p-1 sm:h-[66px] sm:w-[66px]"
-              // QR dibangkitkan di peladen dari alamat halaman ini sendiri;
-              // tidak ada masukan pengguna yang masuk ke dalamnya.
-              dangerouslySetInnerHTML={{ __html: qr }}
-            />
+            <div className="flex shrink-0 flex-col items-center gap-1">
+              <div
+                className="h-[58px] w-[58px] rounded-[4px] bg-white p-1 sm:h-[64px] sm:w-[64px]"
+                // QR dibangkitkan di peladen dari alamat halaman ini sendiri;
+                // tidak ada masukan pengguna yang masuk ke dalamnya.
+                dangerouslySetInnerHTML={{ __html: qr }}
+              />
+              <span className="text-[8px] font-semibold uppercase tracking-[0.1em] text-[#7fb9a6]">
+                Pindai untuk memeriksa
+              </span>
+            </div>
           )}
         </div>
       </div>

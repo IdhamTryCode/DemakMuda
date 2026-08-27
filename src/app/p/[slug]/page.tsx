@@ -150,6 +150,12 @@ export default async function HalamanKartuTalenta({
           qr={qr}
         />
 
+        <p className="max-w-prose text-sm text-muted">
+          Kode pada kartu berisi alamat halaman ini — bukan kode pembayaran.
+          Memindainya membuka kartu yang sama, sehingga isinya dapat diperiksa
+          langsung dari sumbernya.
+        </p>
+
         {p.bio && <p className="text-base text-ink-soft">{p.bio}</p>}
 
         {rincian.length > 0 && (
