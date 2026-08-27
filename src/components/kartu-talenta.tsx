@@ -23,6 +23,8 @@ import lambang from "../../public/lambang-demak.png";
  * ruangan dimatikan, dan benda yang berpura-pura fisik akan kehilangan
  * kesannya bila ikut berubah.
  */
+const TAMPIL = 3;
+
 export function KartuTalenta({
   nama,
   slug,
@@ -30,7 +32,9 @@ export function KartuTalenta({
   kecamatan,
   desa,
   usia,
-  bidang,
+  minat,
+  keterampilan,
+  organisasi,
   terverifikasi,
   qr,
 }: {
@@ -40,7 +44,9 @@ export function KartuTalenta({
   kecamatan: string | null;
   desa: string | null;
   usia: number | null;
-  bidang: string | null;
+  minat: string[];
+  keterampilan: string[];
+  organisasi: { nama: string; peran: string } | null;
   terverifikasi: boolean;
   /** SVG kode QR, dibangkitkan di peladen. */
   qr: string | null;
@@ -54,22 +60,23 @@ export function KartuTalenta({
 
   return (
     <div
-      className="w-full max-w-2xl overflow-hidden rounded-[18px] text-[#eaf3ef] shadow-melayang sm:aspect-[1.586]"
+      className="flex w-full max-w-2xl flex-col overflow-hidden rounded-[18px] text-[#eaf3ef] shadow-melayang sm:aspect-[1.586]"
       style={{ backgroundColor: "#0b3f34" }}
     >
       {/* Pita kepala. Warna kuningan mengambil ornamen yang sama dipakai
           seluruh aplikasi, di sini sebagai garis tegas seperti pada kartu
-          cetak. */}
+          cetak. shrink-0 wajib: tanpa itu pita ikut memampat ketika isinya
+          padat, dan kepala kartu yang memampat langsung terlihat salah. */}
       <div
-        className="flex items-center gap-3 px-5 py-3"
+        className="flex shrink-0 items-center gap-3 px-5 py-3"
         style={{ backgroundColor: "#083026", borderBottom: "2px solid #b58a3c" }}
       >
         <Image
           src={lambang}
           alt=""
-          width={34}
-          height={34}
-          className="h-[34px] w-auto shrink-0"
+          width={32}
+          height={32}
+          className="h-8 w-auto shrink-0"
         />
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#b58a3c]">
@@ -81,9 +88,12 @@ export function KartuTalenta({
         </div>
       </div>
 
-      <div className="flex h-full flex-col gap-4 px-5 py-4 sm:gap-3">
-        <div className="flex flex-1 gap-5">
-          <dl className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-2.5">
+      {/* min-h-0 melengkapi flex-1. Tanpa keduanya, isi yang lebih tinggi dari
+          sisa ruang akan meluber melewati dasar kartu dan terpotong oleh
+          overflow-hidden — persis yang membuat kode QR sempat terpangkas. */}
+      <div className="flex min-h-0 flex-1 flex-col justify-between gap-3 px-5 py-4">
+        <div className="flex gap-4">
+          <dl className="flex min-w-0 flex-1 flex-col gap-2.5">
             <Baris label="Nama" nilai={nama} besar />
             <div className="grid grid-cols-2 gap-3">
               <Baris label="Kecamatan" nilai={kecamatan ?? "—"} />
@@ -91,7 +101,10 @@ export function KartuTalenta({
             </div>
             <div className="grid grid-cols-2 gap-3">
               <Baris label="Usia" nilai={usia !== null ? `${usia} tahun` : "—"} />
-              <Baris label="Bidang" nilai={bidang ?? "—"} />
+              <Baris
+                label="Organisasi"
+                nilai={organisasi ? `${organisasi.nama}` : "—"}
+              />
             </div>
           </dl>
 
@@ -99,7 +112,7 @@ export function KartuTalenta({
               bukan siluet orang, yang selalu terbaca sebagai foto yang gagal
               dimuat. */}
           <div
-            className="relative h-[104px] w-[78px] shrink-0 overflow-hidden rounded-[6px] sm:h-[124px] sm:w-[93px]"
+            className="relative h-[100px] w-[75px] shrink-0 overflow-hidden rounded-[6px] sm:h-[116px] sm:w-[87px]"
             style={{ backgroundColor: "#0f4d3f", border: "1px solid #1c6553" }}
           >
             {fotoUrl ? (
@@ -118,7 +131,12 @@ export function KartuTalenta({
           </div>
         </div>
 
-        <div className="flex items-end justify-between gap-4 pb-4 sm:pb-0">
+        <div className="flex flex-col gap-2">
+          <Cincin label="Bidang minat" isi={minat} />
+          <Cincin label="Keterampilan" isi={keterampilan} />
+        </div>
+
+        <div className="flex items-end justify-between gap-4">
           <div className="flex min-w-0 flex-col gap-1">
             {terverifikasi && (
               <span
@@ -135,7 +153,7 @@ export function KartuTalenta({
 
           {qr && (
             <div
-              className="h-[62px] w-[62px] shrink-0 rounded-[4px] bg-white p-1 sm:h-[70px] sm:w-[70px]"
+              className="h-[58px] w-[58px] shrink-0 rounded-[4px] bg-white p-1 sm:h-[66px] sm:w-[66px]"
               // QR dibangkitkan di peladen dari alamat halaman ini sendiri;
               // tidak ada masukan pengguna yang masuk ke dalamnya.
               dangerouslySetInnerHTML={{ __html: qr }}
@@ -166,6 +184,39 @@ function Baris({
       >
         {nilai}
       </dd>
+    </div>
+  );
+}
+
+/**
+ * Daftar pendek berbentuk cincin.
+ *
+ * Dibatasi tiga, dan sisanya diringkas menjadi "+N". Kartu itu ringkasan
+ * sekilas; memaksa seluruh daftar masuk akan membuatnya memanjang dan
+ * kehilangan bentuk kartunya.
+ */
+function Cincin({ label, isi }: { label: string; isi: string[] }) {
+  if (isi.length === 0) return null;
+  const tampil = isi.slice(0, TAMPIL);
+  const sisa = isi.length - tampil.length;
+
+  return (
+    <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+      <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#7fb9a6]">
+        {label}
+      </span>
+      {tampil.map((t) => (
+        <span
+          key={t}
+          className="truncate rounded-full px-2 py-0.5 text-[11px]"
+          style={{ backgroundColor: "#0f4d3f", border: "1px solid #1c6553" }}
+        >
+          {t}
+        </span>
+      ))}
+      {sisa > 0 && (
+        <span className="text-[11px] text-[#7fb9a6]">+{sisa}</span>
+      )}
     </div>
   );
 }

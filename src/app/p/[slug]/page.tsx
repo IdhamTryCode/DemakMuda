@@ -136,7 +136,16 @@ export default async function HalamanKartuTalenta({
           kecamatan={p.kecamatan?.nama ?? null}
           desa={buka.tampilkanDesa ? (p.desa?.nama ?? null) : null}
           usia={buka.tampilkanUsia && p.tanggalLahir ? umur(p.tanggalLahir) : null}
-          bidang={p.minat[0]?.nama ?? null}
+          minat={p.minat.map((m) => m.nama)}
+          keterampilan={p.keterampilan.map((k) => k.nama)}
+          organisasi={
+            p.user.keanggotaan[0]
+              ? {
+                  nama: p.user.keanggotaan[0].organisasi.nama,
+                  peran: p.user.keanggotaan[0].peran,
+                }
+              : null
+          }
           terverifikasi={p.statusVerifikasi === "TERVERIFIKASI"}
           qr={qr}
         />
@@ -154,42 +163,6 @@ export default async function HalamanKartuTalenta({
               </div>
             ))}
           </dl>
-        )}
-
-        {p.minat.length > 0 && (
-          <section className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
-              Bidang minat
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {p.minat.map((m) => (
-                <span
-                  key={m.nama}
-                  className="rounded-full bg-accent-soft px-3 py-1.5 text-sm text-accent"
-                >
-                  {m.nama}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {p.keterampilan.length > 0 && (
-          <section className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
-              Keterampilan
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {p.keterampilan.map((k) => (
-                <span
-                  key={k.nama}
-                  className="rounded-full border border-line-strong px-3 py-1.5 text-sm text-ink-soft"
-                >
-                  {k.nama}
-                </span>
-              ))}
-            </div>
-          </section>
         )}
 
         {p.user.keanggotaan.length > 0 && (
