@@ -173,6 +173,7 @@ export type OrganisasiMasukan = z.infer<typeof OrganisasiSkema>;
 
 export const ProfilSkema = z.object({
   nama: teks(3, 120, "Nama"),
+  fotoUrl: urlUnggahan("Foto diri").optional().or(z.literal("")),
   bio: z.string().trim().max(500, "Bio maksimal 500 karakter.").optional().or(z.literal("")),
   telepon: z
     .string()

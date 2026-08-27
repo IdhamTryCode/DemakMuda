@@ -994,6 +994,11 @@ async function semaiProfil() {
     jenisKelamin: "PEREMPUAN" as const,
     kecamatanId: kecamatan.id,
     desaId: desa.id,
+    // Diverifikasi supaya lencana pada Kartu Talenta ikut terlihat saat
+    // diperagakan — bagian yang membedakan kartu ini dari sekadar halaman
+    // profil yang diisi sendiri.
+    statusVerifikasi: "TERVERIFIKASI" as const,
+    diverifikasiPada: geser(-30, 10),
   };
 
   await prisma.profilPemuda.upsert({

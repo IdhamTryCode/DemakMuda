@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { headers } from "next/headers";
+import QRCode from "qrcode";
+
 import { BingkaiPublik } from "@/components/bingkai-publik";
+import { KartuTalenta } from "@/components/kartu-talenta";
 import { Kartu } from "@/components/sk";
 import { LABEL_KEANGGOTAAN, LABEL_ORGANISASI } from "@/lib/organisasi";
 import { prisma } from "@/lib/prisma";
@@ -20,7 +24,10 @@ async function ambilProfil(slug: string) {
   return prisma.profilPemuda.findUnique({
     where: { slug },
     select: {
+      slug: true,
       bio: true,
+      fotoUrl: true,
+      statusVerifikasi: true,
       tanggalLahir: true,
       kecamatan: { select: { nama: true } },
       desa: { select: { nama: true } },
@@ -95,31 +102,46 @@ export default async function HalamanKartuTalenta({
 
   const buka = keterbukaanProfil(p.tanggalLahir);
 
+  // QR menunjuk ke halaman ini sendiri, supaya kartunya dapat dipindai dari
+  // layar orang lain dan langsung membuka versi yang dapat diperiksa.
+  const kepala = await headers();
+  const inang = kepala.get("host") ?? "demakmuda.id";
+  const skema = inang.startsWith("localhost") ? "http" : "https";
+  const alamat = `${skema}://${inang}/p/${p.slug}`;
+  const qr = await QRCode.toString(alamat, {
+    type: "svg",
+    margin: 0,
+    width: 120,
+    errorCorrectionLevel: "M",
+    color: { dark: "#0b3f34", light: "#ffffff" },
+  }).catch(() => null);
+
+  // Kecamatan, desa, dan usia sudah tercetak di kartunya. Yang tersisa di
+  // bawah hanya yang tidak muat di sana.
   const rincian = [
-    p.kecamatan ? { label: "Kecamatan", nilai: p.kecamatan.nama } : null,
-    buka.tampilkanDesa && p.desa
-      ? { label: "Desa / kelurahan", nilai: p.desa.nama }
-      : null,
     buka.tampilkanSekolah && p.sekolah
       ? { label: "Sekolah", nilai: p.sekolah.nama }
-      : null,
-    buka.tampilkanUsia && p.tanggalLahir
-      ? { label: "Usia", nilai: `${umur(p.tanggalLahir)} tahun` }
       : null,
   ].filter((r): r is { label: string; nilai: string } => r !== null);
 
   return (
     <BingkaiPublik>
       <article className="mx-auto flex max-w-2xl flex-col gap-6">
-        <header className="flex flex-col gap-3">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brass">
-            Kartu Talenta
-          </span>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-            {p.user.name}
-          </h1>
-          {p.bio && <p className="text-base text-ink-soft">{p.bio}</p>}
-        </header>
+        <h1 className="sr-only">Kartu Talenta {p.user.name}</h1>
+
+        <KartuTalenta
+          nama={p.user.name}
+          slug={p.slug}
+          fotoUrl={buka.tampilkanFoto ? p.fotoUrl : null}
+          kecamatan={p.kecamatan?.nama ?? null}
+          desa={buka.tampilkanDesa ? (p.desa?.nama ?? null) : null}
+          usia={buka.tampilkanUsia && p.tanggalLahir ? umur(p.tanggalLahir) : null}
+          bidang={p.minat[0]?.nama ?? null}
+          terverifikasi={p.statusVerifikasi === "TERVERIFIKASI"}
+          qr={qr}
+        />
+
+        {p.bio && <p className="text-base text-ink-soft">{p.bio}</p>}
 
         {rincian.length > 0 && (
           <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">

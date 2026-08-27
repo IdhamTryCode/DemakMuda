@@ -130,6 +130,44 @@ async function main() {
   await prisma.profilPemuda.deleteMany({ where: { userId: anak.id } });
   await prisma.user.delete({ where: { id: anak.id } });
 
+  console.log("\nKartu Talenta sebagai kartu");
+  const kartu = await ambil("/p/rani-puspitasari");
+  periksa(
+    kartu.isi.includes("Kartu Talenta Pemuda") &&
+      kartu.isi.includes("Pemerintah Kabupaten Demak"),
+    "kartu memakai pita kepala, bukan sekadar judul halaman",
+  );
+  periksa(
+    !kartu.isi.includes("Kartu Tanda Penduduk") && !kartu.isi.includes("NIK"),
+    "kartu tidak meniru dokumen kependudukan",
+  );
+  periksa(
+    kartu.isi.includes("Terverifikasi Dispora"),
+    "lencana verifikasi tercetak di kartu",
+  );
+
+  // Foto mengikuti aturan keterbukaan yang sama dengan desa dan sekolah.
+  const belia = await prisma.profilPemuda.findFirst({
+    where: { fotoUrl: { not: null } },
+    select: { id: true, slug: true, tanggalLahir: true, fotoUrl: true },
+  });
+  if (belia) {
+    const asli = belia.tanggalLahir;
+    await prisma.profilPemuda.update({
+      where: { id: belia.id },
+      data: { tanggalLahir: new Date(Date.now() - 15 * 365.25 * 24 * 3600 * 1000) },
+    });
+    const sebagaiAnak = await ambil(`/p/${belia.slug}`);
+    periksa(
+      !sebagaiAnak.isi.includes(encodeURIComponent(belia.fotoUrl!).slice(0, 40)),
+      "foto profil di bawah umur tidak tampil di halaman publik",
+    );
+    await prisma.profilPemuda.update({
+      where: { id: belia.id },
+      data: { tanggalLahir: asli },
+    });
+  }
+
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
   process.exit(gagal === 0 ? 0 : 1);

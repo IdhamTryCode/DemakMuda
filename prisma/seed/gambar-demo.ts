@@ -178,6 +178,57 @@ function bolehDiganti(alamat: string | null): boolean {
   return !alamat || alamat.includes(`/${AWALAN}/`);
 }
 
+/**
+ * Foto profil contoh berupa monogram, bukan wajah.
+ *
+ * Membangkitkan wajah untuk orang karangan akan menghasilkan gambar yang
+ * tampak seperti foto seseorang yang sungguh ada — persis yang tidak boleh
+ * dilakukan pada data contoh. Monogram jujur mengatakan dirinya buatan, dan
+ * tetap membuat Kartu Talenta terlihat lengkap.
+ */
+function svgFoto(slug: string, nama: string): string {
+  const n = angkaDari(slug);
+  const p = PALET[(n + 1) % PALET.length];
+  const S = 384;
+
+  const cincin = Array.from({ length: 3 }, (_, i) => {
+    const r = 150 + i * 46;
+    return `<circle cx="${S * 0.22}" cy="${S * 0.88}" r="${r}" fill="none" stroke="${p.aksen}" stroke-width="2" opacity="${(0.5 - i * 0.13).toFixed(2)}"/>`;
+  }).join("");
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${S} ${S}">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0.5" y2="1">
+    <stop offset="0%" stop-color="${p.latar}"/><stop offset="100%" stop-color="${p.garis}"/>
+  </linearGradient></defs>
+  <rect width="${S}" height="${S}" fill="url(#g)"/>
+  <g clip-path="inset(0)">${cincin}</g>
+  <text x="${S / 2}" y="${S / 2 + 40}" text-anchor="middle" font-family="sans-serif" font-size="132" font-weight="700" fill="${p.tinta}" opacity="0.95">${huruf(nama)}</text>
+</svg>`;
+}
+
+async function semaiFoto() {
+  const profil = await prisma.profilPemuda.findMany({
+    select: { id: true, slug: true, fotoUrl: true, user: { select: { name: true } } },
+  });
+
+  let dibuat = 0;
+  let dilewati = 0;
+  for (const p of profil) {
+    if (!bolehDiganti(p.fotoUrl)) {
+      dilewati++;
+      continue;
+    }
+    const url = await unggah(`profil/${p.slug}`, svgFoto(p.slug, p.user.name));
+    await prisma.profilPemuda.update({ where: { id: p.id }, data: { fotoUrl: url } });
+    dibuat++;
+  }
+
+  console.log(
+    `Foto profil: ${dibuat}` +
+      (dilewati > 0 ? ` (${dilewati} dilewati, sudah diunggah sendiri)` : ""),
+  );
+}
+
 async function main() {
   let dibuat = 0;
   let dilewati = 0;
@@ -225,6 +276,8 @@ async function main() {
     dibuat++;
   }
   console.log(`Organisasi berlogo: ${organisasi.length - lewatOrg}`);
+
+  await semaiFoto();
 
   const total = dilewati + lewatKarya + lewatOrg;
   if (total > 0) {

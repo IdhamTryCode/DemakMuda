@@ -23,6 +23,7 @@ export default async function HalamanProfil() {
       where: { userId: sesi.user.id },
       select: {
         slug: true,
+        fotoUrl: true,
         bio: true,
         telepon: true,
         tanggalLahir: true,
@@ -84,6 +85,7 @@ export default async function HalamanProfil() {
           keterampilan={keterampilan}
           awal={{
             nama: sesi.user.name,
+            fotoUrl: profil?.fotoUrl ?? "",
             bio: profil?.bio ?? "",
             telepon: profil?.telepon ?? "",
             tanggalLahir: keNilaiTanggal(profil?.tanggalLahir ?? null),

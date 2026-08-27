@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { keSlug } from "@/lib/teks";
 import { galatKolom, ProfilSkema, type HasilAksi } from "@/lib/validasi";
 import { catat } from "@/server/audit";
+import { hapusBerkasLama } from "@/server/berkas";
 import { GagalIzin, wajibAktor } from "@/server/penjaga";
 
 /**
@@ -103,7 +104,16 @@ export async function simpanProfil(data: FormData): Promise<HasilAksi> {
 
     const slug = await slugProfilUnik(n.nama, aktor.id);
 
+    // Foto lama dibaca sebelum ditimpa, supaya berkasnya bisa dihapus setelah
+    // penyimpanan berhasil. Berkas yatim hanya memakan tempat, tetapi foto diri
+    // yang tertinggal di penyimpanan publik lebih dari sekadar sampah.
+    const sebelumnya = await prisma.profilPemuda.findUnique({
+      where: { userId: aktor.id },
+      select: { fotoUrl: true },
+    });
+
     const isi = {
+      fotoUrl: n.fotoUrl || null,
       bio: n.bio || null,
       telepon: n.telepon || null,
       tanggalLahir: n.tanggalLahir ?? null,
@@ -132,6 +142,8 @@ export async function simpanProfil(data: FormData): Promise<HasilAksi> {
         },
       }),
     ]);
+
+    await hapusBerkasLama(sebelumnya?.fotoUrl, n.fotoUrl || null);
 
     await catat({
       aktorId: aktor.id,

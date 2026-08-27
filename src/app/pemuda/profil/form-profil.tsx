@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 
+import { PemilihGambar } from "@/components/pemilih-gambar";
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
 import type { HasilAksi } from "@/lib/validasi";
 
@@ -11,6 +12,7 @@ type Desa = { id: string; nama: string; kecamatanId: string };
 
 type Awal = {
   nama: string;
+  fotoUrl: string;
   bio: string;
   telepon: string;
   tanggalLahir: string;
@@ -76,6 +78,17 @@ export function FormProfil({
     <form onSubmit={kirim} className="flex flex-col gap-6">
       {galat && <Pesan nada="galat">{galat}</Pesan>}
       {berhasil && <Pesan nada="berhasil">Profil tersimpan.</Pesan>}
+
+      <div className="flex flex-col gap-1.5">
+        <PemilihGambar
+          nama="fotoUrl"
+          ruang="profil"
+          awal={awal.fotoUrl}
+          label="Foto diri (opsional)"
+          keterangan="Tampil di Kartu Talenta Anda. Kartu itu dapat dibuka siapa saja lewat tautannya, jadi pilih foto yang memang Anda bagikan. Boleh dikosongkan — inisial nama yang akan dipakai."
+        />
+        {kolom.fotoUrl && <p className="text-xs text-danger">{kolom.fotoUrl}</p>}
+      </div>
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="nama">Nama lengkap</Label>

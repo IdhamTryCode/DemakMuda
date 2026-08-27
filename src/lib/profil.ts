@@ -42,6 +42,10 @@ export function keterbukaanProfil(tanggalLahir: Date | null) {
     tampilkanUsia: !anak && tanggalLahir !== null,
     tampilkanDesa: !anak,
     tampilkanSekolah: !anak,
+    // Foto diri mengikuti aturan yang sama dengan desa dan sekolah. Wajah
+    // seorang anak di halaman yang dapat dibuka siapa saja jauh lebih berat
+    // akibatnya daripada nama kecamatannya.
+    tampilkanFoto: !anak,
     tampilkanTelepon: false,
   };
 }

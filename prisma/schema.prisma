@@ -139,6 +139,10 @@ model ProfilPemuda {
   /// Empat digit terakhir NIK, hanya untuk ditampilkan ke pemiliknya.
   nikEmpat String?
 
+  /// Foto diri, ditampilkan pada Kartu Talenta. Opsional, dan pemiliknya
+  /// diberi tahu terang-terangan bahwa kartunya dapat dibuka siapa saja.
+  fotoUrl String?
+
   /// Sumber kebenaran untuk status di bawah umur — dihitung, tidak disimpan.
   tanggalLahir DateTime?
   jenisKelamin JenisKelamin?
