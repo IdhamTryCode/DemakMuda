@@ -12,8 +12,8 @@
  * Yang dibuktikan:
  *   1. Halaman pengisian menuntut pengguna sudah masuk.
  *   2. Layar penyaringan hanya untuk dinas dan superadmin.
- *   3. Prestasi tampil di kartu publik dengan penanda "Diisi sendiri", dan
- *      TIDAK PERNAH dengan kata yang menyiratkan pengesahan.
+ *   3. Prestasi tampil di kartu publik dan TIDAK PERNAH dengan kata yang
+ *      menyiratkan pengesahan dinas.
  *   4. Bukti prestasi milik pengguna di bawah umur tidak tampil ke umum,
  *      sementara prestasinya sendiri tetap tampil.
  *   5. Saringan tingkat dan saringan bukti benar-benar menyaring — dibuktikan
@@ -96,23 +96,24 @@ async function main() {
 
   console.log("\nprestasi di kartu publik");
   const kartu = await ambil("/p/rani-puspitasari");
-  const teks = teksTampak(kartu.isi);
   periksa(kartu.status === 200, "kartu publik terbuka");
-  periksa(teks.includes("Diisi sendiri"), "prestasi bertanda diisi sendiri");
+  // Penanda "diisi sendiri" per baris sengaja DIHAPUS atas permintaan pemilik
+  // produk: pada halaman profil, prestasi yang diisi sendiri adalah pola lazim,
+  // dan melabeli tiap baris justru terbaca seperti curiga kepada pemiliknya.
+  // Yang tetap ditegakkan adalah batas sebaliknya — halaman ini tidak boleh
+  // MENGAKU prestasinya sudah disahkan.
+  //
+  // Batas bagiannya dipotong dari HTML memakai judul bagiannya, bukan dari
+  // kalimat keterangan. Kalimat dapat diubah kapan saja; potongan yang
+  // bersandar padanya akan diam-diam menjadi kosong, dan pemeriksaan atas
+  // potongan kosong selalu lulus.
+  const awal = kartu.isi.indexOf(">Prestasi</h2>");
+  const akhir = kartu.isi.indexOf(">Sertifikat terbitan DemakMuda</h2>");
+  const bagianPrestasi = teksTampak(kartu.isi.slice(awal, akhir));
   periksa(
-    teks.includes("tidak diperiksa Dinas Kepemudaan dan Olahraga"),
-    "keterangan bahwa isinya tidak diperiksa tampil sebelum daftarnya",
+    awal > 0 && akhir > awal,
+    "bagian prestasi dapat dipotong memakai judul bagiannya",
   );
-
-  // Inilah pemeriksaan yang paling penting di berkas ini. Tanpa pengesahan,
-  // satu-satunya yang menahan kartu ini menjadi surat keterangan palsu adalah
-  // kata-katanya sendiri. Kata "Terverifikasi" memang muncul di kartu, tetapi
-  // untuk PROFIL — bukan untuk prestasi; keduanya tidak boleh tertukar.
-  const bagianPrestasi = teks.slice(
-    teks.indexOf("Bagian ini diisi sendiri"),
-    teks.indexOf("Sertifikat terbitan DemakMuda"),
-  );
-  periksa(bagianPrestasi.length > 0, "bagian prestasi dapat dipisahkan dari sertifikat");
   for (const kata of ["Terverifikasi", "disahkan", "Tervalidasi", "Resmi"]) {
     periksa(
       !bagianPrestasi.includes(kata),

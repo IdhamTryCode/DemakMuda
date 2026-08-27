@@ -244,17 +244,6 @@ export default async function HalamanKartuTalenta({
               Prestasi
             </h2>
 
-            {/* Peringatan ini bukan basa-basi hukum, dan sengaja diletakkan di
-                ATAS daftarnya, bukan sebagai catatan kaki. Isian yang tidak
-                diperiksa siapa pun, dipajang tanpa keterangan pada halaman yang
-                menyerupai kartu resmi, akan terbaca sebagai sesuatu yang sudah
-                disahkan. Pembaca berhak tahu sebelum membacanya, bukan setelah. */}
-            <p className="max-w-prose text-sm text-muted">
-              Bagian ini diisi sendiri oleh pemilik kartu dan tidak diperiksa
-              Dinas Kepemudaan dan Olahraga. Yang dapat Anda periksa adalah
-              buktinya — buka piagamnya dan nilai sendiri.
-            </p>
-
             <ul className="flex flex-col gap-3">
               {p.prestasi.map((s) => (
                 <li key={s.id}>
@@ -292,13 +281,6 @@ export default async function HalamanKartuTalenta({
                         {s.peringkat}
                       </span>
                     )}
-                    <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs text-muted">
-                      {s.buktiUrl
-                        ? buka.tampilkanBukti
-                          ? "Diisi sendiri · ada bukti"
-                          : "Diisi sendiri"
-                        : "Diisi sendiri · tanpa bukti"}
-                    </span>
                   </Kartu>
                 </li>
               ))}
@@ -311,9 +293,6 @@ export default async function HalamanKartuTalenta({
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
               Pengalaman
             </h2>
-            <p className="max-w-prose text-sm text-muted">
-              Diisi sendiri oleh pemilik kartu.
-            </p>
             <ul className="flex flex-col gap-3">
               {p.pengalaman.map((g) => (
                 <li key={g.id}>
@@ -347,9 +326,8 @@ export default async function HalamanKartuTalenta({
             Sertifikat terbitan DemakMuda
           </h2>
           <p className="max-w-prose text-sm text-muted">
-            Berbeda dari bagian di atas: sertifikat ini diterbitkan penyelenggara
-            kegiatan di dalam aplikasi, punya kode, dan keasliannya dapat
-            diperiksa siapa pun.
+            Sertifikat ini diterbitkan penyelenggara kegiatan di dalam aplikasi,
+            punya kode, dan keasliannya dapat diperiksa siapa pun.
           </p>
           {p.user.sertifikatDiterima.length === 0 ? (
             <Kartu>
