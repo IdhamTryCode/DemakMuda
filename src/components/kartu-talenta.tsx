@@ -152,14 +152,20 @@ export function KartuTalenta({
           </div>
 
           {qr && (
-            <div className="flex shrink-0 flex-col items-center gap-1">
+            // Lebar kolom dikunci pada lebar pelatnya. Bila dibiarkan mengikuti
+            // isi terlebar, keterangan di bawahnya yang menentukan lebar, dan
+            // pelat kodenya jadi mengambang di tengah ruang yang lebih lebar.
+            <div className="flex w-[68px] shrink-0 flex-col items-center gap-1">
+              {/* Aturan [&>svg] memaksa kode QR seukuran pelat ini, apa pun
+                  ukuran yang dibawanya sendiri. Pelat yang memuat gambar dari
+                  pustaka luar harus yang menentukan ukuran, bukan menerimanya. */}
               <div
-                className="h-[58px] w-[58px] rounded-[4px] bg-white p-1 sm:h-[64px] sm:w-[64px]"
+                className="h-[68px] w-[68px] rounded-[4px] bg-white p-1 [&>svg]:block [&>svg]:h-full [&>svg]:w-full"
                 // QR dibangkitkan di peladen dari alamat halaman ini sendiri;
                 // tidak ada masukan pengguna yang masuk ke dalamnya.
                 dangerouslySetInnerHTML={{ __html: qr }}
               />
-              <span className="text-[8px] font-semibold uppercase tracking-[0.1em] text-[#7fb9a6]">
+              <span className="text-center text-[8px] font-semibold uppercase leading-[1.25] tracking-[0.06em] text-[#7fb9a6]">
                 Pindai untuk memeriksa
               </span>
             </div>

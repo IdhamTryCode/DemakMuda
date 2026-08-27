@@ -146,6 +146,23 @@ async function main() {
     "lencana verifikasi tercetak di kartu",
   );
 
+  // Kode QR terpotong tiga kali berturut-turut, dan sebabnya selalu sama:
+  // SVG-nya membawa ukuran pikselnya sendiri, mengabaikan pelat yang memuatnya,
+  // lalu lubernya dipangkas overflow-hidden. Ukuran kini ditentukan CSS, dan
+  // pemeriksaan ini menahan agar tidak kembali. Terpotongnya sendiri hanya
+  // terlihat oleh mata; sebabnya dapat dibaca dari HTML-nya.
+  const svgQr = kartu.isi.match(/<svg[^>]*crispEdges[^>]*>/)?.[0] ?? "";
+  periksa(svgQr !== "", "kode QR tercetak di kartu");
+  periksa(svgQr.includes("viewBox="), "kode QR membawa viewBox");
+  periksa(
+    !/\swidth="\d/.test(svgQr) && !/\sheight="\d/.test(svgQr),
+    "kode QR tidak memaksakan ukuran pikselnya sendiri",
+  );
+  periksa(
+    kartu.isi.includes("Pindai untuk memeriksa"),
+    "kode QR berketerangan, agar tidak terbaca sebagai kode pembayaran",
+  );
+
   // Foto mengikuti aturan keterbukaan yang sama dengan desa dan sekolah.
   const belia = await prisma.profilPemuda.findFirst({
     where: { fotoUrl: { not: null } },

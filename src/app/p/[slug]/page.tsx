@@ -108,10 +108,13 @@ export default async function HalamanKartuTalenta({
   const inang = kepala.get("host") ?? "demakmuda.id";
   const skema = inang.startsWith("localhost") ? "http" : "https";
   const alamat = `${skema}://${inang}/p/${p.slug}`;
+  // Tanpa opsi width, SVG-nya hanya membawa viewBox — ukurannya diserahkan
+  // kepada pelat yang memuatnya di kartu. Dengan opsi width, ia menuliskan
+  // ukuran pikselnya sendiri, mengabaikan pelat itu, dan melubernya dipangkas
+  // oleh overflow-hidden kartu. Itu sebab kode QR sempat terpotong.
   const qr = await QRCode.toString(alamat, {
     type: "svg",
     margin: 0,
-    width: 120,
     errorCorrectionLevel: "M",
     color: { dark: "#0b3f34", light: "#ffffff" },
   }).catch(() => null);
