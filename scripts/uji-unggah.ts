@@ -28,7 +28,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { del, put } from "@vercel/blob";
 
 import { PrismaClient } from "../src/generated/prisma/client";
-import { hostBlob, jalurBlob } from "../src/lib/blob";
+import { RUANG_BLOB, hostBlob, jalurBlob } from "../src/lib/blob";
 import { KaryaSkema, OrganisasiSkema } from "../src/lib/validasi";
 
 const connectionString = process.env.DATABASE_URL;
@@ -124,6 +124,17 @@ async function main() {
 
   const sah = await mintaToken("karya/uji-unggah.png", kukiPemuda);
   periksa(Boolean(sah.clientToken), "jalur yang sah mendapat token");
+
+  // Ruang baru gagal dengan diam-diam pula: menambah kolom unggahan di
+  // formulir tanpa mendaftarkan ruangnya di POLA_JALUR_BLOB dan IZIN_RUANG
+  // menghasilkan tombol yang selalu menolak, dan penolakannya baru terlihat
+  // ketika ada orang sungguhan mencoba mengunggah.
+  for (const ruang of RUANG_BLOB) {
+    const boleh = ruang === "karya" || ruang === "profil" || ruang === "prestasi";
+    if (!boleh) continue;
+    const h = await mintaToken(`${ruang}/uji-unggah.png`, kukiPemuda);
+    periksa(Boolean(h.clientToken), `pemuda mendapat token untuk ruang "${ruang}"`);
+  }
 
   console.log("\nbatas yang tertanam di dalam token");
   // Isi token tidak dibongkar — bentuknya urusan pustaka dan bisa berubah.
@@ -258,6 +269,44 @@ async function main() {
   // tidak pernah ditulis. Pemeriksaan ini membaca setiap aksi dan menuntut
   // setiap kolom yang dipakainya sebagai n.<kolom> memang pernah diambil dari
   // FormData di berkas yang sama.
+  // Penjaga di bawah hanya memeriksa sisi peladen. Ada satu sambungan lagi yang
+  // sama diamnya bila putus: nama kolom pada <PemilihGambar nama="…"> harus
+  // sama persis dengan yang dibaca aksinya. Bila salah satu diganti nama, tidak
+  // ada galat, tidak ada peringatan, dan aksinya tetap menjawab "tersimpan" —
+  // bentuk kegagalan yang persis sama dengan cacat foto profil.
+  console.log("\nnama kolom di formulir cocok dengan yang dibaca aksi");
+  const berkasForm = (await readdir("src/app", { recursive: true }))
+    .filter((f) => typeof f === "string" && f.endsWith(".tsx"))
+    .map((f) => `src/app/${f}`.replace(/\\/g, "/"));
+
+  const seluruhAksi = (
+    await Promise.all(
+      (await readdir("src/server"))
+        .filter((f) => f.startsWith("aksi-") && f.endsWith(".ts"))
+        .map((f) => readFile(`src/server/${f}`, "utf8")),
+    )
+  ).join("\n");
+
+  let pemilihDitemukan = 0;
+  for (const f of berkasForm) {
+    const isi = await readFile(f, "utf8");
+    for (const m of isi.matchAll(
+      /<PemilihGambar[\s\S]{0,400}?nama="([^"]+)"[\s\S]{0,400}?ruang="([^"]+)"/g,
+    )) {
+      const [, kolom, ruang] = m;
+      pemilihDitemukan++;
+      periksa(
+        seluruhAksi.includes(`data.get("${kolom}")`),
+        `${f.split("/").pop()}: kolom "${kolom}" dibaca oleh salah satu aksi`,
+      );
+      periksa(
+        (RUANG_BLOB as readonly string[]).includes(ruang),
+        `${f.split("/").pop()}: ruang "${ruang}" terdaftar`,
+      );
+    }
+  }
+  periksa(pemilihDitemukan >= 5, `seluruh pemilih gambar terperiksa (${pemilihDitemukan})`);
+
   console.log("\nsetiap kolom skema benar-benar dibaca dari formulirnya");
   const berkasAksi = (await readdir("src/server")).filter(
     (f) => f.startsWith("aksi-") && f.endsWith(".ts"),
