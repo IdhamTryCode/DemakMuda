@@ -2142,6 +2142,88 @@ async function semaiKisahPeragaan() {
   ]);
   if (!rani || !pengurus) throw new Error("Akun peragaan belum lengkap.");
 
+  // ── Rekam jejak Rani ──
+  //
+  // Ditulis tangan, bukan diambil dari daftar umum semaiRekamJejak(), karena
+  // akun inilah yang dibuka saat peragaan. Isinya menyambung persona yang sudah
+  // ada di profilnya — desain grafis, fotografi, pemrograman, pengurus karang
+  // taruna — supaya kartunya terbaca sebagai satu orang, bukan tempelan.
+  const profilRani = await prisma.profilPemuda.findUnique({
+    where: { userId: rani.id },
+    select: { id: true },
+  });
+  if (profilRani) {
+    await prisma.prestasi.deleteMany({ where: { profilId: profilRani.id } });
+    await prisma.pengalaman.deleteMany({ where: { profilId: profilRani.id } });
+
+    const tahunIni = ACUAN.getFullYear();
+    await prisma.prestasi.createMany({
+      data: [
+        {
+          profilId: profilRani.id,
+          judul: "Lomba Desain Poster Hari Jadi Kabupaten Demak",
+          tingkat: "KABUPATEN",
+          peringkat: "Juara 2",
+          penyelenggara: "Pemerintah Kabupaten Demak",
+          tahun: tahunIni,
+        },
+        {
+          profilId: profilRani.id,
+          judul: "Lomba Foto Wisata Religi dan Pesisir Jawa Tengah",
+          tingkat: "PROVINSI",
+          peringkat: "Juara 3",
+          penyelenggara: "Dinas Kepemudaan, Olahraga dan Pariwisata Jawa Tengah",
+          tahun: tahunIni - 1,
+        },
+        // Sengaja satu tanpa bukti: gambar piagam disemai terpisah, dan yang
+        // ini dibiarkan kosong supaya saringan "hanya yang melampirkan bukti"
+        // di layar dinas menunjukkan bedanya pada akun yang diperagakan.
+        {
+          profilId: profilRani.id,
+          judul: "Lomba Kompetensi Siswa Bidang Desain Grafis",
+          tingkat: "PROVINSI",
+          peringkat: "Finalis",
+          penyelenggara: "Dinas Pendidikan Provinsi Jawa Tengah",
+          tahun: tahunIni - 2,
+        },
+      ],
+    });
+
+    await prisma.pengalaman.createMany({
+      data: [
+        {
+          profilId: profilRani.id,
+          judul: "Kepengurusan Karang Taruna Bintoro",
+          peran: "Sekretaris",
+          penyelenggara: "Karang Taruna Desa Bintoro",
+          tahunMulai: tahunIni - 3,
+          tahunSelesai: null,
+          keterangan:
+            "Menyusun agenda kegiatan bulanan dan menulis laporan pertanggungjawaban tahunan.",
+        },
+        {
+          profilId: profilRani.id,
+          judul: "Magang desain grafis di Dinas Komunikasi dan Informatika",
+          peran: "Peserta magang",
+          penyelenggara: "Diskominfo Kabupaten Demak",
+          tahunMulai: tahunIni - 1,
+          tahunSelesai: tahunIni - 1,
+          keterangan:
+            "Membuat bahan publikasi untuk kanal resmi pemerintah kabupaten selama tiga bulan.",
+        },
+        {
+          profilId: profilRani.id,
+          judul: "Kepanitiaan Festival Budaya Demak",
+          peran: "Seksi dokumentasi",
+          penyelenggara: "Dinas Kebudayaan dan Pariwisata",
+          tahunMulai: tahunIni - 2,
+          tahunSelesai: tahunIni - 2,
+          keterangan: "Mendokumentasikan seluruh rangkaian acara selama empat hari.",
+        },
+      ],
+    });
+  }
+
   // ── Keanggotaan Rani ──
   const bintoro = await prisma.organisasi.findUniqueOrThrow({
     where: { slug: "karang-taruna-bintoro" },
