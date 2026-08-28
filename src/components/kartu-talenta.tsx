@@ -147,7 +147,13 @@ export function KartuTalenta({
             {terverifikasi && (
               <span
                 className="w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-                style={{ backgroundColor: "#b58a3c", color: "#0b3f34" }}
+                // Tulisannya semula sewarna badan kartu, #0b3f34, dan itu hanya
+                // 3,76:1 di atas kuningan — di bawah 4,5:1 yang dituntut WCAG AA
+                // untuk huruf sekecil ini. Dipekatkan menjadi 5,11:1. Bedanya
+                // tidak kentara oleh mata, tetapi lencana inilah satu-satunya
+                // penanda kewenangan di kartu; ia justru yang paling tidak boleh
+                // sulit dibaca.
+                style={{ backgroundColor: "#b58a3c", color: "#06261f" }}
               >
                 Terverifikasi Dispora
               </span>
