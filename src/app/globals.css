@@ -36,7 +36,17 @@
   --sk-sunk: #eaefe8;
   --sk-ink: #15201b;
   --sk-ink-soft: #4a564f;
-  --sk-muted: #7c8880;
+  /* Warna ini semula #7c8880, dan gagal di seluruh halaman: axe-core mengukur
+     3,17:1 di atas permukaan redup dan 3,69:1 di atas putih, sedangkan WCAG AA
+     menuntut 4,5:1 untuk teks berukuran biasa. Label kolom, keterangan kartu,
+     dan tanggal semuanya memakai warna ini — jadi yang tidak terbaca justru
+     bagian yang paling sering perlu dibaca cepat.
+
+     Nilai penggantinya dipilih terhadap latar yang PALING TERANG SEKALIPUN
+     tidak lolos, yakni permukaan redup #eaefe8, bukan terhadap putih. Diuji
+     terhadap putih saja akan lolos di beranda dan tetap gagal di dalam panel
+     saringan. Hasilnya 4,63:1 di sana, dan 5,40:1 di atas putih. */
+  --sk-muted: #616d67;
   --sk-line: #e0e5dd;
   --sk-line-strong: #cfd7cb;
 

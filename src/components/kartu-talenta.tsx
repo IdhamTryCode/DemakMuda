@@ -93,19 +93,25 @@ export function KartuTalenta({
           overflow-hidden — persis yang membuat kode QR sempat terpangkas. */}
       <div className="flex min-h-0 flex-1 flex-col justify-between gap-3 px-5 py-4">
         <div className="flex gap-4">
-          <dl className="flex min-w-0 flex-1 flex-col gap-2.5">
-            <Baris label="Nama" nilai={nama} besar />
-            <div className="grid grid-cols-2 gap-3">
-              <Baris label="Kecamatan" nilai={kecamatan ?? "—"} />
-              <Baris label="Desa / Kelurahan" nilai={desa ?? "—"} />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Baris label="Usia" nilai={usia !== null ? `${usia} tahun` : "—"} />
-              <Baris
-                label="Organisasi"
-                nilai={organisasi ? `${organisasi.nama}` : "—"}
-              />
-            </div>
+          {/* Dua barisnya semula dibungkus <div className="grid"> tersendiri di
+              dalam <dl>, sehingga <dt> dan <dd> berada dua tingkat di dalam div
+              — susunan yang tidak sah. Pembaca layar berhenti mengumumkannya
+              sebagai daftar istilah, dan hubungan antara label dan nilainya
+              hilang. Audit axe-core menandainya sebagai pelanggaran serius pada
+              delapan simpul.
+
+              Kolomnya kini diatur oleh <dl> itu sendiri, sehingga setiap
+              pasangan <dt>/<dd> berada tepat satu tingkat di dalamnya. Tampilan
+              tidak berubah sama sekali. */}
+          <dl className="grid min-w-0 flex-1 grid-cols-2 gap-x-3 gap-y-2.5">
+            <Baris label="Nama" nilai={nama} besar seluruhBaris />
+            <Baris label="Kecamatan" nilai={kecamatan ?? "—"} />
+            <Baris label="Desa / Kelurahan" nilai={desa ?? "—"} />
+            <Baris label="Usia" nilai={usia !== null ? `${usia} tahun` : "—"} />
+            <Baris
+              label="Organisasi"
+              nilai={organisasi ? `${organisasi.nama}` : "—"}
+            />
           </dl>
 
           {/* Foto berbanding 3:4 seperti pasfoto. Bila kosong, inisial nama —
@@ -180,13 +186,16 @@ function Baris({
   label,
   nilai,
   besar = false,
+  seluruhBaris = false,
 }: {
   label: string;
   nilai: string;
   besar?: boolean;
+  /** Memenuhi kedua kolom pada kisi <dl>. Dipakai untuk nama. */
+  seluruhBaris?: boolean;
 }) {
   return (
-    <div className="min-w-0">
+    <div className={`min-w-0 ${seluruhBaris ? "col-span-2" : ""}`}>
       <dt className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#7fb9a6]">
         {label}
       </dt>
