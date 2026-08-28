@@ -1480,6 +1480,105 @@ const AGENDA_DIIKUTI = [
   "kelas-fotografi-ponsel-demak",
 ];
 
+/**
+ * Keanggotaan organisasi.
+ *
+ * Tanpa ini, Direktori menampilkan "0 anggota" pada hampir seluruh
+ * organisasinya — dan beranda yang menjual "cari komunitas di kecamatanmu"
+ * langsung runtuh begitu orang mengklik masuk dan menemukannya kosong.
+ *
+ * Anggotanya diambil lebih dahulu dari kecamatan organisasi itu sendiri, baru
+ * dilengkapi dari kecamatan lain. Karang taruna yang anggotanya tersebar rata
+ * ke seluruh kabupaten akan terbaca palsu oleh siapa pun yang mengenal Demak.
+ *
+ * Sebagiannya sengaja berstatus MENUNGGU, supaya antrean persetujuan di dasbor
+ * pengurus ada isinya saat diperagakan — alur yang tidak dapat ditunjukkan sama
+ * saja dengan alur yang tidak ada.
+ */
+const TARGET_ANGGOTA: Record<string, number> = {
+  KARANG_TARUNA: 12,
+  OKP: 10,
+  KLUB_OLAHRAGA: 9,
+  KOMUNITAS: 7,
+  SANGGAR: 6,
+  LAINNYA: 5,
+};
+
+/** Memutar urutan larik, supaya orang yang sama tidak selalu terpilih pertama. */
+function putar<T>(isi: T[], geseran: number): T[] {
+  if (isi.length === 0) return isi;
+  const n = geseran % isi.length;
+  return [...isi.slice(n), ...isi.slice(0, n)];
+}
+
+async function semaiAnggota() {
+  const organisasi = await prisma.organisasi.findMany({
+    orderBy: { nama: "asc" },
+    select: { id: true, jenis: true, kecamatanId: true, pemilikId: true },
+  });
+  const profil = await prisma.profilPemuda.findMany({
+    where: { user: { email: { startsWith: "contoh-" } } },
+    orderBy: { slug: "asc" },
+    select: { userId: true, kecamatanId: true },
+  });
+  if (organisasi.length === 0 || profil.length === 0) return;
+
+  // Hanya keanggotaan akun contoh yang dibersihkan. Keanggotaan akun peragaan
+  // ditulis tangan di semaiKisahPeragaan dan tidak boleh ikut terhapus.
+  await prisma.keanggotaan.deleteMany({
+    where: { user: { email: { startsWith: "contoh-" } } },
+  });
+
+  let anggota = 0;
+  let menunggu = 0;
+
+  for (const [i, o] of organisasi.entries()) {
+    // Pemiliknya menjadi ketua. Organisasi yang pengurusnya bukan anggota
+    // organisasinya sendiri adalah keganjilan yang langsung terlihat di dasbor.
+    await prisma.keanggotaan.upsert({
+      where: { organisasiId_userId: { organisasiId: o.id, userId: o.pemilikId } },
+      update: { peran: "KETUA", status: "TERVERIFIKASI" },
+      create: {
+        organisasiId: o.id,
+        userId: o.pemilikId,
+        peran: "KETUA",
+        status: "TERVERIFIKASI",
+        dibuatPada: geser(-200, 9),
+      },
+    });
+
+    const sekecamatan = profil.filter((p) => p.kecamatanId === o.kecamatanId);
+    const lainnya = profil.filter((p) => p.kecamatanId !== o.kecamatanId);
+    const calon = [...putar(sekecamatan, i * 3), ...putar(lainnya, i * 7)]
+      .filter((p) => p.userId !== o.pemilikId)
+      .slice(0, TARGET_ANGGOTA[o.jenis] ?? 6);
+
+    for (const [k, p] of calon.entries()) {
+      // Dua orang pertama menjadi pengurus; sisanya anggota biasa.
+      const peran = k < 2 ? "PENGURUS" : "ANGGOTA";
+      // Satu permintaan yang belum disetujui pada tiap organisasi ketiga.
+      const belumDisetujui = i % 3 === 0 && k === calon.length - 1;
+
+      await prisma.keanggotaan.create({
+        data: {
+          organisasiId: o.id,
+          userId: p.userId,
+          peran: belumDisetujui ? "ANGGOTA" : peran,
+          status: belumDisetujui ? "MENUNGGU" : "TERVERIFIKASI",
+          dibuatPada: geser(belumDisetujui ? -3 - (k % 5) : -180 + i * 4 + k, 10),
+        },
+      });
+      anggota++;
+      if (belumDisetujui) menunggu++;
+    }
+  }
+
+  console.log(
+    `Keanggotaan: ${anggota + organisasi.length} keanggotaan di ${organisasi.length} organisasi ` +
+      `(${menunggu} menunggu persetujuan)`,
+  );
+}
+
 async function semaiKeikutsertaan() {
   const peluang = await Promise.all(
     PELUANG_DIIKUTI.map((slug) =>
@@ -2572,6 +2671,7 @@ async function main() {
   await semaiProfil();
   await semaiOrganisasi();
   await semaiPemudaContoh();
+  await semaiAnggota();
   await semaiKeikutsertaan();
   await semaiKarya();
   await semaiAspirasi();
