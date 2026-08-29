@@ -5,6 +5,8 @@ Portal talenta dan peluang pemuda Kabupaten Demak.
 Karya untuk **Lomba Teknologi Piranti Lunak — Jambore Pemuda Kabupaten Demak 2026**.
 Peserta: Idham Hanif Multaam.
 
+Berjalan di **<https://demakmuda.space>**.
+
 Dokumen pendukung: `proposal-demakmuda.html` (proposal umum) dan
 `cetak-biru-teknis.html` (rencana teknis, model data, rencana keamanan).
 
