@@ -46,3 +46,6 @@ next-env.d.ts
 # Berkas panduan agen yang dibuat otomatis oleh Next.js
 AGENTS.md
 CLAUDE.md
+
+# Berkas lomba yang memuat data pribadi (NIK, alamat). Repo ini publik.
+dokumen-lomba/
