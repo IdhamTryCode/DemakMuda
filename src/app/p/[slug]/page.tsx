@@ -13,6 +13,7 @@ import { LABEL_KEANGGOTAAN, LABEL_ORGANISASI } from "@/lib/organisasi";
 import { LABEL_TINGKAT } from "@/lib/prestasi";
 import { prisma } from "@/lib/prisma";
 import { keterbukaanProfil, umur } from "@/lib/profil";
+import { dapatkanSesi } from "@/lib/sesi";
 import { tanggalPendek } from "@/lib/teks";
 
 /**
@@ -66,6 +67,7 @@ async function ambilProfil(slug: string) {
           keterangan: true,
         },
       },
+      userId: true,
       user: {
         select: {
           name: true,
@@ -134,6 +136,13 @@ export default async function HalamanKartuTalenta({
 
   const buka = keterbukaanProfil(p.tanggalLahir);
 
+  // Pemiliknya sendiri kerap sampai ke halaman ini lewat "Lihat kartu publik",
+  // lalu menemukan sesuatu yang ingin diperbaiki — dan sebelumnya tidak ada
+  // satu pun jalan kembali ke penyuntingnya dari sini. Ia harus menebak
+  // alamatnya atau menelusuri menu.
+  const sesi = await dapatkanSesi();
+  const punyaSendiri = sesi?.user.id === p.userId;
+
   // QR menunjuk ke halaman ini sendiri, supaya kartunya dapat dipindai dari
   // layar orang lain dan langsung membuka versi yang dapat diperiksa.
   const kepala = await headers();
@@ -163,6 +172,28 @@ export default async function HalamanKartuTalenta({
     <BingkaiPublik>
       <article className="mx-auto flex max-w-2xl flex-col gap-6">
         <h1 className="sr-only">Kartu Talenta {p.user.name}</h1>
+
+        {punyaSendiri && (
+          <div className="sk-redup flex flex-wrap items-center justify-between gap-3 p-4">
+            <p className="text-sm text-ink-soft">
+              Ini kartu Anda — beginilah orang lain melihatnya.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/pemuda/profil"
+                className="sk-btn-utama sk-pressable rounded-sk px-4 py-2 text-sm"
+              >
+                Ubah Kartu Talenta
+              </Link>
+              <Link
+                href="/pemuda/rekam-jejak"
+                className="sk-kartu sk-pressable rounded-sk px-4 py-2 text-sm font-medium text-ink-soft"
+              >
+                Tambah prestasi &amp; pengalaman
+              </Link>
+            </div>
+          </div>
+        )}
 
         <KartuTalenta
           nama={p.user.name}

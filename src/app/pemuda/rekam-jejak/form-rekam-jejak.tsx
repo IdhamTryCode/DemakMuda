@@ -255,7 +255,7 @@ export function FormPrestasi({
             <PemilihGambar
               nama="buktiUrl"
               ruang="prestasi"
-              label="Foto piagam atau sertifikat"
+              label="Foto piagam atau sertifikat (opsional)"
               keterangan="Prestasi di sini diisi sendiri dan tidak diperiksa siapa pun. Buktinya yang membuatnya berarti — tanpa itu, isinya hanya klaim. Gambar ini tampil terbuka di Kartu Talenta Anda."
             />
             <Galat pesan={kolom.buktiUrl} />

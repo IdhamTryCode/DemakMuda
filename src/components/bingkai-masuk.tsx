@@ -5,10 +5,35 @@ import { BilahPeran } from "@/components/bilah-peran";
 import { GantiTema } from "@/components/ganti-tema";
 import { Lonceng } from "@/components/lonceng";
 import { LogoDemak } from "@/components/logo-demak";
-import { TombolKeluar } from "@/components/tombol-keluar";
+import { MenuAkun } from "@/components/menu-akun";
 import { MENU_PERAN, MENU_PUBLIK } from "@/lib/menu";
 import { LABEL_PERAN } from "@/lib/peran";
 import { wajibMasuk } from "@/lib/sesi";
+
+/**
+ * Isi menu akun. Sama untuk semua peran.
+ *
+ * Kartu Talenta dan rekam jejak sengaja ikut dicantumkan meski sudah ada di
+ * bilah peran pemuda: peran lain pun boleh punya kartu, dan bagi mereka menu
+ * ini satu-satunya jalan ke sana.
+ */
+const BUTIR_AKUN = [
+  {
+    href: "/pemuda/profil",
+    label: "Kartu Talenta saya",
+    keterangan: "Ubah data diri, foto, minat, dan keterampilan",
+  },
+  {
+    href: "/pemuda/rekam-jejak",
+    label: "Rekam jejak",
+    keterangan: "Prestasi dan pengalaman",
+  },
+  {
+    href: "/keamanan",
+    label: "Keamanan akun",
+    keterangan: "Verifikasi dua langkah dan perangkat yang masuk",
+  },
+];
 
 /**
  * Kerangka untuk seluruh area yang sudah masuk.
@@ -68,12 +93,13 @@ export async function BingkaiMasuk({ children }: { children: ReactNode }) {
             </nav>
 
             <div className="ml-auto flex items-center gap-1.5">
-              <span className="hidden text-xs text-muted sm:inline">
-                {LABEL_PERAN[sesi.peran]}
-              </span>
               <Lonceng />
               <GantiTema />
-              <TombolKeluar />
+              <MenuAkun
+                nama={sesi.user.name}
+                peran={LABEL_PERAN[sesi.peran]}
+                butir={BUTIR_AKUN}
+              />
             </div>
           </div>
         </header>

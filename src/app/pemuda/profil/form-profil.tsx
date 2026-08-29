@@ -80,6 +80,16 @@ export function FormProfil({
 
   return (
     <form onSubmit={kirim} className="flex flex-col gap-6">
+      {/* Dari sepuluh isian di formulir ini, hanya nama yang wajib.
+          Menandai sembilan kolom dengan "(opsional)" saja tidak cukup —
+          orang harus memeriksa sepuluh label untuk menyimpulkan hal yang
+          dapat dikatakan dalam satu kalimat. */}
+      <p className="text-sm text-muted">
+        Hanya <strong className="font-medium text-ink-soft">nama lengkap</strong>{" "}
+        yang wajib diisi. Sisanya boleh dikosongkan sekarang dan dilengkapi
+        kapan saja — makin lengkap, makin mudah Anda ditemukan.
+      </p>
+
       <div className="flex flex-col gap-1.5">
         <PemilihGambar
           nama="fotoUrl"
@@ -106,7 +116,7 @@ export function FormProfil({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="tanggalLahir">Tanggal lahir</Label>
+          <Label htmlFor="tanggalLahir">Tanggal lahir (opsional)</Label>
           <Kolom
             id="tanggalLahir"
             name="tanggalLahir"
@@ -122,7 +132,7 @@ export function FormProfil({
           )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="jenisKelamin">Jenis kelamin</Label>
+          <Label htmlFor="jenisKelamin">Jenis kelamin (opsional)</Label>
           <select
             id="jenisKelamin"
             name="jenisKelamin"
@@ -138,7 +148,7 @@ export function FormProfil({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="kecamatanId">Kecamatan</Label>
+          <Label htmlFor="kecamatanId">Kecamatan (opsional)</Label>
           <select
             id="kecamatanId"
             name="kecamatanId"
@@ -155,7 +165,7 @@ export function FormProfil({
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="desaId">Desa / kelurahan</Label>
+          <Label htmlFor="desaId">Desa / kelurahan (opsional)</Label>
           <select
             id="desaId"
             name="desaId"
