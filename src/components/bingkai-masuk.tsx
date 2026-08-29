@@ -1,39 +1,9 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { BilahAtas } from "@/components/bilah-atas";
 import { BilahPeran } from "@/components/bilah-peran";
-import { GantiTema } from "@/components/ganti-tema";
-import { Lonceng } from "@/components/lonceng";
-import { LogoDemak } from "@/components/logo-demak";
-import { MenuAkun } from "@/components/menu-akun";
-import { MENU_PERAN, MENU_PUBLIK } from "@/lib/menu";
-import { LABEL_PERAN } from "@/lib/peran";
+import { MENU_PERAN } from "@/lib/menu";
 import { wajibMasuk } from "@/lib/sesi";
-
-/**
- * Isi menu akun. Sama untuk semua peran.
- *
- * Kartu Talenta dan rekam jejak sengaja ikut dicantumkan meski sudah ada di
- * bilah peran pemuda: peran lain pun boleh punya kartu, dan bagi mereka menu
- * ini satu-satunya jalan ke sana.
- */
-const BUTIR_AKUN = [
-  {
-    href: "/pemuda/profil",
-    label: "Kartu Talenta saya",
-    keterangan: "Ubah data diri, foto, minat, dan keterampilan",
-  },
-  {
-    href: "/pemuda/rekam-jejak",
-    label: "Rekam jejak",
-    keterangan: "Prestasi dan pengalaman",
-  },
-  {
-    href: "/keamanan",
-    label: "Keamanan akun",
-    keterangan: "Verifikasi dua langkah dan perangkat yang masuk",
-  },
-];
 
 /**
  * Kerangka untuk seluruh area yang sudah masuk.
@@ -67,42 +37,7 @@ export async function BingkaiMasuk({ children }: { children: ReactNode }) {
   return (
     <>
       <div className="sticky top-0 z-40">
-        <header className="sk-bilah">
-          <div className="mx-auto flex w-full max-w-[78rem] flex-wrap items-center gap-x-4 gap-y-1.5 px-6 py-1.5">
-            <Link href="/" className="rounded-sk">
-              {/* Tanpa baris "Kabupaten Demak" di sini. Pada halaman yang sudah
-                  masuk, asal aplikasinya sudah lama diketahui pemakainya, dan
-                  barisnya hanya menambah tinggi bilah yang justru ingin
-                  ditipiskan. */}
-              <LogoDemak ukuran={26} ringkas />
-            </Link>
-
-            {/* Menu publik disembunyikan di layar sempit — bilah kedua yang
-                lebih sering dipakai, dan dua baris menu yang menggulir
-                sekaligus justru membingungkan. */}
-            <nav aria-label="Menu publik" className="hidden items-center gap-0.5 lg:flex">
-              {MENU_PUBLIK.map((m) => (
-                <Link
-                  key={m.href}
-                  href={m.href}
-                  className="whitespace-nowrap rounded-full px-2 py-1 text-xs text-muted transition-colors hover:bg-accent-soft hover:text-accent"
-                >
-                  {m.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="ml-auto flex items-center gap-1.5">
-              <Lonceng />
-              <GantiTema />
-              <MenuAkun
-                nama={sesi.user.name}
-                peran={LABEL_PERAN[sesi.peran]}
-                butir={BUTIR_AKUN}
-              />
-            </div>
-          </div>
-        </header>
+        <BilahAtas />
 
         {/* Latar PADAT, bukan .sk-bilah. Inilah bilah kerjanya, dan padatnya
             yang memisahkannya dari strip tipis di atasnya. */}
