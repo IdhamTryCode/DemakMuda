@@ -78,6 +78,7 @@ export default async function HalamanProfil() {
       <Kartu>
         <FormProfil
           simpan={simpanProfil}
+          slug={profil?.slug ?? null}
           kecamatan={kecamatan}
           desa={desa}
           sekolah={sekolah}

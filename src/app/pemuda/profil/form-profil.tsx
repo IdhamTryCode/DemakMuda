@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 
@@ -26,6 +27,7 @@ type Awal = {
 
 export function FormProfil({
   awal,
+  slug,
   kecamatan,
   desa,
   sekolah,
@@ -34,6 +36,8 @@ export function FormProfil({
   simpan,
 }: {
   awal: Awal;
+  /** Alamat kartu publiknya, untuk ditawarkan sesudah tersimpan. */
+  slug: string | null;
   kecamatan: Pilihan[];
   desa: Desa[];
   sekolah: Pilihan[];
@@ -76,9 +80,6 @@ export function FormProfil({
 
   return (
     <form onSubmit={kirim} className="flex flex-col gap-6">
-      {galat && <Pesan nada="galat">{galat}</Pesan>}
-      {berhasil && <Pesan nada="berhasil">Profil tersimpan.</Pesan>}
-
       <div className="flex flex-col gap-1.5">
         <PemilihGambar
           nama="fotoUrl"
@@ -243,10 +244,49 @@ export function FormProfil({
         terpilih={awal.keterampilan}
       />
 
-      <div className="flex gap-3 pt-1">
-        <Tombol type="submit" disabled={sedang}>
-          {sedang ? "Menyimpan…" : "Simpan profil"}
-        </Tombol>
+      {/* Hasil penyimpanan ditaruh DI SEBELAH tombolnya, bukan di kepala
+          formulir. Semula ia di atas, terpisah seratus enam puluh tujuh baris
+          isian — dan di ponsel, orang yang baru menekan "Simpan" berada di
+          dasar halaman, sehingga pesan keberhasilannya muncul jauh di luar
+          layar. Ia tidak pernah terlihat, dan orang tidak tahu apakah
+          simpanannya berhasil.
+
+          Pemberitahuan harus muncul di tempat mata sudah berada. */}
+      <div className="flex flex-col gap-3 pt-1">
+        {galat && <Pesan nada="galat">{galat}</Pesan>}
+
+        {berhasil && (
+          <div className="flex flex-col gap-3 rounded-sk border border-accent/40 bg-accent-soft p-4">
+            <div className="flex flex-col gap-1">
+              <p className="text-sm font-semibold text-accent">Tersimpan.</p>
+              <p className="text-sm text-ink-soft">
+                Perubahannya sudah tampil di Kartu Talenta publik Anda.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {slug && (
+                <Link
+                  href={`/p/${slug}`}
+                  className="sk-btn-utama sk-pressable rounded-sk px-4 py-2 text-sm"
+                >
+                  Lihat kartu publik
+                </Link>
+              )}
+              <Link
+                href="/pemuda/rekam-jejak"
+                className="sk-kartu sk-pressable rounded-sk px-4 py-2 text-sm font-medium text-ink-soft"
+              >
+                Tambah prestasi &amp; pengalaman
+              </Link>
+            </div>
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <Tombol type="submit" disabled={sedang}>
+            {sedang ? "Menyimpan…" : berhasil ? "Simpan lagi" : "Simpan profil"}
+          </Tombol>
+        </div>
       </div>
     </form>
   );
