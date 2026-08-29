@@ -39,6 +39,8 @@ function alamatTepercaya(): string[] {
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : undefined,
     process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    "https://demakmuda.space",
+    "https://www.demakmuda.space",
   ].filter((a): a is string => Boolean(a));
 
   return [...new Set(daftar)];
