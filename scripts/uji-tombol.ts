@@ -19,6 +19,20 @@
  * Berjalan di atas agent-browser, yang mengemudikan Chromium tanpa jendela.
  * Sasarannya localhost — uji yang menekan tombol tidak boleh diarahkan ke
  * lingkungan produksi.
+ *
+ * DUA PELAJARAN YANG DIBAYAR MAHAL, DITULIS DI SINI SUPAYA TIDAK DIULANG
+ *
+ * Pertama, sesinya bernama berbeda setiap kali dijalankan. Semula namanya
+ * tetap, dan kuki masuk dari jalannya uji sebelumnya masih tersimpan di sana —
+ * sehingga membuka /masuk justru dialihkan ke dasbor, dan kolom #email yang
+ * dicari tidak pernah ada. Ujinya gagal karena keadaan yang ditinggalkan
+ * dirinya sendiri, bukan karena aplikasinya.
+ *
+ * Kedua, setiap perintah peramban dibatasi waktu. Tanpa batas itu, satu
+ * perintah yang menggantung membuat seluruh uji menunggu selamanya — dan
+ * menunggu selamanya jauh lebih sulit didiagnosis daripada gagal. Yang paling
+ * sering menggantung justru `close --all` ketika tidak ada sesi untuk ditutup,
+ * yakni persis keadaan saat penanganan galat memanggilnya.
  */
 import "dotenv/config";
 
@@ -35,7 +49,11 @@ const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) })
 
 const PANGKALAN = process.env.UJI_URL ?? "http://localhost:3000";
 const KATA_SANDI = "DemakMuda2026!";
-const SESI = "uji-tombol";
+/** Nama sesi berbeda tiap kali dijalankan, supaya kuki lama tidak terbawa. */
+const SESI = `uji-tombol-${process.pid}`;
+
+/** Batas waktu satu perintah peramban. Menggantung harus menjadi kegagalan. */
+const BATAS_MS = 90_000;
 
 let gagal = 0;
 function periksa(lulus: boolean, keterangan: string) {
@@ -68,14 +86,38 @@ async function ramban(perintah: string[][]): Promise<string> {
     });
     let keluaran = "";
     let galat = "";
+
+    const jam = setTimeout(() => {
+      anak.kill();
+      tolak(
+        new Error(
+          `perintah peramban menggantung lebih dari ${BATAS_MS / 1000} detik:\n` +
+            `${JSON.stringify(perintah)}\n${galat}${keluaran}`,
+        ),
+      );
+    }, BATAS_MS);
+
     anak.stdout.on("data", (d) => (keluaran += d));
     anak.stderr.on("data", (d) => (galat += d));
-    anak.on("error", tolak);
-    anak.on("close", (kode) =>
-      kode === 0
-        ? selesai(keluaran)
-        : tolak(new Error(`agent-browser keluar dengan kode ${kode}\n${galat}${keluaran}`)),
-    );
+    anak.on("error", (e) => {
+      clearTimeout(jam);
+      tolak(e);
+    });
+    // "exit", BUKAN "close". Peristiwa close baru menyala setelah seluruh pipa
+    // keluaran tertutup — dan proses peramban yang dilahirkan agent-browser
+    // ikut memegang pipa itu setelah induknya selesai. Menunggu close berarti
+    // menunggu peramban mati, padahal peramban memang sengaja dibiarkan hidup
+    // untuk perintah berikutnya. Akibatnya perintah yang sudah beres tampak
+    // menggantung, dan itu jauh lebih membingungkan daripada gagal.
+    //
+    // Jeda pendek memberi kesempatan sisa keluaran sampai sebelum dibaca.
+    anak.on("exit", (kode) => {
+      setTimeout(() => {
+        clearTimeout(jam);
+        if (kode === 0) selesai(keluaran);
+        else tolak(new Error(`agent-browser keluar dengan kode ${kode}\n${galat}${keluaran}`));
+      }, 120);
+    });
     anak.stdin.end(JSON.stringify(perintah));
   });
 }
@@ -228,7 +270,7 @@ async function main() {
     "tahun di luar batas ditolak dan tidak menyisakan baris",
   );
 
-  await ramban([["close", "--all"]]).catch(() => {});
+  await ramban([["close"]]).catch(() => {});
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
   process.exit(gagal === 0 ? 0 : 1);
@@ -236,7 +278,7 @@ async function main() {
 
 main().catch(async (e) => {
   console.error(e);
-  await ramban([["close", "--all"]]).catch(() => {});
+  await ramban([["close"]]).catch(() => {});
   await prisma.$disconnect();
   process.exit(1);
 });
