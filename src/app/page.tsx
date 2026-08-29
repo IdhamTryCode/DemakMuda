@@ -7,8 +7,10 @@ import lambang from "../../public/lambang-demak.png";
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
+import { dasborUntuk } from "@/lib/peran";
 import { LABEL_JENIS } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
+import { dapatkanSesi } from "@/lib/sesi";
 import { sisaWaktu, tanggalPanjang, tanggalPendek, waktuSaja } from "@/lib/teks";
 
 export const metadata: Metadata = {
@@ -39,6 +41,7 @@ export const metadata: Metadata = {
  */
 export default async function Beranda() {
   const sekarang = new Date();
+  const sesi = await dapatkanSesi();
 
   const [
     jumlahOrganisasi,
@@ -145,19 +148,48 @@ export default async function Beranda() {
             <p className="text-sm italic text-muted">Nyawiji dadi soko.</p>
           </div>
 
+          {/* Berandanya sengaja TIDAK dialihkan ke dasbor bagi yang sudah masuk.
+              Halaman ini pernyataan maksud aplikasinya, dan isinya — agenda
+              terdekat, tenggat yang mepet, komunitas per kecamatan — sama
+              bergunanya entah sudah masuk atau belum. Mengalihkannya berarti
+              halaman ini tidak akan pernah dapat dibuka lagi tanpa keluar dari
+              akun lebih dahulu, termasuk saat diperagakan.
+
+              Yang keliru bukan halamannya, melainkan ajakannya: menawarkan
+              "Buat akun" kepada orang yang jelas sudah punya akun. Jadi
+              ajakannya yang berganti, bukan halamannya. */}
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/daftar"
-              className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
-            >
-              Buat akun
-            </Link>
-            <Link
-              href="/direktori"
-              className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
-            >
-              Jelajahi komunitas
-            </Link>
+            {sesi ? (
+              <>
+                <Link
+                  href={dasborUntuk(sesi.user.role)}
+                  className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
+                >
+                  Ke dasbor saya
+                </Link>
+                <Link
+                  href="/pemuda/profil"
+                  className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
+                >
+                  Kartu Talenta saya
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/daftar"
+                  className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
+                >
+                  Buat akun
+                </Link>
+                <Link
+                  href="/direktori"
+                  className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
+                >
+                  Jelajahi komunitas
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Angka lebih dahulu, labelnya di bawah lewat order — mata menangkap

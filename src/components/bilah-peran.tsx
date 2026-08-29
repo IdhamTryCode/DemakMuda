@@ -21,7 +21,7 @@ export function BilahPeran({ menu }: { menu: ButirMenu[] }) {
       aria-label="Menu area Anda"
       className="mx-auto w-full max-w-[78rem] overflow-x-auto px-6"
     >
-      <ul className="flex min-w-max items-center gap-1 py-1.5">
+      <ul className="flex min-w-max items-center gap-1 py-2.5">
         {menu.map((m) => {
           const ini = aktif === m.href;
           return (

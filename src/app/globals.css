@@ -180,8 +180,16 @@ h3 {
 
   /* Melayang di atas isi: panel lonceng, dialog, menu. Satu-satunya tempat
      bayangan dipakai, dan salah satu dari dua tempat kaca dipakai. */
+  /* Lapisan mengambang: panel pemberitahuan dan sejenisnya.
+
+     Latarnya PADAT, bukan kaca. Kaca dipakai pada bilah karena isinya hanya
+     beberapa kata yang sudah dikenal letaknya — di sana keburaman terbaca
+     sebagai kedalaman. Panel ini sebaliknya: isinya kalimat yang harus dibaca,
+     dan huruf kecil di atas latar tembus pandang menumpuk pada tulisan halaman
+     di belakangnya. Yang ditawarkan kaca keindahan; yang diminta panel ini
+     keterbacaan. */
   .sk-overlay {
-    background-color: var(--sk-kaca);
+    background-color: var(--sk-surface);
     border: 1px solid var(--sk-line);
     border-radius: 1.125rem;
     box-shadow: var(--sk-sh-melayang);
@@ -193,8 +201,10 @@ h3 {
     border-bottom: 1px solid var(--sk-kaca-tepi);
   }
 
+  /* Hanya bilah. .sk-overlay sengaja tidak lagi ikut: latarnya sudah padat,
+     dan mengaburkan sesuatu di belakang latar padat hanya membuang tenaga
+     penggambaran pada ponsel lama tanpa mengubah apa pun yang terlihat. */
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-    .sk-overlay,
     .sk-bilah {
       -webkit-backdrop-filter: saturate(180%) blur(20px);
       backdrop-filter: saturate(180%) blur(20px);

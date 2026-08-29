@@ -12,9 +12,12 @@ import lambang from "../../public/lambang-demak.png";
 export function LogoDemak({
   ukuran = 44,
   tampilkanNama = true,
+  ringkas = false,
 }: {
   ukuran?: number;
   tampilkanNama?: boolean;
+  /** Menyembunyikan baris "Kabupaten Demak" di bawah nama, untuk bilah tipis. */
+  ringkas?: boolean;
 }) {
   return (
     <span className="inline-flex items-center gap-3">
@@ -29,10 +32,16 @@ export function LogoDemak({
       />
       {tampilkanNama && (
         <span className="flex flex-col leading-tight">
-          <span className="text-base font-semibold tracking-tight">DemakMuda</span>
-          <span className="text-[11px] uppercase tracking-wider text-muted">
-            Kabupaten Demak
+          <span
+            className={`font-semibold tracking-tight ${ringkas ? "text-sm" : "text-base"}`}
+          >
+            DemakMuda
           </span>
+          {!ringkas && (
+            <span className="text-[11px] uppercase tracking-wider text-muted">
+              Kabupaten Demak
+            </span>
+          )}
         </span>
       )}
     </span>
