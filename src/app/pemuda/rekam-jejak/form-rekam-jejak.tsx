@@ -63,13 +63,29 @@ function Kotak({
 
   return (
     <form ref={acuan} onSubmit={kirim} className="flex flex-col gap-4">
-      {galat && <Pesan nada="galat">{galat}</Pesan>}
-      {berhasil && <Pesan nada="berhasil">Tersimpan.</Pesan>}
       {anak(kolom)}
-      <div>
-        <Tombol type="submit" disabled={sedang}>
-          {sedang ? "Menyimpan…" : tombol}
-        </Tombol>
+
+      {/* Hasilnya berdampingan dengan tombol, bukan di kepala formulir.
+          Formulir ini panjang — pada prestasi ada enam kolom ditambah pemilih
+          gambar — dan di ponsel orang yang baru menekan tombol berada di
+          dasarnya. Pesan di kepala formulir muncul di luar layar dan tidak
+          pernah terlihat.
+
+          Pesannya juga menyebut KE MANA barisnya pergi, karena daftarnya
+          berada di atas formulir ini: perubahan yang terjadi di luar
+          pandangan harus dikatakan, bukan diandaikan terlihat. */}
+      <div className="flex flex-col gap-3">
+        {galat && <Pesan nada="galat">{galat}</Pesan>}
+        {berhasil && (
+          <Pesan nada="berhasil">
+            Tersimpan, dan sudah masuk ke daftar di atas.
+          </Pesan>
+        )}
+        <div>
+          <Tombol type="submit" disabled={sedang}>
+            {sedang ? "Menyimpan…" : tombol}
+          </Tombol>
+        </div>
       </div>
     </form>
   );
