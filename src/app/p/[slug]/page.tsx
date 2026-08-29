@@ -143,15 +143,6 @@ export default async function HalamanKartuTalenta({
   const sesi = await dapatkanSesi();
   const punyaSendiri = sesi?.user.id === p.userId;
 
-  // Yang benar-benar disembunyikan DAN benar-benar ada isinya. Menyebut "foto
-  // disembunyikan" kepada orang yang memang belum mengunggah foto hanya
-  // membingungkan.
-  const disembunyikan = [
-    !buka.tampilkanFoto && p.fotoUrl ? "foto diri" : null,
-    !buka.tampilkanUsia && p.tanggalLahir ? "usia" : null,
-    !buka.tampilkanDesa && p.desa ? "desa" : null,
-    !buka.tampilkanSekolah && p.sekolah ? "sekolah" : null,
-  ].filter((x): x is string => x !== null);
 
   // QR menunjuk ke halaman ini sendiri, supaya kartunya dapat dipindai dari
   // layar orang lain dan langsung membuka versi yang dapat diperiksa.
@@ -182,40 +173,6 @@ export default async function HalamanKartuTalenta({
     <BingkaiPublik>
       <article className="mx-auto flex max-w-2xl flex-col gap-6">
         <h1 className="sr-only">Kartu Talenta {p.user.name}</h1>
-
-        {punyaSendiri && disembunyikan.length > 0 && (
-          /* Aturan perlindungan usia bekerja diam-diam, dan diamnya itu yang
-             menjadi masalah. Seorang pengguna mengunggah fotonya, melihat
-             "Tersimpan", lalu fotonya tidak pernah muncul di kartunya — ia
-             menyimpulkan unggahannya gagal. Padahal fotonya tersimpan dengan
-             benar; aplikasinya yang menyembunyikannya, karena tanggal lahir
-             yang ia isi menunjukkan usia di bawah delapan belas tahun.
-
-             Aturannya tidak diubah — wajah anak di halaman yang dapat dibuka
-             siapa saja memang tidak boleh tampil. Yang diubah: alasannya kini
-             dikatakan kepada pemiliknya, di tempat ia menyadari sesuatu hilang.
-
-             Hanya pemiliknya yang melihat pesan ini. Bagi pembaca lain, yang
-             disembunyikan tetap tidak diumumkan keberadaannya. */
-          <div className="flex flex-col gap-2 rounded-sk border border-brass/50 bg-brass-soft p-4">
-            <p className="text-sm font-semibold text-brass">
-              Sebagian isian Anda tidak ditampilkan kepada umum
-            </p>
-            <p className="text-sm text-ink-soft">
-              {p.tanggalLahir
-                ? "Tanggal lahir yang Anda isi menunjukkan usia di bawah 18 tahun."
-                : "Tanggal lahir Anda belum diisi, jadi usia Anda belum dapat dipastikan."}{" "}
-              Untuk melindungi pengguna di bawah umur, {disembunyikan.join(", ")}{" "}
-              disembunyikan otomatis dari halaman ini — meskipun tersimpan dengan
-              benar.
-            </p>
-            <p className="text-sm text-ink-soft">
-              {p.tanggalLahir
-                ? "Bila tanggal lahirnya keliru, betulkan lewat Ubah Kartu Talenta dan semuanya akan tampil kembali."
-                : "Isi tanggal lahir Anda lewat Ubah Kartu Talenta, dan semuanya akan tampil kembali."}
-            </p>
-          </div>
-        )}
 
         {punyaSendiri && (
           <div className="sk-redup flex flex-wrap items-center justify-between gap-3 p-4">

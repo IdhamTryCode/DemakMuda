@@ -5,7 +5,8 @@ import { Lonceng } from "@/components/lonceng";
 import { LogoDemak } from "@/components/logo-demak";
 import { MenuAkun } from "@/components/menu-akun";
 import { MENU_PUBLIK } from "@/lib/menu";
-import { bacaPeran, LABEL_PERAN } from "@/lib/peran";
+import { bacaPeran, dasborUntuk, LABEL_PERAN } from "@/lib/peran";
+import { prisma } from "@/lib/prisma";
 import { dapatkanSesi } from "@/lib/sesi";
 
 /**
@@ -42,6 +43,15 @@ const BUTIR_AKUN = [
 
 export async function BilahAtas({ aktif }: { aktif?: string }) {
   const sesi = await dapatkanSesi();
+
+  // Fotonya diambil hanya bila memang ada yang sedang masuk. Satu pencarian
+  // berindeks, dan hasilnya dipakai sebagai avatar di seluruh halaman.
+  const profil = sesi
+    ? await prisma.profilPemuda.findUnique({
+        where: { userId: sesi.user.id },
+        select: { fotoUrl: true },
+      })
+    : null;
 
   return (
     <header className="sk-bilah">
@@ -84,7 +94,20 @@ export async function BilahAtas({ aktif }: { aktif?: string }) {
               <MenuAkun
                 nama={sesi.user.name}
                 peran={LABEL_PERAN[bacaPeran(sesi.user.role)]}
-                butir={BUTIR_AKUN}
+                fotoUrl={profil?.fotoUrl ?? null}
+                butir={[
+                  // Dasbor selalu di urutan pertama. Setelah bilah publik dan
+                  // bilah dasbor disatukan, tombol "Dasbor" yang dahulu berdiri
+                  // sendiri di bilah publik ikut hilang — sehingga orang yang
+                  // sudah masuk lalu membuka halaman Kabar atau Agenda tidak
+                  // punya jalan kembali ke areanya sendiri.
+                  {
+                    href: dasborUntuk(sesi.user.role),
+                    label: "Dasbor saya",
+                    keterangan: "Ringkasan dan pintasan area Anda",
+                  },
+                  ...BUTIR_AKUN,
+                ]}
               />
             </>
           ) : (

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -21,10 +22,13 @@ import { authClient } from "@/lib/auth-client";
 export function MenuAkun({
   nama,
   peran,
+  fotoUrl,
   butir,
 }: {
   nama: string;
   peran: string;
+  /** Foto profilnya bila sudah diunggah. Inisial hanya cadangan. */
+  fotoUrl: string | null;
   /** Tautan menurut peran, disiapkan di sisi peladen. */
   butir: { href: string; label: string; keterangan?: string }[];
 }) {
@@ -51,8 +55,12 @@ export function MenuAkun({
     };
   }, [buka]);
 
-  // Inisial, bukan siluet orang. Siluet selalu terbaca sebagai foto yang gagal
-  // dimuat; inisial terbaca sebagai pilihan.
+  // Fotonya bila ada; kalau belum, inisial — bukan siluet orang.
+  //
+  // Siluet ditolak dengan sengaja. Ia sama untuk semua orang, jadi tidak
+  // membawa keterangan apa pun, dan yang lebih buruk: bentuknya persis seperti
+  // gambar yang gagal dimuat, sehingga orang mengira ada yang rusak. Inisial
+  // setidaknya menyebut siapa yang sedang masuk.
   const inisial =
     nama
       .split(/\s+/)
@@ -69,9 +77,19 @@ export function MenuAkun({
         aria-expanded={buka}
         aria-haspopup="menu"
         aria-label={`Menu akun ${nama}`}
-        className="sk-pressable flex h-9 w-9 items-center justify-center rounded-full bg-accent text-xs font-semibold text-on-accent"
+        className="sk-pressable flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-accent text-xs font-semibold text-on-accent"
       >
-        {inisial}
+        {fotoUrl ? (
+          <Image
+            src={fotoUrl}
+            alt=""
+            width={36}
+            height={36}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          inisial
+        )}
       </button>
 
       <div

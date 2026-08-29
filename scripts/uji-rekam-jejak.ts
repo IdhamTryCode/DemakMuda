@@ -14,8 +14,8 @@
  *   2. Layar penyaringan hanya untuk dinas dan superadmin.
  *   3. Prestasi tampil di kartu publik dan TIDAK PERNAH dengan kata yang
  *      menyiratkan pengesahan dinas.
- *   4. Bukti prestasi milik pengguna di bawah umur tidak tampil ke umum,
- *      sementara prestasinya sendiri tetap tampil.
+ *   4. Bukti prestasi tetap tampil berapa pun usia pemiliknya — pembatasan
+ *      menurut usia sudah dicabut, dan pencabutannya ikut dijaga di sini.
  *   5. Saringan tingkat dan saringan bukti benar-benar menyaring — dibuktikan
  *      dengan membandingkan hasilnya terhadap hitungan basis data.
  *   6. Skema menolak alamat bukti dari penyimpanan asing dan tahun yang
@@ -163,18 +163,23 @@ async function main() {
       "bukti tampil untuk pemilik dewasa",
     );
 
+    // Dibalik, bukan dihapus. Semula pemeriksaan ini menuntut bukti piagam
+    // milik pengguna di bawah umur DISEMBUNYIKAN; pembatasan usia dicabut
+    // pemilik produk pada 29 Agustus 2026, jadi sekarang ia menuntut bukti itu
+    // TETAP TAMPIL. Membaliknya menjaga pencabutan itu dari dua arah: bila
+    // pembatasannya dipasang kembali diam-diam, uji ini merah.
     await prisma.profilPemuda.update({
       where: { id: belia.id },
       data: { tanggalLahir: usia(15) },
     });
     const sebagaiAnak = await ambil(`/p/${belia.slug}`);
     periksa(
-      !sebagaiAnak.isi.includes(encodeURIComponent(bukti).slice(0, 40)),
-      "bukti TIDAK tampil untuk pemilik di bawah umur",
+      sebagaiAnak.isi.includes(encodeURIComponent(bukti).slice(0, 40)),
+      "bukti tetap tampil meski pemiliknya berusia lima belas tahun",
     );
     periksa(
       teksTampak(sebagaiAnak.isi).includes(judul),
-      "prestasinya sendiri tetap tampil — yang disembunyikan hanya piagamnya",
+      "prestasinya sendiri tetap tampil",
     );
 
     await prisma.profilPemuda.update({

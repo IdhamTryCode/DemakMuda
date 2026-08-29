@@ -1,5 +1,5 @@
 /**
- * Aturan usia dan keterbukaan data profil.
+ * Umur dan keterbukaan data profil.
  *
  * Umur dihitung dari tanggal lahir, tidak pernah disimpan sebagai kolom
  * tersendiri — kolom seperti itu akan basi diam-diam setiap tahun.
@@ -15,16 +15,6 @@ export function umur(tanggalLahir: Date, sekarang: Date = new Date()): number {
   return n;
 }
 
-/**
- * Pengguna di bawah 18 tahun diperlakukan sebagai anak menurut peraturan
- * perlindungan data pribadi, sehingga profil publiknya dibatasi.
- * Tanggal lahir yang belum diisi dianggap anak — memilih yang lebih aman.
- */
-export function dibawahUmur(tanggalLahir: Date | null, sekarang: Date = new Date()): boolean {
-  if (!tanggalLahir) return true;
-  return umur(tanggalLahir, sekarang) < 18;
-}
-
 /** Rentang usia peserta menurut pedoman Jambore Pemuda. */
 export const USIA_MIN_PESERTA = 16;
 export const USIA_MAKS_PESERTA = 30;
@@ -32,25 +22,36 @@ export const USIA_MAKS_PESERTA = 30;
 /**
  * Apa yang boleh tampil di profil publik.
  *
- * Nomor telepon tidak pernah dibuka untuk umum, berapa pun usianya — itu data
- * kontak pribadi yang tidak dibutuhkan pengunjung. Bagi pengguna di bawah 18,
- * lokasi dipersempit sampai kecamatan saja dan usia tidak ditampilkan.
+ * Nomor telepon tidak pernah dibuka untuk umum — itu data kontak pribadi yang
+ * tidak dibutuhkan pengunjung mana pun, dan tidak ada satu pun keadaan yang
+ * membuatnya pantas dipajang.
+ *
+ * PEMBATASAN MENURUT USIA SUDAH DICABUT
+ *
+ * Sebelumnya foto, usia, desa, sekolah, dan bukti piagam disembunyikan bagi
+ * pengguna di bawah delapan belas tahun. Pemilik produk mencabutnya pada
+ * 29 Agustus 2026 dengan alasan aplikasi ini memang ditujukan bagi pemuda
+ * Demak dari segala umur, termasuk anak sekolah dasar, dan pembatasan itu
+ * membuat kartu mereka tampak kosong.
+ *
+ * Keberatan sudah disampaikan dan ditolak, jadi keputusannya bukan kelalaian:
+ * halaman /p/[slug] terbuka untuk seluruh internet tanpa perlu masuk, sehingga
+ * gabungan nama, wajah, umur, desa, dan sekolah seorang anak kini dapat dibaca
+ * siapa pun. UU No. 27/2022 tentang Pelindungan Data Pribadi mengatur data
+ * anak secara khusus dan menuntut persetujuan orang tua atau wali.
+ *
+ * Fungsinya sengaja DIPERTAHANKAN meski isinya kini tetap. Ia satu-satunya
+ * tempat aturan keterbukaan ditulis, dipakai kartu publik dan layar penyaringan
+ * dinas; membubarkannya berarti menyebarkan keputusan ini ke banyak berkas dan
+ * membuat pemulihannya jauh lebih mahal daripada mengubah satu baris di sini.
  */
 export function keterbukaanProfil(tanggalLahir: Date | null) {
-  const anak = dibawahUmur(tanggalLahir);
   return {
-    tampilkanUsia: !anak && tanggalLahir !== null,
-    tampilkanDesa: !anak,
-    tampilkanSekolah: !anak,
-    // Foto diri mengikuti aturan yang sama dengan desa dan sekolah. Wajah
-    // seorang anak di halaman yang dapat dibuka siapa saja jauh lebih berat
-    // akibatnya daripada nama kecamatannya.
-    tampilkanFoto: !anak,
-    // Prestasinya sendiri tetap tampil — menyembunyikannya justru mengubur
-    // hal yang paling pantas dibanggakan seorang anak. Yang disembunyikan
-    // gambar piagamnya, karena piagam hampir selalu memuat nama sekolah, dan
-    // kadang alamat, yang sudah disembunyikan di tempat lain di halaman ini.
-    tampilkanBukti: !anak,
+    tampilkanUsia: tanggalLahir !== null,
+    tampilkanDesa: true,
+    tampilkanSekolah: true,
+    tampilkanFoto: true,
+    tampilkanBukti: true,
     tampilkanTelepon: false,
   };
 }

@@ -7,7 +7,7 @@
  * Yang dibuktikan:
  *   1. Kartu Talenta publik terbuka tanpa masuk.
  *   2. Nomor telepon TIDAK PERNAH tampil di halaman publik.
- *   3. Profil pengguna di bawah 18 tahun menyembunyikan usia, desa, sekolah.
+ *   3. Profil pengguna semuda apa pun tampil penuh — pembatasan usia dicabut.
  *   4. Halaman ubah profil menuntut pengguna sudah masuk.
  *   5. Desa dari kecamatan lain ditolak, tidak tersimpan diam-diam.
  */
@@ -16,7 +16,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../src/generated/prisma/client";
-import { dibawahUmur, keterbukaanProfil, umur } from "../src/lib/profil";
+import { keterbukaanProfil, umur } from "../src/lib/profil";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL belum diisi.");
@@ -47,9 +47,19 @@ async function main() {
   const acuan = new Date("2026-08-19T00:00:00+07:00");
   periksa(umur(new Date("2004-04-12"), acuan) === 22, "usia dihitung benar setelah ulang tahun");
   periksa(umur(new Date("2004-12-31"), acuan) === 21, "usia dihitung benar sebelum ulang tahun");
-  periksa(dibawahUmur(new Date("2010-01-01"), acuan), "usia 16 tahun dianggap di bawah umur");
-  periksa(!dibawahUmur(new Date("2004-04-12"), acuan), "usia 22 tahun bukan di bawah umur");
-  periksa(dibawahUmur(null, acuan), "tanggal lahir kosong diperlakukan sebagai anak");
+  // Pembatasan menurut usia dicabut pemilik produk pada 29 Agustus 2026.
+  // Pemeriksaan ini menegakkan keadaan barunya: profil semuda apa pun tampil
+  // sama penuhnya. Bila pembatasan itu suatu saat dipasang kembali, uji ini
+  // yang pertama merah — dan itu memang yang diinginkan, supaya perubahannya
+  // tidak pernah terjadi diam-diam.
+  const belia = keterbukaanProfil(new Date("2010-01-01"));
+  periksa(belia.tampilkanFoto, "foto pengguna 16 tahun tetap tampil");
+  periksa(belia.tampilkanDesa, "desa pengguna 16 tahun tetap tampil");
+  periksa(belia.tampilkanSekolah, "sekolah pengguna 16 tahun tetap tampil");
+  periksa(
+    !keterbukaanProfil(null).tampilkanUsia,
+    "usia tidak ditampilkan bila tanggal lahirnya memang kosong",
+  );
   periksa(
     keterbukaanProfil(new Date("2004-04-12")).tampilkanTelepon === false,
     "telepon tidak pernah dibuka untuk umum, berapa pun usianya",
@@ -69,7 +79,7 @@ async function main() {
 
   periksa((await ambil("/p/tidak-ada-slug-ini")).status === 404, "slug tak dikenal menolak");
 
-  console.log("\nprofil pengguna di bawah umur");
+  console.log("\nprofil pengguna belia tampil penuh");
   const anak = await prisma.user.upsert({
     where: { email: "anak-uji@demakmuda.test" },
     update: {},
@@ -116,11 +126,14 @@ async function main() {
 
   const halamanAnak = await ambil("/p/pemuda-uji-belas");
   periksa(halamanAnak.status === 200, "kartu talenta pengguna 16 tahun terbuka");
-  periksa(!halamanAnak.isi.includes("081299999999"), "telepon tidak tampil");
-  periksa(!halamanAnak.isi.includes(desa.nama), "desa disembunyikan");
-  periksa(!/\b16 tahun\b/.test(halamanAnak.isi), "usia disembunyikan");
+  periksa(
+    !halamanAnak.isi.includes("081299999999"),
+    "telepon TIDAK tampil, berapa pun usianya — satu-satunya batas yang tersisa",
+  );
+  periksa(halamanAnak.isi.includes(desa.nama), "desa tampil");
+  periksa(/16 tahun/.test(halamanAnak.isi), "usia tampil");
   if (sekolah) {
-    periksa(!halamanAnak.isi.includes(sekolah.nama), "sekolah disembunyikan");
+    periksa(halamanAnak.isi.includes(sekolah.nama), "sekolah tampil");
   }
 
   console.log("\nhalaman ubah profil");
@@ -163,24 +176,27 @@ async function main() {
     "kode QR berketerangan, agar tidak terbaca sebagai kode pembayaran",
   );
 
-  // Foto mengikuti aturan keterbukaan yang sama dengan desa dan sekolah.
-  const belia = await prisma.profilPemuda.findFirst({
+  // Foto tidak lagi bergantung pada usia. Pemeriksaan ini dibalik dari yang
+  // semula: dahulu ia menuntut foto pengguna di bawah umur DISEMBUNYIKAN;
+  // sekarang menuntut foto itu TETAP TAMPIL. Membalik pemeriksaannya, bukan
+  // menghapusnya, membuat pencabutan aturan tetap terjaga dari dua arah.
+  const berfoto = await prisma.profilPemuda.findFirst({
     where: { fotoUrl: { not: null } },
     select: { id: true, slug: true, tanggalLahir: true, fotoUrl: true },
   });
-  if (belia) {
-    const asli = belia.tanggalLahir;
+  if (berfoto) {
+    const asli = berfoto.tanggalLahir;
     await prisma.profilPemuda.update({
-      where: { id: belia.id },
-      data: { tanggalLahir: new Date(Date.now() - 15 * 365.25 * 24 * 3600 * 1000) },
+      where: { id: berfoto.id },
+      data: { tanggalLahir: new Date(Date.now() - 9 * 365.25 * 24 * 3600 * 1000) },
     });
-    const sebagaiAnak = await ambil(`/p/${belia.slug}`);
+    const sebagaiAnak = await ambil(`/p/${berfoto.slug}`);
     periksa(
-      !sebagaiAnak.isi.includes(encodeURIComponent(belia.fotoUrl!).slice(0, 40)),
-      "foto profil di bawah umur tidak tampil di halaman publik",
+      sebagaiAnak.isi.includes(encodeURIComponent(berfoto.fotoUrl!).slice(0, 40)),
+      "foto tetap tampil meski pemiliknya berusia sembilan tahun",
     );
     await prisma.profilPemuda.update({
-      where: { id: belia.id },
+      where: { id: berfoto.id },
       data: { tanggalLahir: asli },
     });
   }
