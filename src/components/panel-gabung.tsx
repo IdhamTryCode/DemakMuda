@@ -1,5 +1,12 @@
+import type { ComponentType } from "react";
+
 import Link from "next/link";
 
+import {
+  IkonDiterima,
+  IkonDitolak,
+  IkonMenunggu,
+} from "@/components/ikon";
 import { Kartu } from "@/components/sk";
 import { TombolGabung } from "@/components/tombol-gabung";
 import { bacaPeran } from "@/lib/peran";
@@ -10,6 +17,15 @@ const PESAN: Record<string, string> = {
   MENUNGGU: "Pengajuan Anda sedang diperiksa pengurus organisasi.",
   TERVERIFIKASI: "Anda tercatat sebagai anggota organisasi ini.",
   DITOLAK: "Pengajuan Anda sebelumnya tidak disetujui pengurus.",
+};
+
+// Ikon di sini membedakan tiga keadaan yang kalimatnya sama-sama panjang dan
+// sama-sama abu-abu. Tulisannya tetap ada dan tetap lengkap; ikonnya hanya
+// mempercepat mata menemukan yang mana.
+const IKON: Record<string, ComponentType<{ className?: string }>> = {
+  MENUNGGU: IkonMenunggu,
+  TERVERIFIKASI: IkonDiterima,
+  DITOLAK: IkonDitolak,
 };
 
 /** Panel pengajuan keanggotaan pada halaman organisasi. */
@@ -46,10 +62,14 @@ export async function PanelGabung({
   });
 
   if (keanggotaan) {
+    const Ikon = IKON[keanggotaan.status];
     return (
       <Kartu className="flex flex-col gap-1">
         <h2 className="text-base font-semibold">Keanggotaan</h2>
-        <p className="text-sm text-ink-soft">{PESAN[keanggotaan.status]}</p>
+        <p className="flex items-start gap-2 text-sm text-ink-soft">
+          {Ikon && <Ikon className="mt-0.5 shrink-0" />}
+          {PESAN[keanggotaan.status]}
+        </p>
       </Kartu>
     );
   }

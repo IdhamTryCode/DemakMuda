@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { IkonLonceng } from "@/components/ikon";
+
 import type { HasilAksi } from "@/lib/validasi";
 
 export type RingkasNotifikasi = {
@@ -126,7 +128,7 @@ export function PanelLonceng({
         }
         className="sk-kartu sk-pressable relative rounded-sk px-3 py-2.5 text-sm font-medium text-ink-soft hover:text-ink"
       >
-        <span aria-hidden="true">🔔</span>
+        <IkonLonceng />
         {belum > 0 && (
           <span className="absolute -right-1.5 -top-1.5 min-w-5 rounded-full bg-accent px-1.5 py-0.5 text-center text-[11px] font-semibold leading-none text-on-accent">
             {belum > 9 ? "9+" : belum}

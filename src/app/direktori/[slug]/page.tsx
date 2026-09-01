@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
+import { IkonTerverifikasi } from "@/components/ikon";
 import { notFound } from "next/navigation";
 
 import { PanelGabung } from "@/components/panel-gabung";
@@ -85,7 +87,8 @@ export default async function HalamanOrganisasi({
         </Link>
 
         <header className="flex flex-col gap-3">
-          <span className="w-fit rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+          <span className="flex w-fit items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+            <IkonTerverifikasi className="shrink-0" />
             Terverifikasi Dispora Demak
           </span>
           <h1 className="text-3xl font-semibold leading-tight tracking-tight">

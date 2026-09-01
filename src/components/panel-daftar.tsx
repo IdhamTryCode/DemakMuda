@@ -1,5 +1,12 @@
+import type { ComponentType } from "react";
+
 import Link from "next/link";
 
+import {
+  IkonDiterima,
+  IkonDitolak,
+  IkonMenunggu,
+} from "@/components/ikon";
 import { TombolDaftar } from "@/components/tombol-daftar";
 import { Kartu } from "@/components/sk";
 import { dapatkanSesi } from "@/lib/sesi";
@@ -11,6 +18,13 @@ const LABEL_STATUS: Record<string, string> = {
   DITERIMA: "Pendaftaran Anda diterima",
   DITOLAK: "Pendaftaran Anda ditolak",
   HADIR: "Kehadiran Anda sudah tercatat",
+};
+
+const IKON_STATUS: Record<string, ComponentType<{ className?: string }>> = {
+  MENUNGGU: IkonMenunggu,
+  DITERIMA: IkonDiterima,
+  DITOLAK: IkonDitolak,
+  HADIR: IkonDiterima,
 };
 
 /**
@@ -45,11 +59,15 @@ export async function PanelDaftar({ sasaran }: { sasaran: SasaranPendaftaran }) 
 
   const sudah = await pendaftaranSaya(sesi.user.id, sasaran);
   if (sudah) {
+    const Ikon = IKON_STATUS[sudah.status];
     return (
       <Kartu className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <h2 className="text-base font-semibold">Anda sudah terdaftar</h2>
-          <p className="text-sm text-ink-soft">{LABEL_STATUS[sudah.status]}</p>
+          <p className="flex items-start gap-2 text-sm text-ink-soft">
+            {Ikon && <Ikon className="mt-0.5 shrink-0" />}
+            {LABEL_STATUS[sudah.status]}
+          </p>
         </div>
         {sudah.status !== "HADIR" && (
           <TombolDaftar
