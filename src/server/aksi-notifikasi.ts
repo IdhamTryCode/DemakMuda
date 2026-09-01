@@ -16,29 +16,43 @@ import { aktorSaatIni } from "@/server/penjaga";
  *
  * Tidak dicatat ke jejak audit: membaca pemberitahuan sendiri bukan tindakan
  * pengelolaan, dan mencatatnya hanya akan menenggelamkan jejak yang penting.
+ *
+ * Galat basis data ditangkap dan dikembalikan sebagai kalimat, sama seperti
+ * seluruh Server Action lain. Tanpa itu, satu sentakan basis data akan
+ * melemparkan penggunanya ke batas galat hanya karena menekan lonceng.
  */
 export async function tandaiTerbaca(id: string): Promise<HasilAksi> {
-  const aktor = await aktorSaatIni();
-  if (!aktor) return { ok: false, pesan: "Anda perlu masuk lebih dulu." };
+  try {
+    const aktor = await aktorSaatIni();
+    if (!aktor) return { ok: false, pesan: "Anda perlu masuk lebih dulu." };
 
-  await prisma.notifikasi.updateMany({
-    where: { id, penerimaId: aktor.id, dibacaPada: null },
-    data: { dibacaPada: new Date() },
-  });
+    await prisma.notifikasi.updateMany({
+      where: { id, penerimaId: aktor.id, dibacaPada: null },
+      data: { dibacaPada: new Date() },
+    });
 
-  revalidatePath("/notifikasi");
-  return { ok: true };
+    revalidatePath("/notifikasi");
+    return { ok: true };
+  } catch (e) {
+    console.error("[notifikasi.tandaiTerbaca]", e);
+    return { ok: false, pesan: "Terjadi kesalahan. Coba lagi." };
+  }
 }
 
 export async function tandaiSemuaTerbaca(): Promise<HasilAksi> {
-  const aktor = await aktorSaatIni();
-  if (!aktor) return { ok: false, pesan: "Anda perlu masuk lebih dulu." };
+  try {
+    const aktor = await aktorSaatIni();
+    if (!aktor) return { ok: false, pesan: "Anda perlu masuk lebih dulu." };
 
-  await prisma.notifikasi.updateMany({
-    where: { penerimaId: aktor.id, dibacaPada: null },
-    data: { dibacaPada: new Date() },
-  });
+    await prisma.notifikasi.updateMany({
+      where: { penerimaId: aktor.id, dibacaPada: null },
+      data: { dibacaPada: new Date() },
+    });
 
-  revalidatePath("/notifikasi");
-  return { ok: true };
+    revalidatePath("/notifikasi");
+    return { ok: true };
+  } catch (e) {
+    console.error("[notifikasi.tandaiSemuaTerbaca]", e);
+    return { ok: false, pesan: "Terjadi kesalahan. Coba lagi." };
+  }
 }

@@ -3,10 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import lambang from "../../public/lambang-demak.png";
+import lambang from "../../../public/lambang-demak.png";
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
+import { agendaAkanDatang } from "@/lib/agenda";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
+import { peluangMasihTerbuka } from "@/lib/peluang";
 import { dasborUntuk } from "@/lib/peran";
 import { LABEL_JENIS } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
@@ -54,20 +56,20 @@ export default async function Beranda() {
     komunitas,
   ] = await Promise.all([
     prisma.organisasi.count({ where: { statusVerifikasi: "TERVERIFIKASI" } }),
-    prisma.agenda.count({ where: { status: "TERBIT", mulai: { gte: sekarang } } }),
+    prisma.agenda.count({ where: agendaAkanDatang(sekarang) }),
     prisma.peluang.count({
       where: {
         status: "TERBIT",
-        // Peluang tanpa tenggat selalu dianggap masih terbuka, sama seperti
-        // aturan yang dipakai Papan Peluang. Dua halaman yang menghitung hal
-        // sama dengan cara berbeda akan menampilkan angka yang berbeda pula.
-        OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }],
+        // Aturannya dibaca dari src/lib/peluang.ts, sama dengan yang dipakai
+        // Papan Peluang dan dasbor — sehingga angka di halaman mana pun tidak
+        // mungkin lagi berbeda karena syaratnya ditulis ulang.
+        ...peluangMasihTerbuka(sekarang),
       },
     }),
     prisma.kecamatan.count(),
 
     prisma.agenda.findMany({
-      where: { status: "TERBIT", mulai: { gte: sekarang } },
+      where: agendaAkanDatang(sekarang),
       orderBy: { mulai: "asc" },
       take: 3,
       select: {

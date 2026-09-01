@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Kartu } from "@/components/sk";
 import { LABEL_KEANGGOTAAN } from "@/lib/organisasi";
+import { peluangMasihTerbuka } from "@/lib/peluang";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { USIA_MAKS_PESERTA, USIA_MIN_PESERTA, umur } from "@/lib/profil";
@@ -41,7 +42,7 @@ export default async function DasborPemuda() {
   const peluang = await prisma.peluang.findMany({
     where: {
       status: "TERBIT",
-      OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }],
+      ...peluangMasihTerbuka(sekarang),
       ...(idMinat.length > 0 ? { minat: { some: { id: { in: idMinat } } } } : {}),
     },
     orderBy: [{ tenggat: "asc" }, { dibuatPada: "desc" }],

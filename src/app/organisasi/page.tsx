@@ -2,7 +2,9 @@ import Link from "next/link";
 
 import { Angka } from "@/components/grafik-batang";
 import { Kartu } from "@/components/sk";
+import { agendaAkanDatang } from "@/lib/agenda";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
+import { peluangMasihTerbuka } from "@/lib/peluang";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -56,14 +58,14 @@ export default async function DasborOrganisasi() {
     prisma.berita.count({ where: { penulisId: sesi.user.id, status: "DRAF" } }),
     prisma.agenda.count({ where: { pembuatId: sesi.user.id } }),
     prisma.agenda.count({
-      where: { pembuatId: sesi.user.id, status: "TERBIT", mulai: { gte: sekarang } },
+      where: { pembuatId: sesi.user.id, ...agendaAkanDatang(sekarang) },
     }),
     prisma.peluang.count({ where: { pembuatId: sesi.user.id } }),
     prisma.peluang.count({
       where: {
         pembuatId: sesi.user.id,
         status: "TERBIT",
-        OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }],
+        ...peluangMasihTerbuka(sekarang),
       },
     }),
     // Pendaftar yang menunggu konfirmasi pada kegiatan milik akun ini.

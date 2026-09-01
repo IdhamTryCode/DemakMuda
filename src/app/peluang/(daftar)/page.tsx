@@ -4,7 +4,13 @@ import Link from "next/link";
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { KotakCari } from "@/components/kotak-cari";
 import { Kartu } from "@/components/sk";
-import { adalahJenis, JENIS_PELUANG, LABEL_JENIS } from "@/lib/peluang";
+import {
+  adalahJenis,
+  JENIS_PELUANG,
+  LABEL_JENIS,
+  peluangMasihTerbuka,
+  peluangSudahTutup,
+} from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
 import { cuplikan, sisaWaktu, tanggalPendek } from "@/lib/teks";
 
@@ -52,10 +58,9 @@ export default async function HalamanPeluang({
                 ],
               }
             : {},
-          // Peluang tanpa tenggat selalu dianggap masih terbuka.
           tampilkanTutup
-            ? { tenggat: { lt: sekarang } }
-            : { OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }] },
+            ? peluangSudahTutup(sekarang)
+            : peluangMasihTerbuka(sekarang),
         ],
       },
       orderBy: tampilkanTutup ? { tenggat: "desc" } : [{ tenggat: "asc" }, { dibuatPada: "desc" }],

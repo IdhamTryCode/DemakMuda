@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
+import { peluangMasihTerbuka } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -55,14 +56,12 @@ const LANGKAH = [
 export default async function HalamanLatar() {
   // Angka diambil dari basis data, bukan ditulis tetap di halaman. Halaman
   // yang mengklaim cakupan wilayah sebaiknya membuktikannya sendiri.
+  const sekarang = new Date();
   const [kecamatan, desa, peluangTerbuka] = await Promise.all([
     prisma.kecamatan.count(),
     prisma.desa.count(),
     prisma.peluang.count({
-      where: {
-        status: "TERBIT",
-        OR: [{ tenggat: null }, { tenggat: { gte: new Date() } }],
-      },
+      where: { status: "TERBIT", ...peluangMasihTerbuka(sekarang) },
     }),
   ]);
 

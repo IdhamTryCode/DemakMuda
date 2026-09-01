@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Angka, GrafikBatang } from "@/components/grafik-batang";
 import { Kartu } from "@/components/sk";
+import { agendaAkanDatang } from "@/lib/agenda";
+import { peluangMasihTerbuka } from "@/lib/peluang";
 import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -64,11 +66,11 @@ export default async function DasborDinas() {
     }),
     prisma.organisasi.count({ where: { statusVerifikasi: "TERVERIFIKASI" } }),
     prisma.organisasi.count({ where: { statusVerifikasi: "MENUNGGU" } }),
-    prisma.agenda.count({ where: { status: "TERBIT", mulai: { gte: sekarang } } }),
+    prisma.agenda.count({ where: agendaAkanDatang(sekarang) }),
     prisma.peluang.count({
       where: {
         status: "TERBIT",
-        OR: [{ tenggat: null }, { tenggat: { gte: sekarang } }],
+        ...peluangMasihTerbuka(sekarang),
       },
     }),
     prisma.pendaftaran.groupBy({ by: ["status"], _count: { _all: true } }),
