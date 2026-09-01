@@ -307,8 +307,16 @@ model Agenda {
   dibuatPada     DateTime @default(now())
   diperbaruiPada DateTime @updatedAt
 
-  @@index([mulai])
+  // Setiap kueri agenda publik menyaring status lalu membandingkan mulai, dan
+  // mengurutkannya dengan kolom yang sama — persis bentuk yang dilayani indeks
+  // gabungan ini. Indeks [mulai] tunggal yang dahulu berdiri sendiri di sini
+  // tidak pernah dapat dipakai kueri itu, sebab kolom penyaring pertamanya
+  // status, bukan mulai.
+  @@index([status, mulai])
   @@index([kecamatanId])
+  // Halaman kelola menyaring milik pembuatnya. Model sejenis — Berita, Karya,
+  // Aspirasi — sudah punya indeks pemilik sejak awal; Agenda terlewat.
+  @@index([pembuatId])
   @@map("agenda")
 }
 
@@ -345,8 +353,16 @@ model Peluang {
   dibuatPada     DateTime @default(now())
   diperbaruiPada DateTime @updatedAt
 
-  @@index([jenis, status])
-  @@index([tenggat])
+  // Urutan kolomnya dahulu terbalik: [jenis, status] menaruh jenis di depan,
+  // padahal jenis hanya disaring bila pembaca memilih tapisnya, sementara
+  // status disaring oleh SETIAP kueri. Indeks gabungan hanya dapat dipakai bila
+  // kolom depannya ikut disaring, sehingga bentuk lamanya menganggur pada kueri
+  // yang paling sering dijalankan.
+  @@index([status, tenggat])
+  @@index([status, jenis])
+  @@index([pembuatId])
+  // Kunci asing tidak diindeks otomatis oleh PostgreSQL maupun Prisma.
+  @@index([organisasiId])
   @@map("peluang")
 }
 
