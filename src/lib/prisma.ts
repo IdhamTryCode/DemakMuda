@@ -28,13 +28,44 @@ const NAMA_ALAMAT = [
   "POSTGRES_URL_NON_POOLING",
 ];
 
+/**
+ * Menaikkan mode SSL yang lemah menjadi `verify-full`.
+ *
+ * Alamat Neon yang disalurkan integrasi Vercel memakai `sslmode=require`. Pada
+ * pustaka `pg` yang terpasang sekarang, nilai itu diperlakukan sama dengan
+ * `verify-full`: tersandi DAN sertifikat servernya diperiksa. Tetapi pustakanya
+ * sendiri sudah memperingatkan bahwa pada versi mayor berikutnya `require`,
+ * `prefer`, dan `verify-ca` akan mengikuti arti libpq — tersandi, tetapi
+ * sertifikatnya TIDAK lagi diperiksa.
+ *
+ * Artinya keamanan sambungan ke basis data akan menurun sendiri pada suatu
+ * pembaruan dependensi, tanpa galat, tanpa build merah, dan tanpa satu baris
+ * pun berubah di sini. Kegagalan yang tidak berbunyi seperti itu justru yang
+ * paling berbahaya.
+ *
+ * Variabelnya sendiri tidak dapat disunting di Vercel — ia dikelola integrasi
+ * Neon dan terkunci — jadi penegakannya dilakukan di sini, di satu-satunya
+ * tempat alamat itu dipakai. Ditulis di sini pula ia selamat dari rotasi
+ * kredensial, yang menulis ulang nilai variabelnya.
+ *
+ * Alamat tanpa `sslmode` sengaja dibiarkan apa adanya: basis data lokal di
+ * Docker tidak melayani SSL, dan memaksakannya di sana hanya akan memutus
+ * sambungan pengembangan.
+ */
+const MODE_SSL_LEMAH = /([?&]sslmode=)(require|prefer|verify-ca)(?=&|$)/i;
+
+export function tegakkanSslPenuh(alamat: string): string {
+  return alamat.replace(MODE_SSL_LEMAH, "$1verify-full");
+}
+
 function buatKlien(): PrismaClient {
-  const connectionString = NAMA_ALAMAT.map((n) => process.env[n]).find(Boolean);
-  if (!connectionString) {
+  const alamat = NAMA_ALAMAT.map((n) => process.env[n]).find(Boolean);
+  if (!alamat) {
     throw new Error(
       `Alamat basis data belum diisi. Setel salah satu dari: ${NAMA_ALAMAT.join(", ")}.`,
     );
   }
+  const connectionString = tegakkanSslPenuh(alamat);
   return new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 }
 

@@ -13,6 +13,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../src/generated/prisma/client";
+import { tegakkanSslPenuh } from "../src/lib/prisma";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL belum diisi.");
@@ -102,6 +103,30 @@ async function main() {
   const isi404 = await hilang.text();
   periksa(isi404.includes("Halaman ini tidak ada"), "halaman 404 berbahasa Indonesia");
   periksa(isi404.includes("/cek"), "halaman 404 menawarkan pemeriksaan sertifikat");
+
+  // Sambungan ke basis data harus tersandi DAN sertifikatnya diperiksa. Alamat
+  // dari integrasi Neon datang dengan sslmode=require, yang pada pustaka pg
+  // sekarang berarti verify-full — tetapi akan berubah arti menjadi lebih lemah
+  // pada versi mayor berikutnya, tanpa galat dan tanpa build merah. Penegakannya
+  // ada di src/lib/prisma.ts, dan pemeriksaan ini yang menahannya tetap ada.
+  //
+  // Ditulis sebagai uji karena kegagalannya senyap: regex yang tidak cocok tidak
+  // melempar apa pun, ia hanya diam-diam tidak mengubah apa-apa. Bentuk pertama
+  // yang ditulis untuk fungsi ini memang begitu, dan hanya ketahuan karena diuji.
+  console.log("\npenegakan mode SSL sambungan basis data");
+  const contohSsl: [string, string, string][] = [
+    ["require dinaikkan menjadi verify-full", "postgres://u@h/db?sslmode=require", "postgres://u@h/db?sslmode=verify-full"],
+    ["prefer dinaikkan", "postgres://u@h/db?sslmode=prefer", "postgres://u@h/db?sslmode=verify-full"],
+    ["verify-ca dinaikkan", "postgres://u@h/db?sslmode=verify-ca", "postgres://u@h/db?sslmode=verify-full"],
+    ["dikenali di tengah parameter lain", "postgres://u@h/db?a=1&sslmode=require&b=2", "postgres://u@h/db?a=1&sslmode=verify-full&b=2"],
+    ["verify-full dibiarkan apa adanya", "postgres://u@h/db?sslmode=verify-full", "postgres://u@h/db?sslmode=verify-full"],
+    ["alamat lokal tanpa SSL tidak dipaksa", "postgres://u@localhost:5432/db", "postgres://u@localhost:5432/db"],
+    ["disable dibiarkan, itu pilihan sadar", "postgres://u@h/db?sslmode=disable", "postgres://u@h/db?sslmode=disable"],
+    ["parameter bernama mirip tidak tersentuh", "postgres://u@h/db?xsslmode=require", "postgres://u@h/db?xsslmode=require"],
+  ];
+  for (const [keterangan, masuk, harap] of contohSsl) {
+    periksa(tegakkanSslPenuh(masuk) === harap, keterangan);
+  }
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
