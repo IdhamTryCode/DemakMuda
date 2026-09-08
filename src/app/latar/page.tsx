@@ -34,7 +34,7 @@ const LANGKAH = [
     urut: "02",
     judul: "Tersalurkan",
     ringkas: "Peluang dikumpulkan di satu tempat, lengkap dengan tenggatnya.",
-    isi: "Bonus demografi berubah menjadi beban bila usia produktif tidak menemukan jalan. Papan Peluang mengumpulkan lomba, pelatihan, beasiswa, magang, dan lowongan kerja pada satu halaman yang dapat dibuka siapa saja tanpa perlu masuk — disaring menurut jenis, bidang minat, dan rentang usia, dengan tenggat yang terlihat jelas. Informasi yang selama ini hanya beredar di grup tertentu menjadi terbuka bagi seluruh kecamatan.",
+    isi: "Bonus demografi berubah menjadi beban bila usia produktif tidak menemukan jalan. Papan Peluang mengumpulkan lomba, pelatihan, beasiswa, magang, dan lowongan kerja pada satu halaman yang dapat dibuka siapa saja tanpa perlu masuk — disaring menurut jenis, bidang minat, dan rentang usia, dengan tenggat yang terlihat jelas. Informasi yang selama ini hanya beredar di grup tertentu menjadi terbuka bagi seluruh kecamatan. Bagi yang belum tahu harus mulai dari mana, Panduan Karier menyusun langkah demi langkah dari Kartu Talenta dan sembilan pertanyaan singkat — menyesuaikan diri dengan waktu luang, kendala, dan alat yang benar-benar dimiliki orangnya.",
     tautan: { href: "/peluang", label: "Lihat Papan Peluang" },
   },
   {

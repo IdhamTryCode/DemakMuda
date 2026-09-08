@@ -46,7 +46,14 @@ async function main() {
   const t = teks(privasi.isi);
   for (const bagian of [
     "Yang kami simpan",
-    "Bila Anda di bawah 18 tahun",
+    // Judulnya berubah bersama isinya. Bagian ini dahulu menjanjikan usia,
+    // desa, dan sekolah pengguna di bawah 18 tahun DISEMBUNYIKAN dari kartu
+    // publik — janji yang berhenti benar ketika pembatasan usia dicabut pada
+    // 29 Agustus 2026, dan halamannya tidak ikut diperbarui selama sepuluh
+    // hari. Halaman privasi yang menjanjikan perlindungan yang tidak ada lebih
+    // buruk daripada tidak ada halaman sama sekali.
+    "Bila Anda masih di bawah umur",
+    "Jawaban survei Panduan Karier",
     "Yang tidak kami lakukan",
     "Hak Anda",
     "Cara kami menjaganya",

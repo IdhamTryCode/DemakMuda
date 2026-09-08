@@ -99,6 +99,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - `NIK_PEPPER` — kunci untuk menyidik NIK. **Tidak boleh diganti setelah ada data**,
   karena sidik lama akan berhenti cocok.
 
+Satu nilai lagi diambil dari luar:
+
+- `MINIMAX_API_KEY` — kunci layanan model bahasa untuk Panduan Karier, dari
+  platform.minimax.io. Hanya dibaca di sisi peladen dan tidak pernah dikirim ke
+  peramban. Tanpa nilai ini fiturnya tidak rusak: ia menolak dengan kalimat yang
+  menjelaskan keadaannya, dan enam kanal lain tidak terpengaruh sama sekali.
+
 ## Data wilayah
 
 `prisma/seed/wilayah.json` memuat 14 kecamatan dan 249 desa/kelurahan Kabupaten
@@ -161,7 +168,7 @@ sama-sama di-spread sebagai `OR`, yang belakangan menimpa yang pertama tanpa
 peringatan — pernah membuat pencarian di Papan Peluang diabaikan diam-diam.
 Bungkus keduanya di dalam `AND: [...]`.
 
-## Dua kanal yang menyimpang dari pola
+## Tiga kanal yang menyimpang dari pola
 
 **Ruang Karya** pemiliknya pemuda, bukan pengelola isi, sehingga
 pengelolaannya berada di `src/app/pemuda/karya/` — bukan di `/kelola`. Dinas
@@ -189,6 +196,41 @@ seluruh halaman publik mencari kalimat yang hanya ada di dalam aspirasi.
 
 Pengiriman aspirasi dibatasi jeda lima menit antar-kiriman dan lima kiriman
 per akun per hari, dan Ruang Karya dibatasi tiga puluh karya per akun.
+
+**Panduan Karier** satu-satunya kanal yang memanggil layanan luar. Pemuda
+menjawab sembilan pertanyaan di `src/lib/panduan.ts` — ditulis sebagai DATA,
+bukan sebagai formulir, sehingga formulir dan penyusun prompt membacanya
+bersama dan tidak mungkin melenceng. Yang tidak ditanyakan sama pentingnya:
+umur, kecamatan, sekolah, minat, keterampilan, prestasi, dan keanggotaan sudah
+tersimpan di Kartu Talenta, dan menanyakannya ulang hanya memperpanjang
+formulir yang orang tinggalkan di tengah jalan.
+
+Kliennya di `src/lib/minimax.ts`, dipisahkan dari Server Action-nya supaya
+bagian yang paling mungkin gagal dapat diuji tanpa basis data dan tanpa sesi.
+Tiga penjagaan di sana lahir dari pengujian sungguhan, bukan dari kehati-hatian
+di atas kertas:
+
+- **Blok penalaran dibuang.** Modelnya menuliskan proses berpikirnya di dalam
+  jawaban, dibungkus `<think>`. Pada percobaan pertama blok itu menghabiskan
+  seluruh jatah token sehingga jawabannya tidak sempat keluar.
+- **Aksara non-Latin ditolak.** Tanpa larangan tegas di system prompt, modelnya
+  menyisipkan kata Tionghoa ke tengah kalimat Indonesia. Larangan menekannya
+  sampai nol, tetapi prompt adalah permintaan; pemeriksaan ini jaminannya.
+  Jawaban yang tercampur ditolak seluruhnya, tidak dibersihkan sebagian —
+  kalimat yang bolong di tengah lebih buruk daripada meminta orang mengulang.
+- **Batas waktu 45 detik.** Panggilan percobaan berpertanyaan pendek selesai
+  5,8 detik, dan atas dasar itu batasnya semula dipasang 25 detik. Permintaan
+  yang sesungguhnya memakan 23 detik di mesin sendiri dan 72 detik di produksi.
+  Mengukur dengan beban yang benar mengubah angkanya hampir dua kali lipat.
+
+Panduannya bersifat **pribadi**: tidak pernah tampil di Kartu Talenta publik,
+tidak dapat dibuka pengelola organisasi maupun dinas, dan jawaban surveinya
+tidak ikut dicatat ke jejak audit — hanya nama model dan panjang hasilnya.
+Pembuatannya dibatasi sekali sehari per pemuda, dihitung dari dua puluh empat
+jam terakhir dan bukan dari pergantian tanggal, supaya yang mengisi pukul 23.50
+tidak mendapat jatah kedua sepuluh menit kemudian. Dijaga `npm run uji:panduan`,
+yang menguji seluruhnya KECUALI panggilan modelnya — panggilan itu memakan
+kuota, memakan puluhan detik, dan hasilnya berbeda tiap kali.
 
 ## Menyegarkan data peragaan sebelum dipertunjukkan
 

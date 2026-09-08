@@ -27,10 +27,9 @@ const DIKUMPULKAN = [
   },
   {
     apa: "Tanggal lahir",
-    kenapa:
-      "Untuk memeriksa syarat usia kegiatan, dan menentukan pembatasan tambahan bila Anda di bawah 18 tahun.",
+    kenapa: "Untuk memeriksa syarat usia kegiatan yang Anda daftari.",
     siapa:
-      "Tidak ditampilkan ke umum. Panitia kegiatan yang Anda daftari melihat usia Anda, bukan tanggal lengkapnya.",
+      "Tanggal lengkapnya tidak pernah ditampilkan. Yang tampil di Kartu Talenta publik hanya usia Anda dalam tahun.",
   },
   {
     apa: "Nomor telepon",
@@ -43,12 +42,19 @@ const DIKUMPULKAN = [
     kenapa:
       "Untuk menyaring peluang yang dekat dengan Anda, dan menyusun sebaran potensi pemuda per kecamatan bagi dinas.",
     siapa:
-      "Kecamatan tampil di Kartu Talenta publik Anda. Desa disembunyikan bila Anda di bawah 18 tahun.",
+      "Kecamatan dan desa tampil di Kartu Talenta publik Anda, berapa pun usia Anda.",
   },
   {
     apa: "Bidang minat dan keterampilan",
     kenapa: "Untuk memunculkan peluang yang sesuai, dan menjadi isi Kartu Talenta Anda.",
     siapa: "Siapa pun yang membuka Kartu Talenta publik Anda.",
+  },
+  {
+    apa: "Jawaban survei Panduan Karier",
+    kenapa:
+      "Untuk menyusun panduan yang sesuai dengan keadaan Anda, dan agar panduan lama tetap dapat dibaca sebagai jawaban atas keadaan saat itu.",
+    siapa:
+      "Hanya Anda. Jawabannya memuat kendala biaya dan dukungan keluarga, sehingga tidak pernah tampil di Kartu Talenta publik, tidak dapat dibuka pengelola organisasi maupun dinas, dan tidak ikut dicatat ke jejak audit. Isi jawabannya dikirim ke layanan model bahasa MiniMax untuk menyusun panduannya, tanpa nama dan tanpa alamat surel Anda.",
   },
   {
     apa: "Riwayat pendaftaran dan sertifikat",
@@ -63,6 +69,7 @@ const TIDAK_DILAKUKAN = [
   "Memasang pelacak iklan atau alat analitik pihak ketiga.",
   "Menampilkan nomor telepon Anda di halaman yang dapat dibuka umum.",
   "Meminta Nomor Induk Kependudukan pada tahap ini.",
+  "Menampilkan panduan karier atau jawaban survei Anda kepada siapa pun selain Anda.",
 ];
 
 export default function HalamanPrivasi() {
@@ -110,18 +117,24 @@ export default function HalamanPrivasi() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Bila Anda di bawah 18 tahun</h2>
+          <h2 className="text-lg font-semibold">Bila Anda masih di bawah umur</h2>
           <Kartu className="flex flex-col gap-2 border-l-4 border-l-brass">
             <p className="text-sm text-ink-soft">
-              Menurut peraturan perlindungan data pribadi, pengguna di bawah 18
-              tahun mendapat perlindungan tambahan. Di DemakMuda itu berarti:
-              usia, desa, dan sekolah Anda <strong>tidak ditampilkan</strong> di
-              Kartu Talenta publik. Yang tampil hanya nama, kecamatan, minat, dan
-              keterampilan.
+              Kartu Talenta menampilkan isi yang sama untuk semua orang,
+              <strong> berapa pun usia Anda</strong>. Aplikasi ini terbuka bagi
+              pemuda Demak sejak bangku sekolah dasar, dan kartu yang separuh
+              kosong tidak menjalankan gunanya bagi mereka.
             </p>
             <p className="text-sm text-ink-soft">
-              Bila tanggal lahir belum diisi, kami memperlakukan Anda sebagai
-              pengguna di bawah umur — memilih yang lebih aman.
+              Yang berlaku bagi semua orang tanpa kecuali: nomor telepon tidak
+              pernah tampil di halaman publik, dan panduan karier beserta
+              jawaban surveinya hanya dapat dibaca pemiliknya sendiri.
+            </p>
+            <p className="text-sm text-ink-soft">
+              Bila Anda belum berusia 18 tahun, pertimbangkan bersama orang tua
+              atau wali apa saja yang ingin Anda tampilkan. Anda dapat
+              mengosongkan foto, sekolah, atau tanggal lahir kapan saja lewat
+              halaman Kartu Talenta, dan yang dikosongkan tidak akan tampil.
             </p>
           </Kartu>
         </section>
