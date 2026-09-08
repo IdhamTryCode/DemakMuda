@@ -18,10 +18,11 @@ import { buatPanduan } from "@/server/aksi-panduan";
  * sini. Dengan begitu formulir dan penyusun prompt tidak mungkin melenceng:
  * menambah pilihan di satu tempat langsung terbaca keduanya.
  *
- * Menunggunya lama — pengukuran ujung ke ujung menunjukkan 23 detik — sehingga
- * keadaan memuat di sini bukan hiasan. Tanpa itu orang akan menyangka
- * aplikasinya menggantung, menekan tombolnya dua kali, lalu penekanan kedua
- * ditolak pembatas sekali sehari dan ia mengira fiturnya rusak.
+ * Menunggunya lama — 23 detik di mesin sendiri, dan 72 detik di produksi —
+ * sehingga keadaan memuat di sini bukan hiasan. Tanpa itu orang akan
+ * menyangka aplikasinya menggantung, menekan tombolnya dua kali, lalu
+ * penekanan kedua ditolak pembatas sekali sehari dan ia mengira fiturnya
+ * rusak.
  */
 export function FormPanduan() {
   const router = useRouter();
@@ -66,7 +67,7 @@ export function FormPanduan() {
           </Tombol>
           {sedang && (
             <span className="text-sm text-muted">
-              Perlu sekitar setengah menit. Jangan tutup halaman ini.
+              Perlu sekitar satu menit. Jangan tutup halaman ini.
             </span>
           )}
           {galat && !sedang && <Pesan nada="galat">{galat}</Pesan>}

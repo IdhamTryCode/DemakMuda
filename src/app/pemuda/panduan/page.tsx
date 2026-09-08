@@ -12,6 +12,17 @@ export const metadata: Metadata = {
     "Panduan langkah demi langkah yang disusun dari Kartu Talenta dan jawaban survei Anda.",
 };
 
+/**
+ * Batas waktu fungsi peladen dinyatakan tegas, bukan diserahkan ke bawaan.
+ *
+ * Menyusun panduan memakan 23 detik di mesin sendiri dan 72 detik di produksi.
+ * Bawaan Vercel untuk fungsi peladen jauh lebih pendek daripada itu pada
+ * sebagian penyetelan, dan bila suatu saat bawaannya berubah, fiturnya akan
+ * berhenti bekerja dengan galat yang terbaca seperti gangguan jaringan —
+ * kegagalan yang menyesatkan justru karena sebabnya tidak kelihatan.
+ */
+export const maxDuration = 60;
+
 /** Riwayat cukup sepuluh terakhir; lebih dari itu tidak dibaca siapa pun. */
 const BANYAK_RIWAYAT = 10;
 
