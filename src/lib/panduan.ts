@@ -146,6 +146,61 @@ export const KELOMPOK = ["Arah", "Keadaan sekarang", "Kemampuan dan kendala"];
 /** Jawaban satu pengisian: kunci pertanyaan, isinya teks atau daftar teks. */
 export type Jawaban = Record<string, string | string[]>;
 
+/**
+ * Batas panjang jawaban yang diketik bebas, dalam karakter.
+ *
+ * Dipakai oleh formulir (maxLength) DAN oleh pengurai di peladen. Sebelum ini
+ * hanya formulir yang membatasinya, dan formulir bukan penjaga: siapa pun yang
+ * mengirim permintaannya sendiri dapat menempelkan lima puluh kilobita ke
+ * dalam prompt — dibayar dari kuota model, lalu tersimpan utuh di basis data.
+ */
+export const BATAS_TEKS = 160;
+
+/**
+ * Membaca jawaban survei dari FormData.
+ *
+ * Dituntun oleh daftar PERTANYAAN, bukan oleh nama kolom yang diketik ulang di
+ * sini. Menambah pertanyaan di berkas ini otomatis ikut terbaca, dan tidak
+ * mungkin ada kolom formulir yang diam-diam tidak pernah dibaca — kesalahan
+ * yang persis pernah terjadi pada foto profil.
+ *
+ * Nilai yang tidak ada di daftar pilihan DITOLAK, bukan dibiarkan lewat ke
+ * model: nilai karangan akan masuk ke prompt apa adanya. Untuk pertanyaan
+ * pilih-satu, penolakan itu berarti pertanyaannya dianggap belum dijawab.
+ * Untuk pilih-banyak, nilai asingnya dibuang dan sisanya dipakai.
+ */
+export function uraiJawaban(data: FormData): { jawaban: Jawaban; kurang: string[] } {
+  const jawaban: Jawaban = {};
+  const kurang: string[] = [];
+
+  for (const p of PERTANYAAN) {
+    if (p.jenis === "banyak") {
+      const nilai = data
+        .getAll(p.nama)
+        .map((v) => String(v))
+        .filter((v) => p.pilihan?.some((o) => o.nilai === v));
+      // Kendala boleh kosong: "tidak ada kendala" itu jawaban yang sah.
+      jawaban[p.nama] = nilai;
+      continue;
+    }
+
+    const nilai = String(data.get(p.nama) ?? "").trim();
+    if (nilai === "") {
+      kurang.push(p.nama);
+      continue;
+    }
+
+    if (p.jenis === "pilih" && !p.pilihan?.some((o) => o.nilai === nilai)) {
+      kurang.push(p.nama);
+      continue;
+    }
+
+    jawaban[p.nama] = p.jenis === "teks" ? nilai.slice(0, BATAS_TEKS) : nilai;
+  }
+
+  return { jawaban, kurang };
+}
+
 /** Label yang terbaca manusia untuk satu nilai pilihan. */
 export function labelPilihan(nama: string, nilai: string): string {
   const p = PERTANYAAN.find((q) => q.nama === nama);

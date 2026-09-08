@@ -4,11 +4,18 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
+import { PemisahAtau, TombolGoogle } from "@/components/tombol-google";
 import { authClient } from "@/lib/auth-client";
 
 const PANJANG_SANDI_MIN = 10;
 
-export function FormDaftar({ modePeragaan = false }: { modePeragaan?: boolean }) {
+export function FormDaftar({
+  modePeragaan = false,
+  googleAktif = false,
+}: {
+  modePeragaan?: boolean;
+  googleAktif?: boolean;
+}) {
   const [galat, setGalat] = useState<string | null>(null);
   const [berhasil, setBerhasil] = useState(false);
   const [sedang, setSedang] = useState(false);
@@ -106,6 +113,16 @@ export function FormDaftar({ modePeragaan = false }: { modePeragaan?: boolean })
       <Tombol type="submit" disabled={sedang} className="mt-1">
         {sedang ? "Mendaftarkan…" : "Buat akun"}
       </Tombol>
+
+      {googleAktif && (
+        <>
+          <PemisahAtau />
+          {/* Akun baru dari Google diantar ke halaman profil oleh tombolnya
+              sendiri; "/tujuan" hanya berlaku bila surelnya ternyata sudah
+              punya akun dan Google ditautkan ke akun itu. */}
+          <TombolGoogle lanjut="/tujuan" />
+        </>
+      )}
     </form>
   );
 }

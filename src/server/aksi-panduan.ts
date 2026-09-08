@@ -4,10 +4,9 @@ import { revalidatePath } from "next/cache";
 
 import { mintaPanduan } from "@/lib/minimax";
 import {
-  PERTANYAAN,
+  uraiJawaban,
   susunPermintaan,
   SISTEM,
-  type Jawaban,
   type RingkasProfil,
 } from "@/lib/panduan";
 import { prisma } from "@/lib/prisma";
@@ -34,48 +33,6 @@ const PENGISI = ["pemuda", "organisasi", "dinas", "superadmin"] as const;
 
 const BELUM_ADA_PROFIL =
   "Lengkapi Kartu Talenta Anda lebih dahulu — panduan disusun dari data di sana.";
-
-/**
- * Membaca jawaban survei dari FormData.
- *
- * Dituntun oleh daftar PERTANYAAN, bukan oleh nama kolom yang diketik ulang di
- * sini. Menambah pertanyaan di src/lib/panduan.ts otomatis ikut terbaca, dan
- * tidak mungkin ada kolom formulir yang diam-diam tidak pernah dibaca —
- * kesalahan yang persis pernah terjadi pada foto profil.
- */
-function bacaJawaban(data: FormData): { jawaban: Jawaban; kurang: string[] } {
-  const jawaban: Jawaban = {};
-  const kurang: string[] = [];
-
-  for (const p of PERTANYAAN) {
-    if (p.jenis === "banyak") {
-      const nilai = data
-        .getAll(p.nama)
-        .map((v) => String(v))
-        .filter(Boolean);
-      // Kendala boleh kosong: "tidak ada kendala" itu jawaban yang sah.
-      jawaban[p.nama] = nilai;
-      continue;
-    }
-
-    const nilai = String(data.get(p.nama) ?? "").trim();
-    if (nilai === "") {
-      kurang.push(p.nama);
-      continue;
-    }
-
-    // Pilihan yang tidak ada di daftar ditolak, bukan dibiarkan lewat ke
-    // model. Nilai karangan akan masuk ke prompt apa adanya.
-    if (p.jenis === "pilih" && !p.pilihan?.some((o) => o.nilai === nilai)) {
-      kurang.push(p.nama);
-      continue;
-    }
-
-    jawaban[p.nama] = nilai;
-  }
-
-  return { jawaban, kurang };
-}
 
 /** Rangkuman Kartu Talenta, dibentuk di peladen dan tidak pernah ditanyakan. */
 function ringkas(
@@ -104,7 +61,7 @@ export async function buatPanduan(data: FormData): Promise<HasilAksi> {
   try {
     const aktor = await wajibAktor(...PENGISI);
 
-    const { jawaban, kurang } = bacaJawaban(data);
+    const { jawaban, kurang } = uraiJawaban(data);
     if (kurang.length > 0) {
       return {
         ok: false,

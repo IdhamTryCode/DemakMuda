@@ -5,17 +5,23 @@ import { useRef, useState, type FormEvent } from "react";
 
 import { DialogAkunPeragaan } from "@/components/dialog-akun-peragaan";
 import { Kolom, Label, Pesan, Tombol } from "@/components/sk";
+import { PemisahAtau, TombolGoogle } from "@/components/tombol-google";
 import { authClient } from "@/lib/auth-client";
 
 export function FormMasuk({
   lanjut,
   modePeragaan,
+  googleAktif = false,
+  galatAwal,
 }: {
   lanjut: string;
   modePeragaan: boolean;
+  googleAktif?: boolean;
+  /** Pesan kegagalan yang dibawa dari pengalihan, mis. dari Google. */
+  galatAwal?: string;
 }) {
   const router = useRouter();
-  const [galat, setGalat] = useState<string | null>(null);
+  const [galat, setGalat] = useState<string | null>(galatAwal ?? null);
   const [sedang, setSedang] = useState(false);
 
   // Kedua kolom sengaja dibiarkan tak terkendali (uncontrolled) seperti
@@ -84,6 +90,13 @@ export function FormMasuk({
       <Tombol type="submit" disabled={sedang} className="mt-1">
         {sedang ? "Memeriksa…" : "Masuk"}
       </Tombol>
+
+      {googleAktif && (
+        <>
+          <PemisahAtau />
+          <TombolGoogle lanjut={lanjut} />
+        </>
+      )}
 
       {modePeragaan && (
         <>

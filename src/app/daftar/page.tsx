@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { FormDaftar } from "@/app/daftar/form-daftar";
 import { BingkaiAuth } from "@/components/bingkai-auth";
-import { MODE_PERAGAAN } from "@/lib/auth";
+import { MASUK_GOOGLE, MODE_PERAGAAN } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Daftar",
@@ -30,7 +30,7 @@ export default function HalamanDaftar() {
         </>
       }
     >
-      <FormDaftar modePeragaan={MODE_PERAGAAN} />
+      <FormDaftar modePeragaan={MODE_PERAGAAN} googleAktif={MASUK_GOOGLE} />
     </BingkaiAuth>
   );
 }

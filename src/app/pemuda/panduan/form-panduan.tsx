@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { Pesan, Tombol } from "@/components/sk";
-import { KELOMPOK, PERTANYAAN, type Pertanyaan } from "@/lib/panduan";
+import { BATAS_TEKS, KELOMPOK, PERTANYAAN, type Pertanyaan } from "@/lib/panduan";
 import { buatPanduan } from "@/server/aksi-panduan";
 
 /**
@@ -99,7 +99,7 @@ function Tanya({ p }: { p: Pertanyaan }) {
           id={p.nama}
           name={p.nama}
           required
-          maxLength={160}
+          maxLength={BATAS_TEKS}
           aria-describedby={idBantuan}
           className="sk-field w-full rounded-sk px-3 py-2 text-sm"
         />

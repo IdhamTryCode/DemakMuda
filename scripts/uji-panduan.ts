@@ -17,7 +17,13 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../src/generated/prisma/client";
 import { adaAksaraAsing, buangPenalaran } from "../src/lib/minimax";
-import { PERTANYAAN, SISTEM, susunPermintaan } from "../src/lib/panduan";
+import {
+  BATAS_TEKS,
+  PERTANYAAN,
+  SISTEM,
+  susunPermintaan,
+  uraiJawaban,
+} from "../src/lib/panduan";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL belum diisi.");
@@ -193,6 +199,47 @@ async function main() {
   } else {
     console.log("  – belum ada panduan tersimpan, pemeriksaan kerahasiaan dilewati");
   }
+
+  console.log("\npengurai jawaban");
+  // Formulir membatasi panjang cita-cita lewat maxLength, tetapi formulir
+  // bukan penjaga: permintaan dapat dibuat tanpa formulir. Yang menjaga adalah
+  // pengurai di peladen, dan batasnya harus SAMA dengan batas formulirnya.
+  const lengkap = new FormData();
+  for (const p of PERTANYAAN) {
+    if (p.jenis === "teks") lengkap.set(p.nama, "x".repeat(5_000));
+    else if (p.jenis === "pilih") lengkap.set(p.nama, p.pilihan![0].nilai);
+    else for (const o of p.pilihan!.slice(0, 2)) lengkap.append(p.nama, o.nilai);
+  }
+  const hasilUrai = uraiJawaban(lengkap);
+  periksa(hasilUrai.kurang.length === 0, "jawaban lengkap tidak menyisakan yang kurang");
+  periksa(
+    String(hasilUrai.jawaban.citaCita).length === BATAS_TEKS,
+    `cita-cita 5.000 karakter dipotong menjadi ${BATAS_TEKS}`,
+  );
+
+  // FormData tidak punya penyalin; konstruktornya hanya menerima elemen form.
+  const salin = (asal: FormData) => {
+    const s = new FormData();
+    for (const [k, v] of asal) s.append(k, v);
+    return s;
+  };
+
+  const pilihAsing = salin(lengkap);
+  const satuPilih = PERTANYAAN.find((p) => p.jenis === "pilih")!;
+  pilihAsing.set(satuPilih.nama, "nilai-karangan");
+  periksa(
+    uraiJawaban(pilihAsing).kurang.includes(satuPilih.nama),
+    "nilai pilih-satu yang tidak ada di daftar dianggap belum dijawab",
+  );
+
+  const banyakAsing = salin(lengkap);
+  const satuBanyak = PERTANYAAN.find((p) => p.jenis === "banyak")!;
+  banyakAsing.append(satuBanyak.nama, "nilai-karangan");
+  const dibaca = uraiJawaban(banyakAsing).jawaban[satuBanyak.nama];
+  periksa(
+    Array.isArray(dibaca) && !dibaca.includes("nilai-karangan") && dibaca.length === 2,
+    "nilai pilih-banyak yang tidak ada di daftar dibuang, sisanya tetap dipakai",
+  );
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();

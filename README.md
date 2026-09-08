@@ -99,12 +99,20 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - `NIK_PEPPER` — kunci untuk menyidik NIK. **Tidak boleh diganti setelah ada data**,
   karena sidik lama akan berhenti cocok.
 
-Satu nilai lagi diambil dari luar:
+Tiga nilai lagi diambil dari luar, dan ketiganya boleh kosong:
 
 - `MINIMAX_API_KEY` — kunci layanan model bahasa untuk Panduan Karier, dari
   platform.minimax.io. Hanya dibaca di sisi peladen dan tidak pernah dikirim ke
   peramban. Tanpa nilai ini fiturnya tidak rusak: ia menolak dengan kalimat yang
   menjelaskan keadaannya, dan enam kanal lain tidak terpengaruh sama sekali.
+- `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` — kredensial OAuth dari Google
+  Cloud Console untuk tombol "Lanjutkan dengan Google" di halaman masuk dan
+  daftar. Alamat balik yang harus didaftarkan di sana:
+  `<BETTER_AUTH_URL>/api/auth/callback/google`. Tombolnya **hanya dirender bila
+  keduanya terisi** — lingkungan yang tidak memasangnya tidak memperlihatkan
+  tombol yang gagal saat ditekan. Akun Google yang surelnya sama dengan akun
+  surel-sandi yang sudah ada otomatis ditautkan; nama dan surel akun lama tidak
+  diubah oleh penautan itu.
 
 ## Data wilayah
 
@@ -345,6 +353,11 @@ sebuah gambar, salinan lama masih dapat terlihat beberapa saat.
   memaksa pendaftaran autentikator di depan juri hanya menghambat peragaan.
 - Dua langkah **belum aktif sampai kodenya diverifikasi**. Tanpa aturan itu,
   salah memindai berarti pengguna terkunci dari akunnya sendiri.
+- **Masuk dengan Google** memakai `prompt=select_account`, supaya perangkat
+  yang dipakai bergantian satu keluarga selalu menawarkan pilihan akun, bukan
+  langsung memakai akun terakhir yang aktif. Pengguna baru dari Google diantar
+  ke halaman profil, bukan dasbor: akunnya baru membawa nama dan surel, dan
+  Kartu Talenta baru berguna setelah kecamatan dan minatnya diisi.
 - Pencabutan sesi merujuk sesi lewat **id, bukan token**. Token adalah
   kredensial; menyematkannya ke halaman agar bisa dipakai tombol berarti ia ikut
   tercetak di sumber halaman.

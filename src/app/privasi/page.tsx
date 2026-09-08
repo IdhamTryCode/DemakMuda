@@ -26,6 +26,13 @@ const DIKUMPULKAN = [
     siapa: "Panitia kegiatan yang Anda daftari, dan Dinas Kepemudaan dan Olahraga.",
   },
   {
+    apa: "Akun Google, bila Anda memilih masuk dengannya",
+    kenapa:
+      "Agar Anda tidak perlu membuat kata sandi baru. Yang diambil dari Google hanya nama, alamat surel, dan foto akun Anda, sekali saat pertama masuk.",
+    siapa:
+      "Sama seperti nama dan surel di atas. Kata sandi Google Anda tidak pernah sampai ke kami, dan foto akun Google tidak ditampilkan di mana pun — foto Kartu Talenta Anda unggah sendiri.",
+  },
+  {
     apa: "Tanggal lahir",
     kenapa: "Untuk memeriksa syarat usia kegiatan yang Anda daftari.",
     siapa:

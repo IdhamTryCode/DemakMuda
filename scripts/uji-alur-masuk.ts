@@ -174,6 +174,58 @@ async function main() {
     );
   }
 
+  // Masuk dengan Google. Alur penuhnya tidak dapat diuji tanpa akun Google
+  // sungguhan di peramban sungguhan, tetapi dua hal di sekelilingnya bisa:
+  // tombolnya hanya tampil bila kredensialnya terpasang, dan bila terpasang,
+  // peladen menyusun alamat pengalihan ke Google dengan alamat balik yang
+  // benar. Better Auth menyusun alamat itu sendiri tanpa menghubungi Google,
+  // sehingga kredensial tiruan pun cukup untuk memeriksanya.
+  console.log("\nmasuk dengan Google");
+  const googleAktif = Boolean(
+    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+  );
+  const halamanDaftar = await (await fetch(`${PANGKALAN}/daftar`)).text();
+  const social = await fetch(`${PANGKALAN}/api/auth/sign-in/social`, {
+    method: "POST",
+    headers: KEPALA_JSON,
+    body: JSON.stringify({ provider: "google", callbackURL: "/tujuan" }),
+  });
+
+  if (googleAktif) {
+    periksa(
+      halamanMasuk.includes("Lanjutkan dengan Google"),
+      "tombol Google tampil di halaman masuk",
+    );
+    periksa(
+      halamanDaftar.includes("Lanjutkan dengan Google"),
+      "tombol Google tampil di halaman daftar",
+    );
+    const isi = (await social.json()) as { url?: string; redirect?: boolean };
+    periksa(social.status === 200, `peladen menerima permintaan (status ${social.status})`);
+    periksa(
+      typeof isi.url === "string" && isi.url.startsWith("https://accounts.google.com/"),
+      "pengalihannya menuju accounts.google.com",
+    );
+    periksa(
+      typeof isi.url === "string" &&
+        decodeURIComponent(isi.url).includes(`${PANGKALAN}/api/auth/callback/google`),
+      "alamat baliknya /api/auth/callback/google pada pangkalan yang sama",
+    );
+    periksa(
+      typeof isi.url === "string" && isi.url.includes("prompt=select_account"),
+      "selalu meminta pemilihan akun",
+    );
+  } else {
+    periksa(
+      !halamanMasuk.includes("Google") && !halamanDaftar.includes("Google"),
+      "kredensial kosong: tombol Google tidak tampil sama sekali",
+    );
+    periksa(
+      social.status >= 400,
+      `kredensial kosong: penyedia google ditolak peladen (status ${social.status})`,
+    );
+  }
+
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
   // process.exitCode, BUKAN process.exit(). Pemanggilan fetch meninggalkan

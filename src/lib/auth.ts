@@ -49,6 +49,21 @@ function alamatTepercaya(): string[] {
 /** Peran yang wajib memakai autentikasi dua langkah. */
 export const PERAN_WAJIB_2FA = ["dinas", "superadmin"];
 
+/**
+ * Masuk dengan Google hanya menyala bila KEDUA kredensialnya terpasang.
+ *
+ * Halaman masuk dan daftar membaca nilai ini untuk memutuskan apakah tombolnya
+ * dirender sama sekali. Tanpa pemeriksaan ini, tombol tetap tampil di
+ * lingkungan yang variabelnya kosong dan gagal saat ditekan — kegagalan yang
+ * baru ketahuan di depan orang.
+ *
+ * Alamat balik yang harus didaftarkan di Google Cloud Console:
+ *   <BETTER_AUTH_URL>/api/auth/callback/google
+ */
+export const MASUK_GOOGLE = Boolean(
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+);
+
 export const auth = betterAuth({
   // Muncul sebagai nama penerbit di aplikasi autentikator pengguna.
   appName: "DemakMuda",
@@ -69,6 +84,24 @@ export const auth = betterAuth({
     requireEmailVerification: !MODE_PERAGAAN,
     minPasswordLength: 10,
   },
+
+  socialProviders: MASUK_GOOGLE
+    ? {
+        google: {
+          clientId: process.env.GOOGLE_CLIENT_ID as string,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+          // Selalu tawarkan pemilihan akun. Ponsel dan komputer di sini
+          // sering dipakai bergantian oleh satu keluarga; tanpa ini Google
+          // langsung memakai akun terakhir yang aktif tanpa bertanya.
+          prompt: "select_account",
+        },
+      }
+    : {},
+
+  // Akun Google yang surelnya sama dengan akun surel-sandi yang sudah ada
+  // otomatis ditautkan — perilaku bawaan Better Auth, dan aman di sini
+  // karena Google hanya mengaku surel yang sudah diverifikasinya. Nama dan
+  // surel akun yang sudah ada tidak diubah oleh penautan itu.
 
   emailVerification: {
     sendOnSignUp: !MODE_PERAGAAN,

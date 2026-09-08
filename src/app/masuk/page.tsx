@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { FormMasuk } from "@/app/masuk/form-masuk";
 import { BingkaiAuth } from "@/components/bingkai-auth";
-import { MODE_PERAGAAN } from "@/lib/auth";
+import { MASUK_GOOGLE, MODE_PERAGAAN } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Masuk",
@@ -18,12 +18,24 @@ function tujuanAman(nilai: string | undefined): string {
   return nilai;
 }
 
+/**
+ * Better Auth memulangkan kegagalan masuk-dengan-Google ke halaman ini dengan
+ * parameter "error" berisi kode. Kodenya dipakai hanya untuk MEMILIH kalimat,
+ * tidak pernah dicetak — nilainya datang dari alamat, dan alamat dapat ditulis
+ * siapa saja.
+ */
+function pesanGalatGoogle(kode: string | undefined): string | undefined {
+  if (!kode) return undefined;
+  if (kode === "access_denied") return "Masuk dengan Google dibatalkan.";
+  return "Masuk dengan Google tidak berhasil. Coba lagi, atau masuk dengan surel dan kata sandi.";
+}
+
 export default async function HalamanMasuk({
   searchParams,
 }: {
-  searchParams: Promise<{ lanjut?: string }>;
+  searchParams: Promise<{ lanjut?: string; error?: string }>;
 }) {
-  const { lanjut } = await searchParams;
+  const { lanjut, error } = await searchParams;
 
   return (
     <BingkaiAuth
@@ -41,7 +53,12 @@ export default async function HalamanMasuk({
         </>
       }
     >
-      <FormMasuk lanjut={tujuanAman(lanjut)} modePeragaan={MODE_PERAGAAN} />
+      <FormMasuk
+        lanjut={tujuanAman(lanjut)}
+        modePeragaan={MODE_PERAGAAN}
+        googleAktif={MASUK_GOOGLE}
+        galatAwal={pesanGalatGoogle(error)}
+      />
     </BingkaiAuth>
   );
 }
