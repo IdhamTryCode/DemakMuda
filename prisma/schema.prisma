@@ -556,6 +556,21 @@ model PanduanKarier {
   /// dipertanggungjawabkan ketika modelnya kelak diganti.
   model String
 
+  /// Butir panduan yang sudah dicentang pemiliknya, sebagai daftar kunci
+  /// berposisi: "1.2" berarti langkah pertama butir ketiga.
+  ///
+  /// Berposisi, bukan berisi teksnya, karena `hasil` tidak pernah berubah
+  /// setelah tersimpan — sehingga penguraiannya selalu menghasilkan urutan
+  /// yang sama. Menyimpan teksnya akan membuat satu koreksi ejaan menghapus
+  /// seluruh centang orang.
+  ///
+  /// Kolomnya dipasang lebih dahulu meski tampilannya belum ada. Aturan
+  /// pertama pengerjaan porsi 30% di lokasi penjurian adalah tidak ada
+  /// migrasi basis data di sana: migrasi yang gagal di tengah lomba dapat
+  /// mematikan aplikasinya, dan lima jam tidak cukup untuk memulihkannya
+  /// dengan tenang. Tanpa kolom ini, centangnya mustahil dikerjakan di lokasi.
+  centang Json @default("[]")
+
   dibuatPada DateTime @default(now())
 
   @@index([profilId, dibuatPada])
