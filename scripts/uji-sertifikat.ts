@@ -132,11 +132,15 @@ async function main() {
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
-  process.exit(gagal === 0 ? 0 : 1);
+  // process.exitCode, BUKAN process.exit(). Pemanggilan fetch meninggalkan
+  // socket keep-alive yang masih menutup diri, dan process.exit() menabraknya
+  // di tengah jalan — pada Windows itu memicu galat penegasan libuv, sehingga
+  // uji yang LULUS keluar dengan kode 127 dan terbaca sebagai gagal.
+  process.exitCode = gagal === 0 ? 0 : 1;
 }
 
 main().catch(async (e) => {
   console.error(e);
   await prisma.$disconnect();
-  process.exit(1);
+  process.exitCode = 1;
 });

@@ -163,6 +163,7 @@ model ProfilPemuda {
   keterampilan Keterampilan[]
   pengalaman   Pengalaman[]
   prestasi     Prestasi[]
+  panduan      PanduanKarier[]
 
   dibuatPada     DateTime @default(now())
   diperbaruiPada DateTime @updatedAt
@@ -525,6 +526,40 @@ model Prestasi {
   @@index([profilId])
   @@index([tingkat])
   @@map("prestasi")
+}
+
+/// Panduan karier yang disusun model bahasa dari jawaban survei pemuda.
+///
+/// Satu baris untuk SETIAP pengisian, bukan satu baris per pemuda. Dengan
+/// begitu riwayatnya didapat tanpa tabel tambahan: pemuda yang mengisi ulang
+/// enam bulan kemudian dapat menyandingkan panduan lamanya dengan yang baru,
+/// dan perkembangan dirinya terbaca dari selisih keduanya.
+///
+/// Seluruh isinya PRIBADI dan tidak pernah tampil di Kartu Talenta publik.
+/// Jawaban surveinya memuat kendala biaya dan dukungan keluarga; itu bukan
+/// urusan pembaca kartu.
+model PanduanKarier {
+  id       String       @id @default(cuid())
+  profilId String
+  profil   ProfilPemuda @relation(fields: [profilId], references: [id], onDelete: Cascade)
+
+  /// Jawaban sembilan pertanyaan survei, apa adanya. Disimpan supaya panduan
+  /// lama tetap dapat dibaca sebagai jawaban atas keadaan saat itu, bukan
+  /// keadaan sekarang.
+  jawaban Json
+
+  /// Panduannya dalam bentuk Markdown, sudah dibersihkan dari blok penalaran
+  /// model. Yang disimpan hanya yang layak dibaca manusia.
+  hasil String
+
+  /// Model yang menyusunnya. Dicatat supaya panduan lama tetap dapat
+  /// dipertanggungjawabkan ketika modelnya kelak diganti.
+  model String
+
+  dibuatPada DateTime @default(now())
+
+  @@index([profilId, dibuatPada])
+  @@map("panduan_karier")
 }
 
 model Aspirasi {

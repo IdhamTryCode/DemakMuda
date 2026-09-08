@@ -280,6 +280,21 @@ async function main() {
         superadmin: "200",
       },
     },
+    {
+      // Sama terbukanya dengan Rekam Jejak, dan karena alasan yang sama:
+      // panduan disusun dari Kartu Talenta, dan setiap peran berhak punya
+      // kartu. Menguncinya khusus pemuda akan mengusir pengelola organisasi
+      // dari fitur yang menyusun panduan atas kartunya sendiri.
+      jalur: "/pemuda/panduan",
+      pola: "/pemuda/panduan",
+      harap: {
+        tamu: "->/masuk",
+        pemuda: "200",
+        organisasi: "200",
+        dinas: "200",
+        superadmin: "200",
+      },
+    },
     { jalur: "/pemuda/kegiatan", pola: "/pemuda/kegiatan", harap: hanya("pemuda") },
     { jalur: "/pemuda/karya", pola: "/pemuda/karya", harap: hanya("pemuda") },
     { jalur: "/pemuda/karya/baru", pola: "/pemuda/karya/baru", harap: hanya("pemuda") },
@@ -490,11 +505,15 @@ async function main() {
   await prisma.rateLimit.deleteMany();
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
-  process.exit(gagal === 0 ? 0 : 1);
+  // process.exitCode, BUKAN process.exit(). Pemanggilan fetch meninggalkan
+  // socket keep-alive yang masih menutup diri, dan process.exit() menabraknya
+  // di tengah jalan — pada Windows itu memicu galat penegasan libuv, sehingga
+  // uji yang LULUS keluar dengan kode 127 dan terbaca sebagai gagal.
+  process.exitCode = gagal === 0 ? 0 : 1;
 }
 
 main().catch(async (e) => {
   console.error(e);
   await prisma.$disconnect();
-  process.exit(1);
+  process.exitCode = 1;
 });

@@ -26,6 +26,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../src/generated/prisma/client";
+import { hostBlob } from "../src/lib/blob";
 import { PengalamanSkema, PrestasiSkema } from "../src/lib/validasi";
 import { tingkatKeAtas } from "../src/lib/prestasi";
 
@@ -126,25 +127,58 @@ async function main() {
   );
 
   console.log("\nbukti prestasi pengguna di bawah umur");
-  const belia = await prisma.profilPemuda.findFirst({
-    where: { prestasi: { some: { buktiUrl: { not: null } } } },
+
+  // Buktinya DIPASANG oleh uji ini, bukan dipungut dari hasil penyemaian.
+  // Gambar contoh disemai oleh langkah terpisah yang tidak selalu dijalankan,
+  // dan versi sebelumnya menyatakan gagal ketika langkah itu dilewati —
+  // padahal tidak ada yang rusak. Uji yang merah tanpa sebab melatih orang
+  // mengabaikan warna merah.
+  //
+  // Inangnya harus store blob milik aplikasi ini, sebab pengoptimal gambar
+  // Next.js menolak inang yang tidak terdaftar dan halamannya akan gagal
+  // dirender — bukan sekadar gambarnya yang kosong.
+  const inang = hostBlob();
+  const BUKTI_UJI = `https://${inang}/uji/bukti-prestasi-uji.webp`;
+
+  // Diangkat ke luar blok: pengembaliannya dilakukan di akhir berkas, setelah
+  // saringan "hanya yang berbukti" ikut diuji atas fikstur yang sama.
+  let pulihkanBukti: (() => Promise<void>) | null = null;
+
+  const calon = await prisma.profilPemuda.findFirst({
+    where: { prestasi: { some: {} } },
     select: {
       id: true,
       slug: true,
       tanggalLahir: true,
-      prestasi: {
-        where: { buktiUrl: { not: null } },
-        take: 1,
-        select: { judul: true, buktiUrl: true },
-      },
+      prestasi: { take: 1, select: { id: true, judul: true, buktiUrl: true } },
     },
   });
-  if (!belia || !belia.prestasi[0]?.buktiUrl) {
-    periksa(false, "ada profil berprestasi dengan bukti untuk diuji");
+
+  if (!inang || !calon || !calon.prestasi[0]) {
+    periksa(
+      false,
+      inang
+        ? "ada profil berprestasi untuk dipasangi bukti uji"
+        : "BLOB_STORE_ID terisi, tanpa itu inang gambar tidak dapat dibentuk",
+    );
   } else {
+    const belia = calon;
     const asli = belia.tanggalLahir;
-    const bukti = belia.prestasi[0].buktiUrl;
+    const buktiAsli = belia.prestasi[0].buktiUrl;
+    const idPrestasi = belia.prestasi[0].id;
+    const bukti = BUKTI_UJI;
     const judul = belia.prestasi[0].judul;
+
+    await prisma.prestasi.update({
+      where: { id: idPrestasi },
+      data: { buktiUrl: BUKTI_UJI },
+    });
+    pulihkanBukti = async () => {
+      await prisma.prestasi.update({
+        where: { id: idPrestasi },
+        data: { buktiUrl: buktiAsli },
+      });
+    };
     const usia = (tahun: number) =>
       new Date(Date.now() - tahun * 365.25 * 24 * 3600 * 1000);
 
@@ -182,6 +216,8 @@ async function main() {
       "prestasinya sendiri tetap tampil",
     );
 
+    // Keduanya dikembalikan, bukan salah satu. Uji yang meninggalkan jejak
+    // membuat uji berikutnya menguji keadaan yang ditinggalkannya sendiri.
     await prisma.profilPemuda.update({
       where: { id: belia.id },
       data: { tanggalLahir: asli },
@@ -278,13 +314,21 @@ async function main() {
     "pengalaman yang selesai sebelum mulai ditolak",
   );
 
+  // Uji yang meninggalkan jejak membuat uji berikutnya menguji keadaan
+  // yang ditinggalkannya sendiri.
+  await pulihkanBukti?.();
+
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);
   await prisma.$disconnect();
-  process.exit(gagal === 0 ? 0 : 1);
+  // process.exitCode, BUKAN process.exit(). Pemanggilan fetch meninggalkan
+  // socket keep-alive yang masih menutup diri, dan process.exit() menabraknya
+  // di tengah jalan — pada Windows itu memicu galat penegasan libuv, sehingga
+  // uji yang LULUS keluar dengan kode 127 dan terbaca sebagai gagal.
+  process.exitCode = gagal === 0 ? 0 : 1;
 }
 
 main().catch(async (e) => {
   console.error(e);
   await prisma.$disconnect();
-  process.exit(1);
+  process.exitCode = 1;
 });

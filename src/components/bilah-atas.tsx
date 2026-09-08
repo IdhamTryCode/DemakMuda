@@ -35,6 +35,11 @@ const BUTIR_AKUN = [
     keterangan: "Prestasi dan pengalaman",
   },
   {
+    href: "/pemuda/panduan",
+    label: "Panduan Karier",
+    keterangan: "Sembilan pertanyaan, lalu langkah yang disusun untuk Anda",
+  },
+  {
     href: "/keamanan",
     label: "Keamanan akun",
     keterangan: "Verifikasi dua langkah dan perangkat yang masuk",
