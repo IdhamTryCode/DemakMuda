@@ -323,7 +323,10 @@ export default async function Beranda() {
           judul="Kalau ikut, kamu dapat apa"
           keterangan="Ini yang membedakannya dari grup pesan: keikutsertaan di sini tidak hilang begitu acaranya bubar."
         >
-          <div className="grid gap-4 lg:grid-cols-3">
+          {/* Empat, bukan tiga. Dua kolom pada layar sedang lalu empat pada
+              layar lebar; kisi tiga kolom akan menyisakan satu kartu sendirian
+              di baris kedua. */}
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <Kartu className="flex flex-col gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-brass">
                 Satu
@@ -356,6 +359,24 @@ export default async function Beranda() {
             <Kartu className="flex flex-col gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-brass">
                 Tiga
+              </span>
+              <h3 className="text-base font-semibold">Panduan Karier</h3>
+              <p className="text-sm text-ink-soft">
+                Jawab sembilan pertanyaan, dan langkah berikutnya disusun dari
+                jawaban itu beserta isi kartumu sendiri — menyesuaikan waktu
+                luang, kendala, dan alat yang kamu punya.
+              </p>
+              <Link
+                href="/pemuda/panduan"
+                className="w-fit pt-1 text-sm text-accent underline underline-offset-2"
+              >
+                Buat panduan saya →
+              </Link>
+            </Kartu>
+
+            <Kartu className="flex flex-col gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-brass">
+                Empat
               </span>
               <h3 className="text-base font-semibold">Suara yang ditanggapi</h3>
               <p className="text-sm text-ink-soft">
