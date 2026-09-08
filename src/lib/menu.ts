@@ -16,6 +16,12 @@ export const MENU_PUBLIK: ButirMenu[] = [
   { href: "/peluang", label: "Peluang" },
   { href: "/karya", label: "Karya" },
   { href: "/direktori", label: "Organisasi" },
+  // Satu-satunya butir di bilah ini yang menuntut pengguna sudah masuk, dan
+  // itu disengaja. Panduan Karier adalah alasan paling kuat bagi pengunjung
+  // untuk membuat akun; menyembunyikannya di balik menu akun berarti hanya
+  // diketahui oleh yang sudah tidak perlu diyakinkan lagi. Yang menekannya
+  // tanpa sesi diantar ke halaman masuk, lalu dikembalikan ke sini.
+  { href: "/pemuda/panduan", label: "Panduan Karier" },
   { href: "/cek", label: "Cek sertifikat" },
 ];
 

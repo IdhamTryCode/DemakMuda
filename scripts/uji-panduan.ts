@@ -154,19 +154,41 @@ async function main() {
   // Panduannya memuat kendala biaya dan dukungan keluarga. Ia tidak boleh
   // pernah bocor ke kartu yang dibuka umum.
   const contoh = await prisma.panduanKarier.findFirst({
-    select: { hasil: true, profil: { select: { slug: true } } },
+    select: { hasil: true, jawaban: true, profil: { select: { slug: true } } },
   });
   if (contoh) {
     const kartu = await fetch(`${PANGKALAN}/p/${contoh.profil.slug}`);
     const isi = await kartu.text();
-    const potong = contoh.hasil.slice(0, 60);
-    periksa(
-      !isi.includes(potong),
-      "panduan TIDAK tampil di Kartu Talenta yang dibuka umum",
+
+    // Diperiksa dari TENGAH panduannya, bukan dari awalnya. Pembukaan panduan
+    // cenderung berbunyi mirip antar-orang; bagian tengahnya khas milik satu
+    // orang, sehingga kebocoran sekecil apa pun tertangkap.
+    const tengah = contoh.hasil.slice(
+      Math.floor(contoh.hasil.length / 2),
+      Math.floor(contoh.hasil.length / 2) + 80,
     );
     periksa(
-      !isi.includes("Panduan Karier"),
-      "kartu publik bahkan tidak menyebut adanya panduan",
+      tengah.length > 40 && !isi.includes(tengah),
+      "isi panduan TIDAK tampil di Kartu Talenta yang dibuka umum",
+    );
+
+    // Cita-citanya diketik sendiri dan tidak dapat ditebak dari data lain —
+    // penanda paling tajam bila jawaban survei sampai bocor ke halaman publik.
+    const jawaban = contoh.jawaban as Record<string, unknown>;
+    const cita = typeof jawaban.citaCita === "string" ? jawaban.citaCita : "";
+    periksa(
+      cita.length > 10 && !isi.includes(cita),
+      "jawaban survei TIDAK tampil di kartu publik",
+    );
+
+    // Label menu "Panduan Karier" MEMANG ada di bilah setiap halaman, dan itu
+    // disengaja — ia mengajak pengunjung membuat akun. Yang dijaga isinya,
+    // bukan namanya. Asersi sebelumnya melarang namanya muncul, lalu merah
+    // begitu menunya dipasang; larangan yang salah sasaran seperti itu melatih
+    // orang mengabaikan warna merah.
+    periksa(
+      !isi.includes("Panduan terbaru") && !isi.includes("Panduan sebelumnya"),
+      "kartu publik tidak memuat bagian panduan mana pun",
     );
   } else {
     console.log("  – belum ada panduan tersimpan, pemeriksaan kerahasiaan dilewati");

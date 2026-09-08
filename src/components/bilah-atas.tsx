@@ -34,11 +34,10 @@ const BUTIR_AKUN = [
     label: "Rekam jejak",
     keterangan: "Prestasi dan pengalaman",
   },
-  {
-    href: "/pemuda/panduan",
-    label: "Panduan Karier",
-    keterangan: "Sembilan pertanyaan, lalu langkah yang disusun untuk Anda",
-  },
+  // Panduan Karier TIDAK dicantumkan di sini. Ia sudah berdiri di bilah menu
+  // publik, terlihat oleh semua orang termasuk yang belum masuk; mengulangnya
+  // di menu akun membuat satu label yang sama tampil dua kali di layar yang
+  // sama.
   {
     href: "/keamanan",
     label: "Keamanan akun",
