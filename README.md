@@ -65,8 +65,11 @@ ponsel maupun komputer.
 
 ### Langkah
 
+**Bila Anda menerima folder ini apa adanya** (misalnya dari flash disk), lewati
+langkah 1 — kodenya sudah lengkap. Masuk ke foldernya, lalu mulai dari langkah 2.
+
 ```bash
-# 1. Ambil kode
+# 1. Ambil kode — hanya bila belum punya foldernya
 git clone https://github.com/IdhamTryCode/DemakMuda.git
 cd DemakMuda
 
@@ -76,6 +79,11 @@ npm install
 # 3. Siapkan berkas lingkungan
 cp .env.example .env
 ```
+
+> Pada langkah 2, Prisma menampilkan peringatan bahwa `DATABASE_URL` belum
+> ditemukan. **Itu wajar dan tidak menggagalkan apa pun** — berkas `.env` memang
+> baru dibuat pada langkah berikutnya. Pemasangannya tetap selesai dan klien
+> Prisma tetap dibangkitkan.
 
 Buka `.env`, lalu isi dua nilai yang wajib dibangkitkan sendiri:
 
@@ -304,6 +312,12 @@ npm run typecheck   # TypeScript, tanpa membangun
 npm run lint        # ESLint
 npm run build       # Membangun versi produksi
 ```
+
+> Jalankan `npm run build` **sekali lebih dahulu** sebelum `npm run typecheck`
+> pada salinan yang benar-benar baru. Next.js membangkitkan berkas tipe
+> (`next-env.d.ts` dan `.next/types`) saat membangun, dan tanpa berkas itu
+> pemeriksa tipe melaporkan nama seperti `LayoutProps` tidak dikenal. Keduanya
+> memang tidak ikut ke dalam repositori karena dibangkitkan ulang setiap kali.
 
 ## Perintah lain
 
