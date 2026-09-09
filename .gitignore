@@ -47,6 +47,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# ── Konfigurasi perkakas pengembangan ────────────────────────────────────────
+# Sekelas .vscode/ atau .idea/ — pengaturan mesin sendiri, bukan bagian karya.
+.claude/
+.vscode/
+.idea/
+
 # ── Panduan agen yang ditulis ulang otomatis oleh `next dev` ─────────────────
 AGENTS.md
 CLAUDE.md
