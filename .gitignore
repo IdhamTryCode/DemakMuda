@@ -1,6 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# ── Ketergantungan ───────────────────────────────────────────────────────────
 /node_modules
 /.pnp
 .pnp.*
@@ -10,42 +8,49 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# ── Hasil bangun ─────────────────────────────────────────────────────────────
 /.next/
 /out/
-
-# production
 /build
+/coverage
+*.tsbuildinfo
+next-env.d.ts
 
-# misc
-.DS_Store
+# Klien Prisma dibangkitkan dari prisma/schema.prisma lewat `prisma generate`.
+# Ia berisi puluhan ribu baris yang berubah setiap kali skema disentuh, dan
+# menyimpannya di git membuat setiap diff mustahil dibaca.
+/src/generated/prisma
+
+# ── Rahasia ──────────────────────────────────────────────────────────────────
+# Seluruh varian .env diabaikan, hanya contohnya yang ikut. Repo ini publik:
+# satu berkas .env yang lolos berarti kunci basis data dan kunci model bahasa
+# terbaca siapa pun.
+.env
+.env.*
+!.env.example
 *.pem
+*.key
 
-# debug
+# ── Berkas pribadi dan berkas lomba ──────────────────────────────────────────
+# Memuat NIK, alamat, dan nomor telepon pada surat pernyataan bermaterai.
+# TIDAK BOLEH masuk ke repo publik dalam keadaan apa pun.
+dokumen-lomba/
+
+# ── Alat dan sistem operasi ──────────────────────────────────────────────────
+.vercel
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-/src/generated/prisma
-
-# Berkas panduan agen yang dibuat otomatis oleh Next.js
+# ── Panduan agen yang ditulis ulang otomatis oleh `next dev` ─────────────────
 AGENTS.md
 CLAUDE.md
 
-# Berkas lomba yang memuat data pribadi (NIK, alamat). Repo ini publik.
-dokumen-lomba/
+# Berkas yang dibangkitkan perkakas desain pihak ketiga. Pernah berisi analisis
+# desain produk lain yang sama sekali tidak berhubungan dengan aplikasi ini.
+DESIGN.md

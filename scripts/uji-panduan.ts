@@ -187,11 +187,12 @@ async function main() {
       "jawaban survei TIDAK tampil di kartu publik",
     );
 
-    // Label menu "Panduan Karier" MEMANG ada di bilah setiap halaman, dan itu
-    // disengaja — ia mengajak pengunjung membuat akun. Yang dijaga isinya,
-    // bukan namanya. Asersi sebelumnya melarang namanya muncul, lalu merah
-    // begitu menunya dipasang; larangan yang salah sasaran seperti itu melatih
-    // orang mengabaikan warna merah.
+    // Yang dijaga di sini ISI panduannya, bukan namanya. Nama "Panduan Karier"
+    // boleh muncul di bilah menu — apakah ia muncul atau tidak diatur saklar
+    // fitur, dan diuji terpisah di bagian bawah berkas ini. Asersi lama
+    // melarang namanya muncul di mana pun, lalu merah begitu menunya dipasang;
+    // larangan yang salah sasaran seperti itu melatih orang mengabaikan warna
+    // merah.
     periksa(
       !isi.includes("Panduan terbaru") && !isi.includes("Panduan sebelumnya"),
       "kartu publik tidak memuat bagian panduan mana pun",
@@ -239,6 +240,37 @@ async function main() {
   periksa(
     Array.isArray(dibaca) && !dibaca.includes("nilai-karangan") && dibaca.length === 2,
     "nilai pilih-banyak yang tidak ada di daftar dibuang, sisanya tetap dipakai",
+  );
+
+  // Saklar fitur. Yang disembunyikan JALAN MASUKNYA — menu dan kartu beranda —
+  // bukan halamannya. Dua sisi itu diuji terpisah, sebab menyembunyikan
+  // halamannya sekalian akan membuat fiturnya mustahil diperiksa sendiri
+  // sebelum saklarnya dinyalakan.
+  console.log("\nsaklar fitur Panduan Karier");
+  const tampil = process.env.FITUR_PANDUAN === "true";
+  const beranda = await (await fetch(`${PANGKALAN}/`)).text();
+  const adaTautan = beranda.includes('href="/pemuda/panduan"');
+
+  if (tampil) {
+    periksa(adaTautan, "saklar menyala: tautannya ada di beranda");
+    periksa(
+      beranda.includes("Panduan Karier"),
+      "saklar menyala: namanya tampil di beranda",
+    );
+  } else {
+    periksa(!adaTautan, "saklar mati: tidak ada tautan ke halaman panduan");
+    periksa(
+      !beranda.includes("Panduan Karier"),
+      "saklar mati: namanya tidak muncul sama sekali di beranda",
+    );
+  }
+
+  const masihHidup = await fetch(`${PANGKALAN}/pemuda/panduan`, {
+    redirect: "manual",
+  });
+  periksa(
+    masihHidup.status === 307 || masihHidup.status === 200,
+    `halamannya tetap hidup apa pun saklarnya (status ${masihHidup.status})`,
   );
 
   console.log(gagal === 0 ? "\nSemua pemeriksaan lulus." : `\n${gagal} pemeriksaan GAGAL.`);

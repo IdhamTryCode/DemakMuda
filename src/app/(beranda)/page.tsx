@@ -7,6 +7,8 @@ import lambang from "../../../public/lambang-demak.png";
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Kartu } from "@/components/sk";
 import { agendaAkanDatang } from "@/lib/agenda";
+import { PANDUAN_TAMPIL } from "@/lib/fitur";
+import { MENU_PANDUAN } from "@/lib/menu";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
 import { peluangMasihTerbuka } from "@/lib/peluang";
 import { dasborUntuk } from "@/lib/peran";
@@ -20,6 +22,56 @@ export const metadata: Metadata = {
     "Kegiatan, peluang, dan komunitas pemuda Kabupaten Demak dalam satu tempat — " +
     "tanpa perlu kenal orang dalam lebih dahulu.",
 };
+
+/**
+ * Kartu pada bagian "Kalau ikut, kamu dapat apa".
+ *
+ * Ditulis sebagai data, bukan empat blok JSX yang hampir sama, karena satu di
+ * antaranya tunduk pada saklar fitur. Sebagai blok berulang, mematikan Panduan
+ * Karier akan menyisakan nomor urut yang melompat dari Dua ke Empat dan kisi
+ * empat kolom yang salah satunya kosong. Sebagai data, keduanya menyesuaikan
+ * diri sendiri.
+ */
+const URUTAN = ["Satu", "Dua", "Tiga", "Empat"];
+
+const MANFAAT: {
+  judul: string;
+  isi: string;
+  tautan?: { href: string; label: string };
+}[] = [
+  {
+    judul: "Sertifikat berkode",
+    isi:
+      "Setiap sertifikat kegiatan punya kode unik. Siapa pun dapat memeriksa " +
+      "keasliannya sendiri, tanpa perlu bertanya ke panitia.",
+    tautan: { href: "/cek", label: "Periksa sertifikat →" },
+  },
+  {
+    judul: "Kartu Talenta",
+    isi:
+      "Sertifikat, keanggotaan, minat, dan keterampilanmu terkumpul di satu " +
+      "kartu beralamat tetap. Kodenya dapat dipindai dari layar orang lain " +
+      "untuk diperiksa langsung dari sumbernya.",
+  },
+  ...(PANDUAN_TAMPIL
+    ? [
+        {
+          judul: "Panduan Karier",
+          isi:
+            "Jawab sembilan pertanyaan, dan langkah berikutnya disusun dari " +
+            "jawaban itu beserta isi kartumu sendiri — menyesuaikan waktu " +
+            "luang, kendala, dan alat yang kamu punya.",
+          tautan: { href: MENU_PANDUAN, label: "Buat panduan saya →" },
+        },
+      ]
+    : []),
+  {
+    judul: "Suara yang ditanggapi",
+    isi:
+      "Usul dan keluhan soal kepemudaan dapat dikirim langsung ke Dinas " +
+      "Kepemudaan dan Olahraga, dan statusnya terlacak sampai dijawab.",
+  },
+];
 
 /**
  * Beranda sebagai bukti, bukan sebagai daftar pintu.
@@ -323,67 +375,31 @@ export default async function Beranda() {
           judul="Kalau ikut, kamu dapat apa"
           keterangan="Ini yang membedakannya dari grup pesan: keikutsertaan di sini tidak hilang begitu acaranya bubar."
         >
-          {/* Empat, bukan tiga. Dua kolom pada layar sedang lalu empat pada
-              layar lebar; kisi tiga kolom akan menyisakan satu kartu sendirian
-              di baris kedua. */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <Kartu className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-                Satu
-              </span>
-              <h3 className="text-base font-semibold">Sertifikat berkode</h3>
-              <p className="text-sm text-ink-soft">
-                Setiap sertifikat kegiatan punya kode unik. Siapa pun dapat
-                memeriksa keasliannya sendiri, tanpa perlu bertanya ke panitia.
-              </p>
-              <Link
-                href="/cek"
-                className="w-fit pt-1 text-sm text-accent underline underline-offset-2"
-              >
-                Periksa sertifikat →
-              </Link>
-            </Kartu>
-
-            <Kartu className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-                Dua
-              </span>
-              <h3 className="text-base font-semibold">Kartu Talenta</h3>
-              <p className="text-sm text-ink-soft">
-                Sertifikat, keanggotaan, minat, dan keterampilanmu terkumpul di
-                satu kartu beralamat tetap. Kodenya dapat dipindai dari layar
-                orang lain untuk diperiksa langsung dari sumbernya.
-              </p>
-            </Kartu>
-
-            <Kartu className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-                Tiga
-              </span>
-              <h3 className="text-base font-semibold">Panduan Karier</h3>
-              <p className="text-sm text-ink-soft">
-                Jawab sembilan pertanyaan, dan langkah berikutnya disusun dari
-                jawaban itu beserta isi kartumu sendiri — menyesuaikan waktu
-                luang, kendala, dan alat yang kamu punya.
-              </p>
-              <Link
-                href="/pemuda/panduan"
-                className="w-fit pt-1 text-sm text-accent underline underline-offset-2"
-              >
-                Buat panduan saya →
-              </Link>
-            </Kartu>
-
-            <Kartu className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-                Empat
-              </span>
-              <h3 className="text-base font-semibold">Suara yang ditanggapi</h3>
-              <p className="text-sm text-ink-soft">
-                Usul dan keluhan soal kepemudaan dapat dikirim langsung ke Dinas
-                Kepemudaan dan Olahraga, dan statusnya terlacak sampai dijawab.
-              </p>
-            </Kartu>
+          {/* Dua kolom pada layar sedang. Pada layar lebar, jumlah kolomnya
+              mengikuti jumlah kartu — kisi empat kolom untuk tiga kartu akan
+              menyisakan satu kolom menganggur di ujung kanan. */}
+          <div
+            className={`grid gap-4 sm:grid-cols-2 ${
+              MANFAAT.length === 4 ? "xl:grid-cols-4" : "xl:grid-cols-3"
+            }`}
+          >
+            {MANFAAT.map((m, i) => (
+              <Kartu key={m.judul} className="flex flex-col gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-brass">
+                  {URUTAN[i]}
+                </span>
+                <h3 className="text-base font-semibold">{m.judul}</h3>
+                <p className="text-sm text-ink-soft">{m.isi}</p>
+                {m.tautan && (
+                  <Link
+                    href={m.tautan.href}
+                    className="w-fit pt-1 text-sm text-accent underline underline-offset-2"
+                  >
+                    {m.tautan.label}
+                  </Link>
+                )}
+              </Kartu>
+            ))}
           </div>
         </Bagian>
 

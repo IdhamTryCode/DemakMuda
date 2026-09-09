@@ -10,6 +10,16 @@ import type { Peran } from "@/lib/peran";
  */
 export type ButirMenu = { href: string; label: string };
 
+/** Alamat butir yang tunduk pada saklar fitur, dipakai menyaringnya. */
+export const MENU_PANDUAN = "/pemuda/panduan";
+
+/**
+ * Daftar lengkapnya, termasuk butir yang sedang disembunyikan.
+ *
+ * Penyaringan TIDAK dilakukan di sini melainkan di bilah-atas.tsx, sebab modul
+ * ini ikut diimpor komponen klien dan process.env tidak tersedia di sana.
+ * Lihat src/lib/fitur.ts.
+ */
 export const MENU_PUBLIK: ButirMenu[] = [
   { href: "/kabar", label: "Kabar" },
   { href: "/agenda", label: "Agenda" },
@@ -21,7 +31,7 @@ export const MENU_PUBLIK: ButirMenu[] = [
   // untuk membuat akun; menyembunyikannya di balik menu akun berarti hanya
   // diketahui oleh yang sudah tidak perlu diyakinkan lagi. Yang menekannya
   // tanpa sesi diantar ke halaman masuk, lalu dikembalikan ke sini.
-  { href: "/pemuda/panduan", label: "Panduan Karier" },
+  { href: MENU_PANDUAN, label: "Panduan Karier" },
   { href: "/cek", label: "Cek sertifikat" },
 ];
 

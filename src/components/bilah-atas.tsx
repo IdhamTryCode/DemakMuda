@@ -4,7 +4,8 @@ import { GantiTema } from "@/components/ganti-tema";
 import { Lonceng } from "@/components/lonceng";
 import { LogoDemak } from "@/components/logo-demak";
 import { MenuAkun } from "@/components/menu-akun";
-import { MENU_PUBLIK } from "@/lib/menu";
+import { PANDUAN_TAMPIL } from "@/lib/fitur";
+import { MENU_PANDUAN, MENU_PUBLIK } from "@/lib/menu";
 import { bacaPeran, dasborUntuk, LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { dapatkanSesi } from "@/lib/sesi";
@@ -71,7 +72,9 @@ export async function BilahAtas({ aktif }: { aktif?: string }) {
           aria-label="Menu publik"
           className="order-3 -mx-6 flex w-[calc(100%+3rem)] gap-0.5 overflow-x-auto px-6 pb-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1 sm:overflow-visible sm:px-0 sm:pb-0"
         >
-          {MENU_PUBLIK.map((m) => {
+          {MENU_PUBLIK.filter(
+            (m) => PANDUAN_TAMPIL || m.href !== MENU_PANDUAN,
+          ).map((m) => {
             const ini = aktif === m.href;
             return (
               <Link
