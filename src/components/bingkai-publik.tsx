@@ -15,11 +15,9 @@ const JELAJAHI = [
   { href: "/karya", label: "Karya" },
 ];
 
-const IKUT_SERTA = [
+const IKUT_SERTA_DASAR = [
   { href: "/direktori", label: "Direktori organisasi" },
   { href: "/cek", label: "Periksa sertifikat" },
-  { href: "/daftar", label: "Buat akun" },
-  { href: "/masuk", label: "Masuk" },
 ];
 
 /** Bingkai untuk seluruh halaman yang dapat dibuka tanpa masuk. */
@@ -30,9 +28,21 @@ export async function BingkaiPublik({
   aktif?: string;
   children: ReactNode;
 }) {
-  // Sesi dibaca untuk satu hal saja: ke mana butir "Akun" di dok mengarah.
+  // Sesi dibaca untuk dua hal: ke mana butir "Akun" di dok mengarah, dan
+  // apakah kaki halaman masih menawarkan "Buat akun" dan "Masuk".
   const sesi = await dapatkanSesi();
   const akunHref = sesi ? dasborUntuk(sesi.user.role) : "/masuk";
+
+  // Bagi yang sudah masuk, menawarkan "Buat akun" dan "Masuk" mengundang
+  // tindakan yang tidak mungkin lagi dilakukan. Keduanya diganti satu tautan
+  // ke dasbornya.
+  const ikutSerta = sesi
+    ? [...IKUT_SERTA_DASAR, { href: akunHref, label: "Dasbor saya" }]
+    : [
+        ...IKUT_SERTA_DASAR,
+        { href: "/daftar", label: "Buat akun" },
+        { href: "/masuk", label: "Masuk" },
+      ];
 
   return (
     <>
@@ -45,9 +55,13 @@ export async function BingkaiPublik({
       {/* Kaki halaman berkolom. Tanpa klaim kepemilikan lembaga, tanpa alamat
           kantor, tanpa surel dinas: aplikasi ini karya perorangan. Ruang bawah
           pada ponsel menyisakan tinggi dok supaya kedua tautan wajib di baris
-          terbawah tidak tertutup. */}
-      <footer className="border-t border-line px-6 pt-10 pb-[calc(5rem_+_env(safe-area-inset-bottom))] text-sm sm:pb-10">
-        <div className="mx-auto grid w-full max-w-[78rem] gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          terbawah tidak tertutup.
+
+          px-6 dipasang pada wadah max-w-[78rem], bukan pada <footer>, supaya
+          tepi kiri bilah atas, isi <main>, dan kaki halaman sama persis. Bila
+          px-6 ada di luar wadah, kaki halaman bergeser 24 px ke kiri. */}
+      <footer className="border-t border-line pt-10 pb-[calc(5rem_+_env(safe-area-inset-bottom))] text-sm sm:pb-10">
+        <div className="mx-auto grid w-full max-w-[78rem] gap-8 px-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-3 lg:col-span-2">
             <LogoDemak ukuran={28} ringkas />
             <p className="max-w-sm text-xs leading-relaxed text-muted">
@@ -56,10 +70,10 @@ export async function BingkaiPublik({
           </div>
 
           <KakiKolom judul="Jelajahi" butir={JELAJAHI} />
-          <KakiKolom judul="Ikut serta" butir={IKUT_SERTA} />
+          <KakiKolom judul="Ikut serta" butir={ikutSerta} />
         </div>
 
-        <div className="mx-auto mt-10 flex w-full max-w-[78rem] flex-wrap items-center gap-x-4 gap-y-1 border-t border-line pt-6 text-xs text-muted">
+        <div className="mx-auto mt-10 flex w-full max-w-[78rem] flex-wrap items-center gap-x-4 gap-y-1 border-t border-line px-6 pt-6 text-xs text-muted">
           <Link
             href="/latar"
             className="text-accent underline underline-offset-2"

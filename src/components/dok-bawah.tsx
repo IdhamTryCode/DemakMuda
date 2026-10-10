@@ -42,10 +42,14 @@ export function DokBawah({ akunHref }: { akunHref: string }) {
   const jalur = usePathname() ?? "";
   const butir = [...MENU_DOK, { href: akunHref, label: "Akun" }];
 
+  // Memakai .sk-bilah yang sama dengan bilah atas, bukan kaca yang ditulis
+  // lepas: dengan begitu warna dan keburamannya selalu sama di kedua tema dan
+  // cukup diubah di satu tempat. border-b-0 meniadakan garis bawah bilah; dok
+  // justru butuh garis ATAS.
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl sm:hidden"
+      className="sk-bilah fixed inset-x-0 bottom-0 z-50 border-b-0 border-t border-line pb-[env(safe-area-inset-bottom)] sm:hidden"
     >
       <ul className="flex items-stretch px-1">
         {butir.map((m) => {
