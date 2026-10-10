@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { KotakCari } from "@/components/kotak-cari";
-import { Kartu } from "@/components/sk";
+import { Cip, Kartu, Overline } from "@/components/sk";
 import { JENIS_KARYA, LABEL_JENIS_KARYA, adalahJenisKarya } from "@/lib/karya";
 import { prisma } from "@/lib/prisma";
 import { cuplikan, tanggalPendek } from "@/lib/teks";
@@ -73,6 +73,7 @@ export default async function HalamanKarya({
     <BingkaiPublik aktif="/karya">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
+          <Overline>Karya</Overline>
           <h1 className="text-3xl font-semibold tracking-tight">Ruang Karya</h1>
           <p className="max-w-prose text-sm text-ink-soft">
             Etalase karya pemuda Demak — produk, seni, tulisan, dan proyek —
@@ -83,27 +84,14 @@ export default async function HalamanKarya({
 
         <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Jenis
-            </span>
-            <Link
-              href={tautan({ jenis: "" })}
-              className={`rounded-full px-3 py-1.5 text-sm ${
-                !jenis ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-              }`}
-            >
+            <Overline>Jenis</Overline>
+            <Cip href={tautan({ jenis: "" })} aktif={!jenis}>
               Semua
-            </Link>
+            </Cip>
             {JENIS_KARYA.map((j) => (
-              <Link
-                key={j}
-                href={tautan({ jenis: j })}
-                className={`rounded-full px-3 py-1.5 text-sm ${
-                  jenis === j ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-                }`}
-              >
+              <Cip key={j} href={tautan({ jenis: j })} aktif={jenis === j}>
                 {LABEL_JENIS_KARYA[j]}
-              </Link>
+              </Cip>
             ))}
           </div>
 

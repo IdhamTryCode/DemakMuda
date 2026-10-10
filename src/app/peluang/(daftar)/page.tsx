@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { KotakCari } from "@/components/kotak-cari";
-import { Kartu } from "@/components/sk";
+import { Cip, Kartu, Overline } from "@/components/sk";
 import {
   adalahJenis,
   JENIS_PELUANG,
@@ -97,6 +97,7 @@ export default async function HalamanPeluang({
     <BingkaiPublik aktif="/peluang">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
+          <Overline>Peluang</Overline>
           <h1 className="text-3xl font-semibold tracking-tight">Papan Peluang</h1>
           <p className="max-w-prose text-sm text-ink-soft">
             Lomba, pelatihan, beasiswa, magang, dan lowongan kerja yang terbuka
@@ -106,27 +107,14 @@ export default async function HalamanPeluang({
 
         <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Jenis
-            </span>
-            <Link
-              href={tautan({ jenis: "" })}
-              className={`rounded-full px-3 py-1.5 text-sm ${
-                !jenis ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-              }`}
-            >
+            <Overline>Jenis</Overline>
+            <Cip href={tautan({ jenis: "" })} aktif={!jenis}>
               Semua
-            </Link>
+            </Cip>
             {JENIS_PELUANG.map((j) => (
-              <Link
-                key={j}
-                href={tautan({ jenis: j })}
-                className={`rounded-full px-3 py-1.5 text-sm ${
-                  jenis === j ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-                }`}
-              >
+              <Cip key={j} href={tautan({ jenis: j })} aktif={jenis === j}>
                 {LABEL_JENIS[j]}
-              </Link>
+              </Cip>
             ))}
           </div>
 
@@ -168,12 +156,12 @@ export default async function HalamanPeluang({
             >
               Terapkan
             </button>
-            <Link
+            <Cip
               href={tautan({ tutup: tampilkanTutup ? "" : "1" })}
-              className="px-2 py-2.5 text-sm text-accent underline underline-offset-2"
+              aktif={tampilkanTutup}
             >
               {tampilkanTutup ? "Lihat yang masih dibuka" : "Lihat yang sudah tutup"}
-            </Link>
+            </Cip>
           </form>
         </div>
 

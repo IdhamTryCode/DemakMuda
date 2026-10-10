@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
-import { Kartu } from "@/components/sk";
+import { Cip, Kartu, Overline } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { bulanTahun, tanggalPanjang, waktuSaja } from "@/lib/teks";
 
@@ -74,6 +74,7 @@ export default async function HalamanAgenda({
     <BingkaiPublik aktif="/agenda">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
+          <Overline>Agenda</Overline>
           <h1 className="text-3xl font-semibold tracking-tight">Agenda Demak</h1>
           <p className="max-w-prose text-sm text-ink-soft">
             Kegiatan kepemudaan se-Kabupaten Demak dalam satu tempat — dari
@@ -83,28 +84,19 @@ export default async function HalamanAgenda({
 
         <div className="sk-redup flex flex-col gap-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Waktu
-            </span>
+            <Overline>Waktu</Overline>
             {[
               { nilai: undefined, label: "Mendatang" },
               { nilai: "lalu", label: "Sudah lewat" },
-            ].map((p) => {
-              const aktif = (p.nilai ?? "") === (waktu ?? "");
-              return (
-                <Link
-                  key={p.label}
-                  href={tautanSaringan({ waktu: p.nilai ?? "" })}
-                  className={`rounded-full px-3 py-1.5 text-sm ${
-                    aktif
-                      ? "bg-accent text-on-accent"
-                      : "sk-kartu text-ink-soft"
-                  }`}
-                >
-                  {p.label}
-                </Link>
-              );
-            })}
+            ].map((p) => (
+              <Cip
+                key={p.label}
+                href={tautanSaringan({ waktu: p.nilai ?? "" })}
+                aktif={(p.nilai ?? "") === (waktu ?? "")}
+              >
+                {p.label}
+              </Cip>
+            ))}
           </div>
 
           <form action="/agenda" method="get" className="flex flex-wrap items-end gap-3">

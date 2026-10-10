@@ -55,99 +55,105 @@ export default async function HalamanPeluangRinci({
 
   return (
     <BingkaiPublik aktif="/peluang">
-      <article className="mx-auto flex max-w-2xl flex-col gap-6">
-        <Link href="/peluang" className="text-sm text-accent underline underline-offset-2">
-          ← Semua peluang
-        </Link>
+      <article className="mx-auto flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
+        <div className="flex min-w-0 flex-col gap-6 lg:flex-1">
+          <Link href="/peluang" className="text-sm text-accent underline underline-offset-2">
+            ← Semua peluang
+          </Link>
 
-        <header className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
-              {LABEL_JENIS[p.jenis]}
-            </span>
-            {sudahTutup && (
-              <span className="rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
-                Pendaftaran sudah ditutup
+          <header className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+                {LABEL_JENIS[p.jenis]}
               </span>
-            )}
-            {p.khususAnggota && (
-              <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
-                Khusus anggota
-              </span>
-            )}
-          </div>
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-            {p.judul}
-          </h1>
-        </header>
+              {sudahTutup && (
+                <span className="rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
+                  Pendaftaran sudah ditutup
+                </span>
+              )}
+              {p.khususAnggota && (
+                <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                  Khusus anggota
+                </span>
+              )}
+            </div>
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
+              {p.judul}
+            </h1>
+          </header>
 
-        <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">
-          <div className="flex flex-col gap-1">
-            <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Tenggat pendaftaran
-            </dt>
-            <dd className="text-sm">
-              {p.tenggat
-                ? `${tanggalPanjang(p.tenggat)} (${sisaWaktu(p.tenggat, sekarang)})`
-                : "Tidak ditentukan"}
-            </dd>
-          </div>
-          <div className="flex flex-col gap-1">
-            <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Batas usia
-            </dt>
-            <dd className="text-sm">
-              {p.usiaMin || p.usiaMaks
-                ? `${p.usiaMin ?? "—"} sampai ${p.usiaMaks ?? "—"} tahun`
-                : "Tidak dibatasi"}
-            </dd>
-          </div>
-          <div className="flex flex-col gap-1">
-            <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Penyelenggara
-            </dt>
-            <dd className="text-sm">{p.organisasi?.nama ?? p.pembuat.name}</dd>
-          </div>
-          {p.minat.length > 0 && (
+          <Markdown isi={p.deskripsi} />
+
+          {p.agenda?.status === "TERBIT" && (
+            <p className="text-sm text-ink-soft">
+              Terkait agenda{" "}
+              <Link
+                href={`/agenda/${p.agenda.slug}`}
+                className="text-accent underline underline-offset-2"
+              >
+                {p.agenda.judul}
+              </Link>
+            </p>
+          )}
+        </div>
+
+        {/* Fakta ringkas, pendaftaran, dan tautan pendaftaran luar, di samping
+            isi pada layar lebar. */}
+        <aside className="flex flex-col gap-5 lg:sticky lg:top-16 lg:w-80 lg:shrink-0">
+          <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-1">
             <div className="flex flex-col gap-1">
               <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
-                Bidang
+                Tenggat pendaftaran
               </dt>
-              <dd className="text-sm">{p.minat.map((m) => m.nama).join(", ")}</dd>
+              <dd className="text-sm">
+                {p.tenggat
+                  ? `${tanggalPanjang(p.tenggat)} (${sisaWaktu(p.tenggat, sekarang)})`
+                  : "Tidak ditentukan"}
+              </dd>
             </div>
+            <div className="flex flex-col gap-1">
+              <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Batas usia
+              </dt>
+              <dd className="text-sm">
+                {p.usiaMin || p.usiaMaks
+                  ? `${p.usiaMin ?? "—"} sampai ${p.usiaMaks ?? "—"} tahun`
+                  : "Tidak dibatasi"}
+              </dd>
+            </div>
+            <div className="flex flex-col gap-1">
+              <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Penyelenggara
+              </dt>
+              <dd className="text-sm">{p.organisasi?.nama ?? p.pembuat.name}</dd>
+            </div>
+            {p.minat.length > 0 && (
+              <div className="flex flex-col gap-1">
+                <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  Bidang
+                </dt>
+                <dd className="text-sm">{p.minat.map((m) => m.nama).join(", ")}</dd>
+              </div>
+            )}
+          </dl>
+
+          {!sudahTutup && (
+            <PanelDaftar sasaran={{ jenis: "peluang", id: p.id }} />
           )}
-        </dl>
 
-        <Markdown isi={p.deskripsi} />
-
-        {!sudahTutup && <PanelDaftar sasaran={{ jenis: "peluang", id: p.id }} />}
-
-        {p.agenda?.status === "TERBIT" && (
-          <p className="text-sm text-ink-soft">
-            Terkait agenda{" "}
-            <Link
-              href={`/agenda/${p.agenda.slug}`}
-              className="text-accent underline underline-offset-2"
-            >
-              {p.agenda.judul}
-            </Link>
-          </p>
-        )}
-
-        {p.tautanLuar && !sudahTutup && (
-          <div>
-            {/* Skema tautan sudah dibatasi http/https saat disimpan
-                (lihat urlAman di lib/validasi.ts). */}
+          {p.tautanLuar && !sudahTutup && (
+            // Skema tautan sudah dibatasi http/https saat disimpan
+            // (lihat urlAman di lib/validasi.ts).
             <a
               href={p.tautanLuar}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="sk-btn-utama sk-pressable inline-block rounded-sk px-5 py-2.5 text-sm"
+              className="sk-btn-utama sk-pressable rounded-sk px-5 py-2.5 text-sm"
             >
               Buka pendaftaran →
             </a>
-          </div>
-        )}
+          )}
+        </aside>
       </article>
     </BingkaiPublik>
   );

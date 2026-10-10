@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { KotakCari } from "@/components/kotak-cari";
-import { Kartu } from "@/components/sk";
+import { Kartu, Overline } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { tanggalPanjang } from "@/lib/teks";
 
@@ -55,6 +55,7 @@ export default async function HalamanKabar({
     <BingkaiPublik aktif="/kabar">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
+          <Overline>Kabar</Overline>
           <h1 className="text-3xl font-semibold tracking-tight">Kabar Demak</h1>
           <p className="max-w-prose text-sm text-ink-soft">
             Berita dan pengumuman seputar kepemudaan Kabupaten Demak.

@@ -68,41 +68,48 @@ export default async function HalamanAgendaRinci({
 
   return (
     <BingkaiPublik aktif="/agenda">
-      <article className="mx-auto flex max-w-2xl flex-col gap-6">
-        <Link href="/agenda" className="text-sm text-accent underline underline-offset-2">
-          ← Semua agenda
-        </Link>
+      <article className="mx-auto flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
+        <div className="flex min-w-0 flex-col gap-6 lg:flex-1">
+          <Link href="/agenda" className="text-sm text-accent underline underline-offset-2">
+            ← Semua agenda
+          </Link>
 
-        <header className="flex flex-col gap-3">
-          {sudahLewat && (
-            <span className="w-fit rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
-              Kegiatan ini sudah berlangsung
-            </span>
+          <header className="flex flex-col gap-3">
+            {sudahLewat && (
+              <span className="w-fit rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
+                Kegiatan ini sudah berlangsung
+              </span>
+            )}
+            {agenda.khususAnggota && (
+              <span className="w-fit rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                Khusus anggota
+              </span>
+            )}
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight">
+              {agenda.judul}
+            </h1>
+          </header>
+
+          <Markdown isi={agenda.deskripsi} />
+        </div>
+
+        {/* Fakta ringkas dan ajakan mendaftar, di samping isi pada layar lebar. */}
+        <aside className="flex flex-col gap-5 lg:sticky lg:top-16 lg:w-80 lg:shrink-0">
+          <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-1">
+            {rincian.map((r) => (
+              <div key={r.label} className="flex flex-col gap-1">
+                <dt className="text-[11px] font-semibold uppercase leading-[14px] tracking-[0.12em] text-muted">
+                  {r.label}
+                </dt>
+                <dd className="text-sm">{r.nilai}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {!sudahLewat && (
+            <PanelDaftar sasaran={{ jenis: "agenda", id: agenda.id }} />
           )}
-          {agenda.khususAnggota && (
-            <span className="w-fit rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
-              Khusus anggota
-            </span>
-          )}
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight">
-            {agenda.judul}
-          </h1>
-        </header>
-
-        <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2">
-          {rincian.map((r) => (
-            <div key={r.label} className="flex flex-col gap-1">
-              <dt className="text-xs font-semibold uppercase tracking-wider text-muted">
-                {r.label}
-              </dt>
-              <dd className="text-sm">{r.nilai}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <Markdown isi={agenda.deskripsi} />
-
-        {!sudahLewat && <PanelDaftar sasaran={{ jenis: "agenda", id: agenda.id }} />}
+        </aside>
       </article>
     </BingkaiPublik>
   );
