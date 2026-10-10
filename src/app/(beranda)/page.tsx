@@ -11,21 +11,20 @@ import {
   IkonAgenda,
   IkonKomunitas,
   IkonLokasi,
-  IkonPanahKanan,
   IkonPeluang,
 } from "@/components/ikon";
+import { KartuOrganisasi } from "@/components/kartu-organisasi";
 import { KartuTalenta } from "@/components/kartu-talenta";
 import { Cip, Kartu, Overline, PanelSunk, UbinMetrik } from "@/components/sk";
 import { agendaAkanDatang } from "@/lib/agenda";
 import { PANDUAN_TAMPIL } from "@/lib/fitur";
 import { MENU_PANDUAN } from "@/lib/menu";
-import { LABEL_ORGANISASI } from "@/lib/organisasi";
 import { LABEL_JENIS, peluangMasihTerbuka } from "@/lib/peluang";
 import { dasborUntuk } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { keterbukaanProfil, umur } from "@/lib/profil";
 import { dapatkanSesi } from "@/lib/sesi";
-import { cuplikan, sisaWaktu, tanggalPanjang, tanggalPendek, waktuSaja } from "@/lib/teks";
+import { sisaWaktu, tanggalPanjang, tanggalPendek, waktuSaja } from "@/lib/teks";
 
 export const metadata: Metadata = {
   description:
@@ -82,16 +81,6 @@ const MANFAAT: {
       "Kepemudaan dan Olahraga, dan statusnya terlacak sampai dijawab.",
   },
 ];
-
-/** Inisial nama, dipakai kartu komunitas yang belum punya logo. */
-function inisial(nama: string) {
-  return nama
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((k) => k[0]?.toUpperCase() ?? "")
-    .join("");
-}
 
 /**
  * Beranda sebagai bukti, bukan sebagai daftar pintu.
@@ -181,6 +170,9 @@ export default async function Beranda() {
         deskripsi: true,
         logoUrl: true,
         kecamatan: { select: { nama: true } },
+        _count: {
+          select: { keanggotaan: { where: { status: "TERVERIFIKASI" } } },
+        },
       },
     }),
 
@@ -461,50 +453,15 @@ export default async function Beranda() {
                 <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {komunitas.map((o) => (
                     <li key={o.id} className="h-full">
-                      <Link
-                        href={`/direktori/${o.slug}`}
-                        className="block h-full rounded-sk"
-                      >
-                        <Kartu className="sk-pressable flex h-full flex-col gap-3">
-                          <div className="flex items-center gap-3">
-                            {o.logoUrl ? (
-                              <span className="sk-redup relative h-11 w-11 shrink-0 overflow-hidden rounded-[8px]">
-                                <Image
-                                  src={o.logoUrl}
-                                  alt=""
-                                  fill
-                                  sizes="2.75rem"
-                                  className="object-cover"
-                                />
-                              </span>
-                            ) : (
-                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-accent-soft font-semibold text-accent">
-                                {inisial(o.nama)}
-                              </span>
-                            )}
-                            <div className="flex min-w-0 flex-wrap items-center gap-2">
-                              <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
-                                {LABEL_ORGANISASI[o.jenis]}
-                              </span>
-                              <span className="inline-flex items-center gap-1 text-xs text-muted">
-                                <IkonLokasi className="h-3.5 w-3.5" />
-                                {o.kecamatan.nama}
-                              </span>
-                            </div>
-                          </div>
-
-                          <h3 className="font-semibold leading-snug">{o.nama}</h3>
-                          {o.deskripsi && (
-                            <p className="text-sm text-ink-soft">
-                              {cuplikan(o.deskripsi, 120)}
-                            </p>
-                          )}
-                          <span className="mt-auto inline-flex w-fit items-center gap-1 pt-1 text-sm text-accent">
-                            Lihat rincian
-                            <IkonPanahKanan className="h-4 w-4" />
-                          </span>
-                        </Kartu>
-                      </Link>
+                      <KartuOrganisasi
+                        nama={o.nama}
+                        slug={o.slug}
+                        jenis={o.jenis}
+                        kecamatan={o.kecamatan.nama}
+                        anggota={o._count.keanggotaan}
+                        deskripsi={o.deskripsi}
+                        logoUrl={o.logoUrl}
+                      />
                     </li>
                   ))}
                 </ul>
