@@ -60,11 +60,21 @@
   --sk-brass: #7d5416;
   --sk-brass-soft: #f5eddc;
 
+  /* Biru laut lambang Demak — penanda hal administratif kedinasan, bukan aksen
+     kedua. Dipakai untuk arsip sertifikasi dan tautan resmi tingkat kabupaten. */
+  --sk-navy: #1e3a8a;
+  --sk-navy-soft: #eef2ff;
+  /* Emas lambang daerah. HANYA sebagai isian berteks gelap: sebagai warna teks
+     di atas putih ia gagal kontras (sekitar 1,9:1). */
+  --sk-gold: #eab308;
+
   --sk-danger: #96301f;
   --sk-danger-soft: #f8e6e2;
 
-  /* Kaca: latar setengah tembus untuk bilah dan panel mengambang. */
-  --sk-kaca: rgb(255 255 255 / 0.72);
+  /* Kaca: latar setengah tembus untuk bilah dan panel mengambang. Kepekatan
+     0,85 dipilih supaya teks bilah tetap terbaca saat isi halaman lewat di
+     belakangnya, tanpa kehilangan kesan tembus pandang. */
+  --sk-kaca: rgb(255 255 255 / 0.85);
   --sk-kaca-tepi: rgb(21 32 27 / 0.08);
 
   /* Satu-satunya bayangan di seluruh sistem, khusus lapisan mengambang. */
@@ -90,10 +100,14 @@
   --sk-brass: #d7a954;
   --sk-brass-soft: #2a2317;
 
+  --sk-navy: #a9bcff;
+  --sk-navy-soft: #1a2440;
+  --sk-gold: #f5cb2b;
+
   --sk-danger: #e78d7d;
   --sk-danger-soft: #2e1a17;
 
-  --sk-kaca: rgb(20 29 25 / 0.72);
+  --sk-kaca: rgb(20 29 25 / 0.85);
   --sk-kaca-tepi: rgb(255 255 255 / 0.08);
 
   --sk-sh-melayang: 0 14px 38px -10px rgb(0 0 0 / 0.66);
@@ -115,6 +129,9 @@
   --color-on-accent: var(--sk-on-accent);
   --color-brass: var(--sk-brass);
   --color-brass-soft: var(--sk-brass-soft);
+  --color-navy: var(--sk-navy);
+  --color-navy-soft: var(--sk-navy-soft);
+  --color-gold: var(--sk-gold);
   --color-danger: var(--sk-danger);
   --color-danger-soft: var(--sk-danger-soft);
 
@@ -206,8 +223,8 @@ h3 {
      penggambaran pada ponsel lama tanpa mengubah apa pun yang terlihat. */
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
     .sk-bilah {
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      backdrop-filter: saturate(180%) blur(16px);
     }
   }
 
@@ -215,16 +232,16 @@ h3 {
      penyusutan halus, cara benda di layar kaca menanggapi sentuhan. */
   .sk-pressable {
     transition:
-      background-color 160ms ease-out,
-      border-color 160ms ease-out,
-      transform 160ms ease-out,
-      opacity 160ms ease-out;
+      background-color 150ms ease-out,
+      border-color 150ms ease-out,
+      transform 150ms ease-out,
+      opacity 150ms ease-out;
   }
   .sk-pressable:hover {
     border-color: var(--sk-line-strong);
   }
   .sk-pressable:active {
-    transform: scale(0.985);
+    transform: scale(0.98);
   }
   .sk-pressable:focus-visible {
     outline: 2px solid var(--sk-accent);
@@ -237,7 +254,12 @@ h3 {
     background-color: var(--sk-accent);
     color: var(--sk-on-accent);
     border: 1px solid transparent;
-    border-radius: 999px;
+    /* Kapsul penuh, dan WAJIB menang atas utilitas `rounded-sk` yang masih
+       terpasang di puluhan tombol di halaman. Utilitas selalu berada di lapisan
+       setelah komponen, jadi tanpa !important bentuk kapsulnya kalah dan
+       tombolnya tetap bersudut 12px. */
+    border-radius: 999px !important;
+    min-height: 2.5rem;
     font-weight: 600;
   }
   .sk-btn-utama:hover {
@@ -255,6 +277,7 @@ h3 {
     border: 1px solid var(--sk-line-strong);
     border-radius: var(--radius-sk-kecil);
     color: var(--sk-ink);
+    min-height: 2.75rem;
     transition:
       border-color 160ms ease-out,
       box-shadow 160ms ease-out;
