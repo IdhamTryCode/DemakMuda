@@ -100,10 +100,10 @@ export default function HalamanCek() {
           </h2>
           <div className="flex flex-col gap-2">
             {FAQ.map((f) => (
-              <details key={f.tanya} className="sk-kartu px-4 py-3">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium">
+              <details key={f.tanya} className="sk-kartu group px-4 py-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium [&::-webkit-details-marker]:hidden">
                   {f.tanya}
-                  <IkonBuka className="h-4 w-4 shrink-0 text-muted" />
+                  <IkonBuka className="h-4 w-4 shrink-0 text-muted transition-transform duration-200 group-open:rotate-180" />
                 </summary>
                 <p className="pt-2 text-sm text-ink-soft">{f.jawab}</p>
               </details>

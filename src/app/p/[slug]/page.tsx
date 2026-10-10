@@ -188,7 +188,7 @@ export default async function HalamanKartuTalenta({
       <article className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
         {/* Kolom kartu: lebar tetap di layar lebar, tidak diregangkan mengikuti
             lebar halaman. */}
-        <div className="flex flex-col gap-4 lg:w-[26rem] lg:shrink-0">
+        <div className="flex flex-col gap-4 lg:sticky lg:top-16 lg:w-[26rem] lg:shrink-0">
           <h1 className="sr-only">Kartu Talenta {p.user.name}</h1>
 
           {punyaSendiri && (
@@ -311,18 +311,19 @@ export default async function HalamanKartuTalenta({
             </section>
           )}
 
+          {(p.prestasi.length > 0 || p.pengalaman.length > 0) && (
+            <p className="max-w-prose text-sm text-muted">
+              Prestasi dan pengalaman di sini dicatat sendiri oleh pemiliknya
+              dan tidak diperiksa siapa pun. Yang membuatnya berarti adalah
+              buktinya — tanpa itu, isinya hanya klaim.
+            </p>
+          )}
+
           {p.prestasi.length > 0 && (
             <section className="flex flex-col gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">
                 Prestasi
               </h2>
-
-              {/* Prestasi diisi sendiri dan tidak diperiksa siapa pun. */}
-              <p className="max-w-prose text-sm text-muted">
-                Prestasi di sini dicatat sendiri oleh pemiliknya dan tidak
-                diperiksa siapa pun. Yang membuatnya berarti adalah buktinya —
-                tanpa itu, isinya hanya klaim.
-              </p>
 
               <ul className="flex flex-col gap-3">
                 {p.prestasi.map((s) => (
