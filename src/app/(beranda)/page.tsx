@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import QRCode from "qrcode";
 import type { ReactNode } from "react";
 
 import lambang from "../../../public/lambang-demak.png";
 import { BingkaiPublik } from "@/components/bingkai-publik";
-import { Kartu } from "@/components/sk";
+import {
+  IkonAgenda,
+  IkonKomunitas,
+  IkonLokasi,
+  IkonPanahKanan,
+  IkonPeluang,
+} from "@/components/ikon";
+import { KartuTalenta } from "@/components/kartu-talenta";
+import { Cip, Kartu, Overline, PanelSunk, UbinMetrik } from "@/components/sk";
 import { agendaAkanDatang } from "@/lib/agenda";
 import { PANDUAN_TAMPIL } from "@/lib/fitur";
 import { MENU_PANDUAN } from "@/lib/menu";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
-import { peluangMasihTerbuka } from "@/lib/peluang";
+import { LABEL_JENIS, peluangMasihTerbuka } from "@/lib/peluang";
 import { dasborUntuk } from "@/lib/peran";
-import { LABEL_JENIS } from "@/lib/peluang";
 import { prisma } from "@/lib/prisma";
+import { keterbukaanProfil, umur } from "@/lib/profil";
 import { dapatkanSesi } from "@/lib/sesi";
-import { sisaWaktu, tanggalPanjang, tanggalPendek, waktuSaja } from "@/lib/teks";
+import { cuplikan, sisaWaktu, tanggalPanjang, tanggalPendek, waktuSaja } from "@/lib/teks";
 
 export const metadata: Metadata = {
   description:
@@ -73,6 +83,16 @@ const MANFAAT: {
   },
 ];
 
+/** Inisial nama, dipakai kartu komunitas yang belum punya logo. */
+function inisial(nama: string) {
+  return nama
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((k) => k[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 /**
  * Beranda sebagai bukti, bukan sebagai daftar pintu.
  *
@@ -81,12 +101,10 @@ const MANFAAT: {
  * yang mendarat tiga puluh detik menyimpulkan aplikasi ini portal berita, dan
  * kesimpulan itu wajar: itulah yang halamannya perlihatkan.
  *
- * Yang ditawarkan aplikasi ini bukan bacaan, melainkan jalan masuk. Info
- * kegiatan pemuda Demak selama ini berserak di grup WhatsApp dan status
- * Instagram, dan yang tidak mengenal orang di dalamnya tidak kebagian. Karena
- * itu beranda kini memimpin dengan ISINYA — agenda yang benar-benar akan
- * berlangsung, peluang yang tenggatnya benar-benar dekat, komunitas yang
- * benar-benar bisa didatangi — bukan dengan penjelasan tentang mesinnya.
+ * Yang ditawarkan aplikasi ini bukan bacaan, melainkan jalan masuk. Karena itu
+ * beranda memimpin dengan ISINYA — agenda yang benar-benar akan berlangsung,
+ * peluang yang tenggatnya benar-benar dekat, komunitas yang benar-benar bisa
+ * didatangi — bukan dengan penjelasan tentang mesinnya.
  *
  * Angkanya dihitung dari basis data pada setiap permintaan. Angka yang ditulis
  * tangan akan basi tanpa ada yang tahu, dan beranda yang mengaku memuat
@@ -106,6 +124,7 @@ export default async function Beranda() {
     peluang,
     kecamatan,
     komunitas,
+    profilContoh,
   ] = await Promise.all([
     prisma.organisasi.count({ where: { statusVerifikasi: "TERVERIFIKASI" } }),
     prisma.agenda.count({ where: agendaAkanDatang(sekarang) }),
@@ -159,23 +178,97 @@ export default async function Beranda() {
         nama: true,
         slug: true,
         jenis: true,
+        deskripsi: true,
+        logoUrl: true,
         kecamatan: { select: { nama: true } },
+      },
+    }),
+
+    // Kartu Talenta peragaan untuk sisi kanan hero. Profilnya diambil dari
+    // basis data, bukan dikarang: memakai nama dan keterampilan yang benar-
+    // benar ada menghindari mengarang orang, dan sejak penyemaian gambar
+    // contoh tidak dijalankan, fotonya kosong sehingga kartunya memakai
+    // inisial, bukan wajah.
+    prisma.profilPemuda.findUnique({
+      where: { slug: "rani-puspitasari" },
+      select: {
+        slug: true,
+        fotoUrl: true,
+        statusVerifikasi: true,
+        tanggalLahir: true,
+        kecamatan: { select: { nama: true } },
+        desa: { select: { nama: true } },
+        minat: { select: { nama: true }, orderBy: { nama: "asc" } },
+        keterampilan: { select: { nama: true }, orderBy: { nama: "asc" } },
+        user: {
+          select: {
+            name: true,
+            keanggotaan: {
+              where: { status: "TERVERIFIKASI" },
+              orderBy: [{ peran: "asc" }, { dibuatPada: "asc" }],
+              take: 1,
+              select: {
+                peran: true,
+                organisasi: { select: { nama: true } },
+              },
+            },
+          },
+        },
       },
     }),
   ]);
 
   const angka = [
-    { nilai: jumlahOrganisasi, label: "Komunitas terverifikasi" },
-    { nilai: jumlahAgenda, label: "Agenda mendatang" },
-    { nilai: jumlahPeluang, label: "Peluang masih dibuka" },
-    { nilai: jumlahKecamatan, label: "Kecamatan terjangkau" },
+    {
+      nilai: jumlahOrganisasi,
+      label: "Komunitas terverifikasi",
+      ikon: <IkonKomunitas className="h-5 w-5" />,
+    },
+    {
+      nilai: jumlahAgenda,
+      label: "Agenda mendatang",
+      ikon: <IkonAgenda className="h-5 w-5" />,
+    },
+    {
+      nilai: jumlahPeluang,
+      label: "Peluang masih dibuka",
+      ikon: <IkonPeluang className="h-5 w-5" />,
+    },
+    {
+      nilai: jumlahKecamatan,
+      label: "Kecamatan terjangkau",
+      ikon: <IkonLokasi className="h-5 w-5" />,
+    },
   ];
+
+  // Kode QR pada kartu peragaan menunjuk halaman kartunya sendiri, sama seperti
+  // kartu sungguhan di /p/[slug].
+  let qr: string | null = null;
+  if (profilContoh) {
+    const kepala = await headers();
+    const inang = kepala.get("host") ?? "localhost:3000";
+    const skema = inang.startsWith("localhost") ? "http" : "https";
+    qr = await QRCode.toString(`${skema}://${inang}/p/${profilContoh.slug}`, {
+      type: "svg",
+      margin: 0,
+      errorCorrectionLevel: "M",
+      color: { dark: "#0b3f34", light: "#ffffff" },
+    }).catch(() => null);
+  }
+  const bukaContoh = profilContoh
+    ? keterbukaanProfil(profilContoh.tanggalLahir)
+    : null;
 
   return (
     <BingkaiPublik>
       <div className="flex flex-col gap-12 pb-6">
-        <section className="flex flex-col gap-5">
-          <div className="flex max-w-3xl flex-col gap-4">
+        {/* Hero dua kolom. Sisi kanan bukan foto pemuda — tidak ada foto
+            sungguhan yang boleh dipakai, dan foto karangan akan menyamar
+            sebagai rekaman komunitas nyata. Sebagai gantinya, Kartu Talenta
+            peragaan: bendanya sendiri, yang justru paling menjelaskan apa yang
+            didapat orang kalau ikut. */}
+        <section className="grid items-center gap-8 lg:grid-cols-12">
+          <div className="flex flex-col gap-5 lg:col-span-7">
             <Image
               src={lambang}
               alt="Lambang Kabupaten Demak"
@@ -185,9 +278,7 @@ export default async function Beranda() {
               className="h-auto"
               style={{ width: 76 }}
             />
-            <span className="text-xs font-semibold uppercase tracking-widest text-brass">
-              Kabupaten Demak
-            </span>
+            <Overline>Kabupaten Demak</Overline>
             <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
               Kegiatan dan komunitas pemuda Demak,
               <br className="hidden sm:block" /> tanpa harus kenal orang dalam.
@@ -200,67 +291,89 @@ export default async function Beranda() {
               sertifikat berkode yang dapat diperiksa siapa pun.
             </p>
             <p className="text-sm italic text-muted">Nyawiji dadi soko.</p>
+
+            {/* Berandanya sengaja TIDAK dialihkan ke dasbor bagi yang sudah
+                masuk: halaman ini pernyataan maksud aplikasinya, dan isinya
+                sama bergunanya entah sudah masuk atau belum. Yang berganti
+                hanya ajakannya. */}
+            <div className="flex flex-wrap gap-3">
+              {sesi ? (
+                <>
+                  <Link
+                    href={dasborUntuk(sesi.user.role)}
+                    className="sk-btn-utama sk-pressable px-5 py-2.5 text-sm"
+                  >
+                    Ke dasbor saya
+                  </Link>
+                  <Link
+                    href="/pemuda/profil"
+                    className="sk-kartu sk-pressable px-5 py-2.5 text-sm font-medium text-ink-soft"
+                  >
+                    Kartu Talenta saya
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/daftar"
+                    className="sk-btn-utama sk-pressable px-5 py-2.5 text-sm"
+                  >
+                    Buat akun
+                  </Link>
+                  <Link
+                    href="/direktori"
+                    className="sk-kartu sk-pressable px-5 py-2.5 text-sm font-medium text-ink-soft"
+                  >
+                    Jelajahi komunitas
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Berandanya sengaja TIDAK dialihkan ke dasbor bagi yang sudah masuk.
-              Halaman ini pernyataan maksud aplikasinya, dan isinya — agenda
-              terdekat, tenggat yang mepet, komunitas per kecamatan — sama
-              bergunanya entah sudah masuk atau belum. Mengalihkannya berarti
-              halaman ini tidak akan pernah dapat dibuka lagi tanpa keluar dari
-              akun lebih dahulu, termasuk saat diperagakan.
-
-              Yang keliru bukan halamannya, melainkan ajakannya: menawarkan
-              "Buat akun" kepada orang yang jelas sudah punya akun. Jadi
-              ajakannya yang berganti, bukan halamannya. */}
-          <div className="flex flex-wrap gap-3">
-            {sesi ? (
-              <>
-                <Link
-                  href={dasborUntuk(sesi.user.role)}
-                  className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
-                >
-                  Ke dasbor saya
-                </Link>
-                <Link
-                  href="/pemuda/profil"
-                  className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
-                >
-                  Kartu Talenta saya
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/daftar"
-                  className="sk-pressable sk-btn-utama rounded-sk px-5 py-2.5 text-sm"
-                >
-                  Buat akun
-                </Link>
-                <Link
-                  href="/direktori"
-                  className="sk-pressable sk-kartu rounded-sk px-5 py-2.5 text-sm font-medium text-ink-soft"
-                >
-                  Jelajahi komunitas
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Angka lebih dahulu, labelnya di bawah lewat order — mata menangkap
-              bilangan sebelum ia sempat membaca keterangannya. */}
-          <dl className="sk-redup grid grid-cols-2 gap-x-6 gap-y-5 p-5 sm:grid-cols-4">
-            {angka.map((a) => (
-              <div key={a.label} className="flex flex-col gap-0.5">
-                <dt className="order-2 text-xs uppercase tracking-wider text-muted">
-                  {a.label}
-                </dt>
-                <dd className="order-1 text-3xl font-semibold tabular-nums tracking-tight text-accent">
-                  {a.nilai}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {profilContoh && bukaContoh && (
+            <div className="flex justify-center lg:col-span-5">
+              <KartuTalenta
+                nama={profilContoh.user.name}
+                slug={profilContoh.slug}
+                fotoUrl={bukaContoh.tampilkanFoto ? profilContoh.fotoUrl : null}
+                kecamatan={profilContoh.kecamatan?.nama ?? null}
+                desa={bukaContoh.tampilkanDesa ? (profilContoh.desa?.nama ?? null) : null}
+                usia={
+                  bukaContoh.tampilkanUsia && profilContoh.tanggalLahir
+                    ? umur(profilContoh.tanggalLahir)
+                    : null
+                }
+                minat={profilContoh.minat.map((m) => m.nama)}
+                keterampilan={profilContoh.keterampilan.map((k) => k.nama)}
+                organisasi={
+                  profilContoh.user.keanggotaan[0]
+                    ? {
+                        nama: profilContoh.user.keanggotaan[0].organisasi.nama,
+                        peran: profilContoh.user.keanggotaan[0].peran,
+                      }
+                    : null
+                }
+                terverifikasi={profilContoh.statusVerifikasi === "TERVERIFIKASI"}
+                qr={qr}
+              />
+            </div>
+          )}
         </section>
+
+        {/* Empat angka, dihitung dari basis data. Angka nol tetap ditampilkan:
+            ubin yang hilang saat nilainya nol membuat halaman terlihat rusak,
+            dan "belum ada" adalah keterangan yang berguna. */}
+        <PanelSunk className="grid grid-cols-2 gap-x-6 gap-y-6 p-5 sm:grid-cols-4">
+          {angka.map((a) => (
+            <UbinMetrik
+              key={a.label}
+              nilai={a.nilai}
+              label={a.label}
+              ikon={a.ikon}
+            />
+          ))}
+        </PanelSunk>
 
         {agenda.length > 0 && (
           <Bagian
@@ -331,36 +444,63 @@ export default async function Beranda() {
             tautan={{ href: "/direktori", teks: "Lihat direktori lengkap" }}
           >
             <div className="flex flex-col gap-5">
-              {/* Keempat belas kecamatan ditulis lengkap, bukan disembunyikan di
-                  balik kotak pilihan. Melihat nama kecamatannya sendiri tertulis
-                  adalah cara tercepat seseorang tahu aplikasi ini menjangkau
-                  tempat tinggalnya. */}
-              <ul className="flex flex-wrap gap-2">
+              {/* Keempat belas kecamatan ditulis lengkap, bukan disembunyikan
+                  di balik kotak pilihan. Di ponsel pita ini menggulir mendatar;
+                  pada layar lebar ia membungkus. */}
+              <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
                 {kecamatan.map((k) => (
-                  <li key={k.id}>
-                    <Link
-                      href={`/direktori?kecamatan=${k.id}`}
-                      className="sk-kartu sk-pressable block rounded-full px-3.5 py-1.5 text-sm text-ink-soft"
-                    >
-                      {k.nama}
-                    </Link>
+                  <li key={k.id} className="shrink-0 sm:shrink">
+                    <Cip href={`/direktori?kecamatan=${k.id}`}>{k.nama}</Cip>
                   </li>
                 ))}
               </ul>
 
               {komunitas.length > 0 && (
-                <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {komunitas.map((o) => (
-                    <li key={o.id}>
+                    <li key={o.id} className="h-full">
                       <Link
                         href={`/direktori/${o.slug}`}
                         className="block h-full rounded-sk"
                       >
-                        <Kartu className="sk-pressable flex h-full flex-col gap-1 p-4">
-                          <h3 className="font-medium leading-snug">{o.nama}</h3>
-                          <p className="text-xs text-muted">
-                            {LABEL_ORGANISASI[o.jenis]} · {o.kecamatan.nama}
-                          </p>
+                        <Kartu className="sk-pressable flex h-full flex-col gap-3">
+                          <div className="flex items-center gap-3">
+                            {o.logoUrl ? (
+                              <span className="sk-redup relative h-11 w-11 shrink-0 overflow-hidden rounded-[8px]">
+                                <Image
+                                  src={o.logoUrl}
+                                  alt=""
+                                  fill
+                                  sizes="2.75rem"
+                                  className="object-cover"
+                                />
+                              </span>
+                            ) : (
+                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-accent-soft font-semibold text-accent">
+                                {inisial(o.nama)}
+                              </span>
+                            )}
+                            <div className="flex min-w-0 flex-wrap items-center gap-2">
+                              <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+                                {LABEL_ORGANISASI[o.jenis]}
+                              </span>
+                              <span className="inline-flex items-center gap-1 text-xs text-muted">
+                                <IkonLokasi className="h-3.5 w-3.5" />
+                                {o.kecamatan.nama}
+                              </span>
+                            </div>
+                          </div>
+
+                          <h3 className="font-semibold leading-snug">{o.nama}</h3>
+                          {o.deskripsi && (
+                            <p className="text-sm text-ink-soft">
+                              {cuplikan(o.deskripsi, 120)}
+                            </p>
+                          )}
+                          <span className="mt-auto inline-flex w-fit items-center gap-1 pt-1 text-sm text-accent">
+                            Lihat rincian
+                            <IkonPanahKanan className="h-4 w-4" />
+                          </span>
                         </Kartu>
                       </Link>
                     </li>
@@ -403,6 +543,11 @@ export default async function Beranda() {
           </div>
         </Bagian>
 
+        {/* Kabar dan Karya di sini sengaja tetap berbentuk tautan kanal, bukan
+            kartu bergambar: tidak satu pun berita maupun karya di basis data
+            punya gambar, dan memasang gambar karangan akan berpura-pura menjadi
+            rekaman kegiatan nyata. Bila kelak gambarnya ada, bagian ini yang
+            pertama memakainya. */}
         <div className="grid gap-4 lg:grid-cols-3">
           <Link href="/kabar" className="block h-full rounded-sk">
             <Kartu className="sk-pressable flex h-full flex-col gap-1.5">
