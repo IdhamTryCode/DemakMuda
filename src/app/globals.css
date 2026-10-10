@@ -65,8 +65,12 @@
   --sk-navy: #1e3a8a;
   --sk-navy-soft: #eef2ff;
   /* Emas lambang daerah. HANYA sebagai isian berteks gelap: sebagai warna teks
-     di atas putih ia gagal kontras (sekitar 1,9:1). */
+     di atas putih ia gagal kontras (1,92:1). */
   --sk-gold: #eab308;
+  /* Teks di atas isian emas. Tetap gelap di KEDUA tema — latarnya tetap emas
+     terang, jadi teksnya tidak boleh ikut berbalik menjadi terang. Kontras
+     terhadap --sk-gold: 8,73:1 di mode terang dan 10,73:1 di mode gelap. */
+  --sk-on-gold: #15201b;
 
   --sk-danger: #96301f;
   --sk-danger-soft: #f8e6e2;
@@ -132,6 +136,7 @@
   --color-navy: var(--sk-navy);
   --color-navy-soft: var(--sk-navy-soft);
   --color-gold: var(--sk-gold);
+  --color-on-gold: var(--sk-on-gold);
   --color-danger: var(--sk-danger);
   --color-danger-soft: var(--sk-danger-soft);
 
@@ -257,8 +262,15 @@ h3 {
     /* Kapsul penuh, dan WAJIB menang atas utilitas `rounded-sk` yang masih
        terpasang di puluhan tombol di halaman. Utilitas selalu berada di lapisan
        setelah komponen, jadi tanpa !important bentuk kapsulnya kalah dan
-       tombolnya tetap bersudut 12px. */
+       tombolnya tetap bersudut 12px. Utang sementara, dicabut di Fase 8 setelah
+       `rounded-sk` dibersihkan dari tombol di halaman. */
     border-radius: 999px !important;
+    /* Banyak "tombol" di aplikasi ini berupa <a>, dan `min-height` diabaikan
+       selama elemennya masih inline. Flex membuat tinggi 40 px benar-benar
+       berlaku sekaligus memusatkan isi kapsul. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 2.5rem;
     font-weight: 600;
   }
