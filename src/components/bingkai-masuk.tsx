@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 
 import { BilahAtas } from "@/components/bilah-atas";
 import { BilahPeran } from "@/components/bilah-peran";
+import { DokBawah } from "@/components/dok-bawah";
 import { MENU_PERAN } from "@/lib/menu";
+import { dasborUntuk } from "@/lib/peran";
 import { wajibMasuk } from "@/lib/sesi";
 
 /**
@@ -46,9 +48,11 @@ export async function BingkaiMasuk({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-[78rem] flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-[78rem] flex-1 px-6 pt-8 pb-[calc(5rem_+_env(safe-area-inset-bottom))] sm:pb-8">
         {children}
       </main>
+
+      <DokBawah akunHref={dasborUntuk(sesi.peran)} />
     </>
   );
 }

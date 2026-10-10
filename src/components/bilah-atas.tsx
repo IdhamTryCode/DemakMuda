@@ -81,10 +81,10 @@ export async function BilahAtas({ aktif }: { aktif?: string }) {
                 key={m.href}
                 href={m.href}
                 aria-current={ini ? "page" : undefined}
-                className={`whitespace-nowrap rounded-full px-2 py-1 text-xs transition-colors ${
+                className={`whitespace-nowrap border-b-2 px-1.5 py-1 text-sm transition-colors ${
                   ini
-                    ? "bg-accent-soft font-medium text-accent"
-                    : "text-muted hover:bg-accent-soft hover:text-accent"
+                    ? "border-accent font-semibold text-accent"
+                    : "border-transparent text-muted hover:border-line-strong hover:text-accent"
                 }`}
               >
                 {m.label}

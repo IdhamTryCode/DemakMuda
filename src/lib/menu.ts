@@ -36,6 +36,21 @@ export const MENU_PUBLIK: ButirMenu[] = [
 ];
 
 /**
+ * Butir dok navigasi bawah untuk ponsel (<640 px).
+ *
+ * Butir kelima, "Akun", tidak dicantumkan di sini karena tujuannya bergantung
+ * apakah pengguna sudah masuk — `/masuk` bagi tamu, dasbor perannya bagi yang
+ * sudah masuk — dan itu hanya diketahui komponen peladen. Doknya menyisipkan
+ * butir itu sendiri.
+ */
+export const MENU_DOK: ButirMenu[] = [
+  { href: "/", label: "Beranda" },
+  { href: "/direktori", label: "Komunitas" },
+  { href: "/agenda", label: "Agenda" },
+  { href: "/cek", label: "Sertifikat" },
+];
+
+/**
  * Menu tiap peran. Urutannya bukan urutan abjad melainkan urutan pemakaian:
  * yang paling sering dibuka diletakkan paling kiri.
  */
