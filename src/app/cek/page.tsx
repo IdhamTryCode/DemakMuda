@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { BingkaiPublik } from "@/components/bingkai-publik";
+import { IkonBuka, IkonTanya } from "@/components/ikon";
 import { Kartu, Kolom, Label } from "@/components/sk";
 import { rapikanKode } from "@/lib/kode-sertifikat";
 
@@ -10,6 +11,39 @@ export const metadata: Metadata = {
   description:
     "Periksa keaslian sertifikat kegiatan kepemudaan Kabupaten Demak dengan kode yang tertera.",
 };
+
+/**
+ * Tanya-jawab singkat di bawah formulir.
+ *
+ * Jawabannya harus benar menurut perilaku aplikasi yang sesungguhnya — halaman
+ * ini diperiksa orang yang baru pertama memegang sertifikat, dan menyesatkan
+ * mereka soal ke mana harus bertanya lebih buruk daripada tidak menjawab sama
+ * sekali. Karena itu tidak ada janji tenggat pengesahan dan tidak ada rujukan
+ * ke kantor mana pun.
+ */
+const FAQ: { tanya: string; jawab: string }[] = [
+  {
+    tanya: "Bagaimana kalau kode saya tidak ditemukan?",
+    jawab:
+      "Periksa lagi penulisannya: huruf besar-kecil dan tanda hubung tidak " +
+      "berpengaruh, tetapi satu huruf yang tertukar membuat kodenya tidak " +
+      "cocok. Kode yang benar-benar tidak terdaftar berarti sertifikat itu " +
+      "tidak pernah diterbitkan melalui DemakMuda.",
+  },
+  {
+    tanya: "Di mana kode sertifikat saya tertera?",
+    jawab:
+      "Pada sertifikat yang diterbitkan penyelenggara kegiatan di DemakMuda, " +
+      "dan pada daftar sertifikat di Kartu Talenta penerimanya.",
+  },
+  {
+    tanya: "Apakah sertifikat bisa dibatalkan?",
+    jawab:
+      "Bisa. Sertifikat tidak pernah dihapus, hanya dibatalkan: kodenya tetap " +
+      "dapat diperiksa, dan hasilnya menyatakan bahwa sertifikat itu sudah " +
+      "dibatalkan beserta tanggal dan alasannya.",
+  },
+];
 
 export default function HalamanCek() {
   async function cari(data: FormData) {
@@ -52,12 +86,30 @@ export default function HalamanCek() {
             </div>
             <button
               type="submit"
-              className="sk-btn-utama sk-pressable w-fit rounded-sk px-5 py-2.5 text-sm"
+              className="sk-btn-utama sk-pressable w-fit px-5 py-2.5 text-sm"
             >
               Periksa
             </button>
           </form>
         </Kartu>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <IkonTanya className="h-4 w-4 shrink-0 text-muted" />
+            Bantuan &amp; pertanyaan
+          </h2>
+          <div className="flex flex-col gap-2">
+            {FAQ.map((f) => (
+              <details key={f.tanya} className="sk-kartu px-4 py-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-medium">
+                  {f.tanya}
+                  <IkonBuka className="h-4 w-4 shrink-0 text-muted" />
+                </summary>
+                <p className="pt-2 text-sm text-ink-soft">{f.jawab}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </div>
     </BingkaiPublik>
   );
