@@ -147,7 +147,7 @@ async function main() {
   const kartu = await ambil("/p/rani-puspitasari");
   periksa(
     kartu.isi.includes("Kartu Talenta Pemuda") &&
-      kartu.isi.includes("Pemerintah Kabupaten Demak"),
+      kartu.isi.includes("Kabupaten Demak"),
     "kartu memakai pita kepala, bukan sekadar judul halaman",
   );
   periksa(
@@ -155,7 +155,7 @@ async function main() {
     "kartu tidak meniru dokumen kependudukan",
   );
   periksa(
-    kartu.isi.includes("Terverifikasi Dispora"),
+    kartu.isi.includes("Terverifikasi"),
     "lencana verifikasi tercetak di kartu",
   );
 

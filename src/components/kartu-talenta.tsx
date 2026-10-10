@@ -80,7 +80,7 @@ export function KartuTalenta({
         />
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#b58a3c]">
-            Pemerintah Kabupaten Demak
+            Kabupaten Demak
           </p>
           <p className="truncate text-sm font-semibold tracking-tight">
             Kartu Talenta Pemuda
@@ -155,7 +155,7 @@ export function KartuTalenta({
                 // sulit dibaca.
                 style={{ backgroundColor: "#b58a3c", color: "#06261f" }}
               >
-                Terverifikasi Dispora
+                Terverifikasi
               </span>
             )}
             <p className="truncate font-mono text-[11px] text-[#7fb9a6]">
