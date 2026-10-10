@@ -186,14 +186,16 @@ export default async function Beranda() {
 
     // Kartu Talenta peragaan untuk sisi kanan hero. Profilnya diambil dari
     // basis data, bukan dikarang: memakai nama dan keterampilan yang benar-
-    // benar ada menghindari mengarang orang, dan sejak penyemaian gambar
-    // contoh tidak dijalankan, fotonya kosong sehingga kartunya memakai
-    // inisial, bukan wajah.
+    // benar ada menghindari mengarang orang. FOTONYA sengaja TIDAK dipakai,
+    // apa pun isi basis data — di produksi profil ini berfoto orang
+    // sungguhan, dan memasang wajah seseorang di halaman depan bukan hal yang
+    // pantas. Di basis data lokal fotonya kebetulan kosong, dan menyimpulkan
+    // dari keadaan lokal itu keliru. Karena itu fotoUrl tidak ikut dikueri dan
+    // selalu dikirim null, sehingga kartunya memakai inisial.
     prisma.profilPemuda.findUnique({
       where: { slug: "rani-puspitasari" },
       select: {
         slug: true,
-        fotoUrl: true,
         statusVerifikasi: true,
         tanggalLahir: true,
         kecamatan: { select: { nama: true } },
@@ -336,7 +338,7 @@ export default async function Beranda() {
               <KartuTalenta
                 nama={profilContoh.user.name}
                 slug={profilContoh.slug}
-                fotoUrl={bukaContoh.tampilkanFoto ? profilContoh.fotoUrl : null}
+                fotoUrl={null}
                 kecamatan={profilContoh.kecamatan?.nama ?? null}
                 desa={bukaContoh.tampilkanDesa ? (profilContoh.desa?.nama ?? null) : null}
                 usia={
@@ -553,7 +555,7 @@ export default async function Beranda() {
             <Kartu className="sk-pressable flex h-full flex-col gap-1.5">
               <h2 className="text-base font-semibold">Kabar Demak</h2>
               <p className="text-sm text-ink-soft">
-                Berita dan pengumuman resmi kepemudaan, bersumber dari dinas dan
+                Berita dan pengumuman kepemudaan, bersumber dari dinas dan
                 organisasi terverifikasi.
               </p>
             </Kartu>

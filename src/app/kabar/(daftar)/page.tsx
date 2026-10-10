@@ -11,7 +11,7 @@ import { tanggalPanjang } from "@/lib/teks";
 export const metadata: Metadata = {
   title: "Kabar",
   description:
-    "Berita dan pengumuman resmi seputar kepemudaan Kabupaten Demak.",
+    "Berita dan pengumuman seputar kepemudaan Kabupaten Demak.",
 };
 
 export default async function HalamanKabar({
@@ -57,7 +57,7 @@ export default async function HalamanKabar({
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">Kabar Demak</h1>
           <p className="max-w-prose text-sm text-ink-soft">
-            Berita dan pengumuman resmi seputar kepemudaan Kabupaten Demak.
+            Berita dan pengumuman seputar kepemudaan Kabupaten Demak.
             Seluruh kabar di sini berasal dari dinas dan organisasi yang sudah
             terverifikasi.
           </p>
