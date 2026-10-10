@@ -10,8 +10,15 @@ import {
   CircleHelp,
   CircleUser,
   Clock,
+  History,
   House,
+  Map,
   MapPin,
+  MessageSquare,
+  Newspaper,
+  Palette,
+  Search,
+  Settings,
   ShieldCheck,
   SlidersHorizontal,
   Users,
@@ -148,4 +155,39 @@ export function IkonTanya({ className }: { className?: string }) {
 /** Saringan — kepala panel saringan direktori. Dari `tune`. */
 export function IkonFilter({ className }: { className?: string }) {
   return <SlidersHorizontal {...SIFAT} className={className} />;
+}
+
+/** Kabar dan pengumuman. Dari `campaign`. */
+export function IkonKabar({ className }: { className?: string }) {
+  return <Newspaper {...SIFAT} className={className} />;
+}
+
+/** Peta sebaran. Dari `map`. */
+export function IkonPeta({ className }: { className?: string }) {
+  return <Map {...SIFAT} className={className} />;
+}
+
+/** Pencarian dan penyaringan talenta. Dari `search`. */
+export function IkonCari({ className }: { className?: string }) {
+  return <Search {...SIFAT} className={className} />;
+}
+
+/** Aspirasi dan tanggapan. Dari `chat_bubble_outline`. */
+export function IkonAspirasi({ className }: { className?: string }) {
+  return <MessageSquare {...SIFAT} className={className} />;
+}
+
+/** Karya pemuda. Dari `palette`. */
+export function IkonKarya({ className }: { className?: string }) {
+  return <Palette {...SIFAT} className={className} />;
+}
+
+/** Administrasi sistem. Dari `settings`. */
+export function IkonAdmin({ className }: { className?: string }) {
+  return <Settings {...SIFAT} className={className} />;
+}
+
+/** Riwayat dan catatan — rekam jejak serta jejak audit. Dari `history`. */
+export function IkonRiwayat({ className }: { className?: string }) {
+  return <History {...SIFAT} className={className} />;
 }

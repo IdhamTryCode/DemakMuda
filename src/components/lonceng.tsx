@@ -17,17 +17,20 @@ import { tandaiSemuaTerbaca, tandaiTerbaca } from "@/server/aksi-notifikasi";
  */
 const BANYAK_DITAMPILKAN = 6;
 
-export async function Lonceng() {
-  const sesi = await dapatkanSesi();
-  if (!sesi) return null;
+export async function Lonceng({ userId }: { userId?: string } = {}) {
+  // Halaman yang memanggilnya sudah punya sesi, jadi id-nya diteruskan lewat
+  // prop dan di sini tidak dibaca ulang. Tanpa prop, ia membaca sendiri — supaya
+  // pemanggil lama tetap bekerja.
+  const id = userId ?? (await dapatkanSesi())?.user.id;
+  if (!id) return null;
 
   const sekarang = new Date();
   const [belum, terbaru] = await Promise.all([
     prisma.notifikasi.count({
-      where: { penerimaId: sesi.user.id, dibacaPada: null },
+      where: { penerimaId: id, dibacaPada: null },
     }),
     prisma.notifikasi.findMany({
-      where: { penerimaId: sesi.user.id },
+      where: { penerimaId: id },
       orderBy: [{ dibacaPada: "asc" }, { dibuatPada: "desc" }],
       take: BANYAK_DITAMPILKAN,
       select: {

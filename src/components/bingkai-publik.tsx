@@ -47,7 +47,7 @@ export async function BingkaiPublik({
   return (
     <>
       <div className="sticky top-0 z-40">
-        <BilahAtas aktif={aktif} />
+        <BilahAtas aktif={aktif} sesi={sesi} />
       </div>
 
       <main className="mx-auto w-full max-w-[78rem] flex-1 px-6 py-8">{children}</main>

@@ -1,14 +1,10 @@
 import Link from "next/link";
 
-import { GantiTema } from "@/components/ganti-tema";
-import { Lonceng } from "@/components/lonceng";
+import { GugusKanan, type SesiRingkas } from "@/components/gugus-kanan";
+import { JejakLokasi } from "@/components/jejak-lokasi";
 import { LogoDemak } from "@/components/logo-demak";
-import { MenuAkun } from "@/components/menu-akun";
 import { PANDUAN_TAMPIL } from "@/lib/fitur";
-import { MENU_PANDUAN, MENU_PUBLIK } from "@/lib/menu";
-import { bacaPeran, dasborUntuk, LABEL_PERAN } from "@/lib/peran";
-import { prisma } from "@/lib/prisma";
-import { dapatkanSesi } from "@/lib/sesi";
+import { MENU_PANDUAN, MENU_PUBLIK, type ButirMenu } from "@/lib/menu";
 
 /**
  * Bilah atas, dipakai bersama halaman publik dan halaman yang sudah masuk.
@@ -22,55 +18,48 @@ import { dapatkanSesi } from "@/lib/sesi";
  * dan itu memang harus berbeda: yang belum masuk melihat tombol Masuk, yang
  * sudah masuk melihat lonceng dan menu akunnya.
  *
- * Halaman yang sudah masuk menambahkan bilah keduanya sendiri di bawah ini.
+ * Pada RAGAM "masuk" di layar lg ke atas, lambang dan menu publik disembunyikan
+ * dan bilahnya menyusut jadi strip tipis di samping sidebar; jejak lokasi
+ * menggantikan menu publik di sisi kiri. Di bawah lg ia tetap utuh.
+ *
+ * Sesi diterima lewat prop, bukan dibaca di sini: halamannya sudah membacanya.
  */
-const BUTIR_AKUN = [
-  {
-    href: "/pemuda/profil",
-    label: "Kartu Talenta saya",
-    keterangan: "Ubah data diri, foto, minat, dan keterampilan",
-  },
-  {
-    href: "/pemuda/rekam-jejak",
-    label: "Rekam jejak",
-    keterangan: "Prestasi dan pengalaman",
-  },
-  // Panduan Karier TIDAK dicantumkan di sini. Ia sudah berdiri di bilah menu
-  // publik, terlihat oleh semua orang termasuk yang belum masuk; mengulangnya
-  // di menu akun membuat satu label yang sama tampil dua kali di layar yang
-  // sama.
-  {
-    href: "/keamanan",
-    label: "Keamanan akun",
-    keterangan: "Verifikasi dua langkah dan perangkat yang masuk",
-  },
-];
-
-export async function BilahAtas({ aktif }: { aktif?: string }) {
-  const sesi = await dapatkanSesi();
-
-  // Fotonya diambil hanya bila memang ada yang sedang masuk. Satu pencarian
-  // berindeks, dan hasilnya dipakai sebagai avatar di seluruh halaman.
-  const profil = sesi
-    ? await prisma.profilPemuda.findUnique({
-        where: { userId: sesi.user.id },
-        select: { fotoUrl: true },
-      })
-    : null;
+export function BilahAtas({
+  aktif,
+  sesi = null,
+  ragam = "publik",
+  menu = [],
+}: {
+  aktif?: string;
+  sesi?: SesiRingkas;
+  /** "masuk" menyusutkan bilah menjadi strip tipis di layar lg. */
+  ragam?: "publik" | "masuk";
+  /** Menu peran; hanya dipakai untuk jejak lokasi pada ragam "masuk". */
+  menu?: ButirMenu[];
+}) {
+  const masuk = ragam === "masuk";
 
   return (
     <header className="sk-bilah">
       <div className="mx-auto flex w-full max-w-[78rem] flex-wrap items-center gap-x-4 gap-y-1.5 px-6 py-1.5">
-        <Link href="/" className="rounded-sk">
+        <Link href="/" className={`rounded-sk ${masuk ? "lg:hidden" : ""}`}>
           <LogoDemak ukuran={26} ringkas />
         </Link>
+
+        {masuk && (
+          <div className="hidden min-w-0 lg:block">
+            <JejakLokasi menu={menu} />
+          </div>
+        )}
 
         {/* flex-wrap wajib: enam menu tidak muat pada lebar ponsel, dan tanpa
             ini seluruh halaman meluber ke samping. whitespace-nowrap menjaga
             satu label tidak patah di tengah kata. */}
         <nav
           aria-label="Menu publik"
-          className="order-3 -mx-6 flex w-[calc(100%+3rem)] gap-0.5 overflow-x-auto px-6 pb-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1 sm:overflow-visible sm:px-0 sm:pb-0"
+          className={`order-3 -mx-6 flex w-[calc(100%+3rem)] gap-0.5 overflow-x-auto px-6 pb-1 sm:order-2 sm:mx-0 sm:w-auto sm:flex-1 sm:overflow-visible sm:px-0 sm:pb-0 ${
+            masuk ? "lg:hidden" : ""
+          }`}
         >
           {MENU_PUBLIK.filter(
             (m) => PANDUAN_TAMPIL || m.href !== MENU_PANDUAN,
@@ -94,40 +83,7 @@ export async function BilahAtas({ aktif }: { aktif?: string }) {
         </nav>
 
         <div className="order-2 ml-auto flex items-center gap-1.5 sm:order-3">
-          {sesi ? (
-            <>
-              <Lonceng />
-              <GantiTema />
-              <MenuAkun
-                nama={sesi.user.name}
-                peran={LABEL_PERAN[bacaPeran(sesi.user.role)]}
-                fotoUrl={profil?.fotoUrl ?? null}
-                butir={[
-                  // Dasbor selalu di urutan pertama. Setelah bilah publik dan
-                  // bilah dasbor disatukan, tombol "Dasbor" yang dahulu berdiri
-                  // sendiri di bilah publik ikut hilang — sehingga orang yang
-                  // sudah masuk lalu membuka halaman Kabar atau Agenda tidak
-                  // punya jalan kembali ke areanya sendiri.
-                  {
-                    href: dasborUntuk(sesi.user.role),
-                    label: "Dasbor saya",
-                    keterangan: "Ringkasan dan pintasan area Anda",
-                  },
-                  ...BUTIR_AKUN,
-                ]}
-              />
-            </>
-          ) : (
-            <>
-              <GantiTema />
-              <Link
-                href="/masuk"
-                className="sk-btn-utama sk-pressable px-4 py-1.5 text-sm"
-              >
-                Masuk
-              </Link>
-            </>
-          )}
+          <GugusKanan sesi={sesi} />
         </div>
       </div>
     </header>
