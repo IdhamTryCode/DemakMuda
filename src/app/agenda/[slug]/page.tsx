@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { BingkaiPublik } from "@/components/bingkai-publik";
 import { Markdown } from "@/components/markdown";
 import { PanelDaftar } from "@/components/panel-daftar";
+import { Overline } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { tanggalPanjang, waktuSaja } from "@/lib/teks";
 
@@ -68,13 +69,21 @@ export default async function HalamanAgendaRinci({
 
   return (
     <BingkaiPublik aktif="/agenda">
-      <article className="mx-auto flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex min-w-0 flex-col gap-6 lg:flex-1">
-          <Link href="/agenda" className="text-sm text-accent underline underline-offset-2">
+      {/* Di bawah lg urutan bacanya sama seperti sebelum Fase 7: judul, fakta,
+          deskripsi, lalu ajakan mendaftar. Di lg ke atas tetap dua kolom: isi di
+          kiri, fakta dan ajakan di kanan. Urutan DOM mengikuti susunan dua kolom;
+          `order` dipakai hanya di layar sempit, jadi faktanya tidak jatuh di
+          bawah seluruh deskripsi. */}
+      <article className="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
+        <div className="contents lg:flex lg:min-w-0 lg:flex-1 lg:flex-col lg:gap-6">
+          <Link
+            href="/agenda"
+            className="order-1 text-sm text-accent underline underline-offset-2 lg:order-none"
+          >
             ← Semua agenda
           </Link>
 
-          <header className="flex flex-col gap-3">
+          <header className="order-2 flex flex-col gap-3 lg:order-none">
             {sudahLewat && (
               <span className="w-fit rounded-full bg-sunk px-2.5 py-1 text-xs font-medium text-muted">
                 Kegiatan ini sudah berlangsung
@@ -90,16 +99,17 @@ export default async function HalamanAgendaRinci({
             </h1>
           </header>
 
-          <Markdown isi={agenda.deskripsi} />
+          <div className="order-4 lg:order-none">
+            <Markdown isi={agenda.deskripsi} />
+          </div>
         </div>
 
-        {/* Fakta ringkas dan ajakan mendaftar, di samping isi pada layar lebar. */}
-        <aside className="flex flex-col gap-5 lg:sticky lg:top-16 lg:w-80 lg:shrink-0">
-          <dl className="sk-redup grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-1">
+        <div className="contents lg:sticky lg:top-16 lg:flex lg:w-80 lg:shrink-0 lg:flex-col lg:gap-5">
+          <dl className="order-3 grid gap-4 sk-redup p-5 sm:grid-cols-2 lg:order-none lg:grid-cols-1">
             {rincian.map((r) => (
               <div key={r.label} className="flex flex-col gap-1">
-                <dt className="text-[11px] font-semibold uppercase leading-[14px] tracking-[0.12em] text-muted">
-                  {r.label}
+                <dt>
+                  <Overline>{r.label}</Overline>
                 </dt>
                 <dd className="text-sm">{r.nilai}</dd>
               </div>
@@ -107,9 +117,11 @@ export default async function HalamanAgendaRinci({
           </dl>
 
           {!sudahLewat && (
-            <PanelDaftar sasaran={{ jenis: "agenda", id: agenda.id }} />
+            <div className="order-5 lg:order-none">
+              <PanelDaftar sasaran={{ jenis: "agenda", id: agenda.id }} />
+            </div>
           )}
-        </aside>
+        </div>
       </article>
     </BingkaiPublik>
   );
