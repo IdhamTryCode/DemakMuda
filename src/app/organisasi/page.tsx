@@ -1,7 +1,12 @@
 import Link from "next/link";
 
 import { Angka } from "@/components/grafik-batang";
-import { Kartu } from "@/components/sk";
+import {
+  IkonDitolak,
+  IkonMenunggu,
+  IkonTerverifikasi,
+} from "@/components/ikon";
+import { Kartu, Overline } from "@/components/sk";
 import { agendaAkanDatang } from "@/lib/agenda";
 import { LABEL_ORGANISASI } from "@/lib/organisasi";
 import { peluangMasihTerbuka } from "@/lib/peluang";
@@ -9,6 +14,7 @@ import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
 import { tanggalPendek } from "@/lib/teks";
+import type { ComponentType } from "react";
 
 export const metadata = { title: "Dasbor Organisasi" };
 
@@ -22,6 +28,15 @@ const LABEL_VERIFIKASI: Record<string, string> = {
   MENUNGGU: "Menunggu verifikasi",
   TERVERIFIKASI: "Terverifikasi",
   DITOLAK: "Ditolak",
+};
+
+const IKON_VERIFIKASI: Record<
+  string,
+  ComponentType<{ className?: string }>
+> = {
+  MENUNGGU: IkonMenunggu,
+  TERVERIFIKASI: IkonTerverifikasi,
+  DITOLAK: IkonDitolak,
 };
 
 export default async function DasborOrganisasi() {
@@ -99,9 +114,7 @@ export default async function DasborOrganisasi() {
     <div className="flex flex-col gap-6">
 
       <header className="flex flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-          {LABEL_PERAN.organisasi}
-        </span>
+        <Overline>{LABEL_PERAN.organisasi}</Overline>
         <h1 className="text-2xl font-semibold tracking-tight">{sesi.user.name}</h1>
         <p className="max-w-prose text-sm text-ink-soft">
           Ringkasan organisasi yang Anda kelola beserta isi yang Anda terbitkan
@@ -174,8 +187,13 @@ export default async function DasborOrganisasi() {
                   </Link>
                   <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${WARNA_VERIFIKASI[o.statusVerifikasi]}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${WARNA_VERIFIKASI[o.statusVerifikasi]}`}
                     >
+                      {(() => {
+                        const Ikon =
+                          IKON_VERIFIKASI[o.statusVerifikasi] ?? IkonMenunggu;
+                        return <Ikon className="h-3.5 w-3.5 shrink-0" />;
+                      })()}
                       {LABEL_VERIFIKASI[o.statusVerifikasi]}
                     </span>
                     <span className="text-xs text-muted">

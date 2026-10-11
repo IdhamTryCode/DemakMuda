@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ComponentType } from "react";
 
 import { PilihStatusPeserta } from "@/app/kelola/peserta/[jenis]/[id]/pilih-status";
 import { TerbitkanSertifikat } from "@/app/kelola/peserta/[jenis]/[id]/terbitkan-sertifikat";
-import { Kartu } from "@/components/sk";
+import {
+  IkonDiterima,
+  IkonDitolak,
+  IkonHadir,
+  IkonMenunggu,
+} from "@/components/ikon";
+import { KepalaHalaman, Kartu, PanelSunk, UbinMetrik } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
 import { tanggalPendek } from "@/lib/teks";
@@ -68,6 +75,20 @@ const WARNA: Record<string, string> = {
   HADIR: "bg-brass-soft text-brass",
 };
 
+const LABEL: Record<string, string> = {
+  MENUNGGU: "Menunggu",
+  DITERIMA: "Diterima",
+  DITOLAK: "Ditolak",
+  HADIR: "Hadir",
+};
+
+const IKON: Record<string, ComponentType<{ className?: string }>> = {
+  MENUNGGU: IkonMenunggu,
+  DITERIMA: IkonDiterima,
+  DITOLAK: IkonDitolak,
+  HADIR: IkonHadir,
+};
+
 export default async function HalamanPeserta({
   params,
 }: {
@@ -91,39 +112,36 @@ export default async function HalamanPeserta({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-            Daftar peserta
-          </span>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {data.kegiatan.judul}
-          </h1>
-          <p className="text-sm text-muted">
-            {data.peserta.length} pendaftar
-            {Object.entries(ringkas).length > 0 &&
-              ` · ${Object.entries(ringkas)
-                .map(([s, n]) => `${n} ${s.toLowerCase()}`)
-                .join(", ")}`}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {data.peserta.length > 0 && (
-            <a
-              href={`/kelola/peserta/${jenis}/${id}/unduh`}
-              className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+      <KepalaHalaman
+        overline="Daftar peserta"
+        judul={data.kegiatan.judul}
+        keterangan={`${data.peserta.length} pendaftar`}
+        aksi={
+          <>
+            {data.peserta.length > 0 && (
+              <a
+                href={`/kelola/peserta/${jenis}/${id}/unduh`}
+                className="sk-btn-utama sk-pressable px-4 py-2.5 text-sm"
+              >
+                Unduh CSV
+              </a>
+            )}
+            <Link
+              href={`/kelola/${jenis}`}
+              className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
-              Unduh CSV
-            </a>
-          )}
-          <Link
-            href={`/kelola/${jenis}`}
-            className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-          >
-            Kembali
-          </Link>
-        </div>
-      </div>
+              Kembali
+            </Link>
+          </>
+        }
+      />
+
+      <PanelSunk className="grid grid-cols-2 gap-x-4 gap-y-5 p-5 sm:grid-cols-4">
+        <UbinMetrik nilai={ringkas.MENUNGGU ?? 0} label="Menunggu" />
+        <UbinMetrik nilai={ringkas.DITERIMA ?? 0} label="Diterima" />
+        <UbinMetrik nilai={ringkas.HADIR ?? 0} label="Hadir" />
+        <UbinMetrik nilai={ringkas.DITOLAK ?? 0} label="Ditolak" />
+      </PanelSunk>
 
       {data.peserta.length === 0 ? (
         <Kartu>
@@ -142,13 +160,19 @@ export default async function HalamanPeserta({
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h2 className="font-medium">{p.user.name}</h2>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${WARNA[p.status]}`}
-                      >
-                        {p.status.toLowerCase()}
-                      </span>
+                      {(() => {
+                        const Ikon = IKON[p.status] ?? IkonMenunggu;
+                        return (
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${WARNA[p.status]}`}
+                          >
+                            <Ikon className="h-3.5 w-3.5 shrink-0" />
+                            {LABEL[p.status]}
+                          </span>
+                        );
+                      })()}
                     </div>
-                    <span className="text-xs text-muted">
+                    <span className="break-all text-xs text-muted">
                       {p.user.email}
                       {usia !== null && ` · ${usia} tahun`}
                       {profil?.kecamatan && ` · ${profil.kecamatan.nama}`}

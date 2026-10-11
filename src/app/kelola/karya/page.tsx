@@ -2,7 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { TombolArsip } from "@/components/tombol-arsip";
-import { Kartu } from "@/components/sk";
+import {
+  Cip,
+  KepalaHalaman,
+  Kartu,
+  Overline,
+  PanelSunk,
+  UbinMetrik,
+} from "@/components/sk";
 import { LABEL_JENIS_KARYA } from "@/lib/karya";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -65,35 +72,25 @@ export default async function HalamanModerasiKarya({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Ruang Karya</h1>
-        <p className="max-w-prose text-sm text-muted">
-          {jumlahTerbit} karya tampil di etalase publik, {jumlahArsip} sudah
-          diturunkan. Karya berstatus draf tidak ditampilkan di sini — selama
-          belum diterbitkan pemiliknya, karya itu belum menjadi urusan dinas.
-        </p>
-      </div>
+      <KepalaHalaman
+        overline="Kelola"
+        judul="Ruang Karya"
+        keterangan="Karya berstatus draf tidak ditampilkan di sini — selama belum diterbitkan pemiliknya, karya itu belum menjadi urusan dinas."
+      />
 
-      <div className="sk-redup flex flex-wrap items-center gap-2 p-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-          Tampilkan
-        </span>
-        <Link
-          href="/kelola/karya"
-          className={`rounded-full px-3 py-1.5 text-sm ${
-            !tampilkanArsip ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-          }`}
-        >
+      <PanelSunk className="grid grid-cols-2 gap-x-4 gap-y-5 p-5">
+        <UbinMetrik nilai={jumlahTerbit} label="Tampil di etalase" />
+        <UbinMetrik nilai={jumlahArsip} label="Sudah diturunkan" />
+      </PanelSunk>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Overline>Tampilkan</Overline>
+        <Cip href="/kelola/karya" aktif={!tampilkanArsip}>
           Terbit ({jumlahTerbit})
-        </Link>
-        <Link
-          href="/kelola/karya?arsip=1"
-          className={`rounded-full px-3 py-1.5 text-sm ${
-            tampilkanArsip ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-          }`}
-        >
+        </Cip>
+        <Cip href="/kelola/karya?arsip=1" aktif={tampilkanArsip}>
           Arsip ({jumlahArsip})
-        </Link>
+        </Cip>
       </div>
 
       {daftar.length === 0 ? (
