@@ -77,7 +77,7 @@ export default async function HalamanPanduan() {
           </p>
           <Link
             href="/pemuda/profil"
-            className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+            className="sk-btn-utama sk-pressable px-4 py-2.5 text-sm"
           >
             Isi Kartu Talenta
           </Link>

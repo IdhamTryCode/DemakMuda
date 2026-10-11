@@ -45,7 +45,7 @@ export async function PanelDaftar({ sasaran }: { sasaran: SasaranPendaftaran }) 
         </p>
         <Link
           href="/masuk"
-          className="sk-btn-utama sk-pressable rounded-sk px-5 py-2.5 text-sm"
+          className="sk-btn-utama sk-pressable px-5 py-2.5 text-sm"
         >
           Masuk
         </Link>

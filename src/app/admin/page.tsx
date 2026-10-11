@@ -80,7 +80,7 @@ export default async function DasborAdmin() {
           </dl>
           <Link
             href="/admin/pengguna"
-            className="sk-btn-utama sk-pressable w-fit rounded-sk px-4 py-2.5 text-sm"
+            className="sk-btn-utama sk-pressable w-fit px-4 py-2.5 text-sm"
           >
             Kelola peran pengguna
           </Link>

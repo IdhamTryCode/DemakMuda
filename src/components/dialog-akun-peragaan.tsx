@@ -100,7 +100,7 @@ export function DialogAkunPeragaan({
                       pakai(akun.email, SANDI_PERAGAAN);
                       dialog.current?.close();
                     }}
-                    className="sk-btn-utama sk-pressable rounded-sk px-3.5 py-2 text-xs"
+                    className="sk-btn-utama sk-pressable px-3.5 py-2 text-xs"
                   >
                     Pakai
                   </button>

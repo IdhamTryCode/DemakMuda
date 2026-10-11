@@ -17,7 +17,7 @@ export function TombolTerbaca({
   const [sedang, setSedang] = useState(false);
 
   const gaya = semua
-    ? "sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+    ? "sk-btn-utama sk-pressable px-4 py-2.5 text-sm"
     : "sk-kartu sk-pressable rounded-sk px-3 py-2 text-xs font-medium text-ink-soft";
 
   return (

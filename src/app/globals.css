@@ -259,12 +259,8 @@ h3 {
     background-color: var(--sk-accent);
     color: var(--sk-on-accent);
     border: 1px solid transparent;
-    /* Kapsul penuh, dan WAJIB menang atas utilitas `rounded-sk` yang masih
-       terpasang di puluhan tombol di halaman. Utilitas selalu berada di lapisan
-       setelah komponen, jadi tanpa !important bentuk kapsulnya kalah dan
-       tombolnya tetap bersudut 12px. Utang sementara, dicabut di Fase 8 setelah
-       `rounded-sk` dibersihkan dari tombol di halaman. */
-    border-radius: 999px !important;
+    /* Kapsul penuh — tanda pengenal tombol utama. */
+    border-radius: 999px;
     /* Banyak "tombol" di aplikasi ini berupa <a>, dan `min-height` diabaikan
        selama elemennya masih inline. Flex membuat tinggi 40 px benar-benar
        berlaku sekaligus memusatkan isi kapsul. */

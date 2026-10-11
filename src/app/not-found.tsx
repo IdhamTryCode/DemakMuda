@@ -64,7 +64,7 @@ export default function TidakDitemukan() {
           </p>
           <Link
             href="/cek"
-            className="sk-btn-utama sk-pressable w-fit rounded-sk px-5 py-2.5 text-sm"
+            className="sk-btn-utama sk-pressable w-fit px-5 py-2.5 text-sm"
           >
             Periksa sertifikat
           </Link>

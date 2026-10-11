@@ -277,7 +277,7 @@ export function FormProfil({
               {slug && (
                 <Link
                   href={`/p/${slug}`}
-                  className="sk-btn-utama sk-pressable rounded-sk px-4 py-2 text-sm"
+                  className="sk-btn-utama sk-pressable px-4 py-2 text-sm"
                 >
                   Lihat kartu publik
                 </Link>
