@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { FormKarya } from "@/app/pemuda/form-karya";
-import { Kartu } from "@/components/sk";
+import { KepalaHalaman, Kartu } from "@/components/sk";
 import { TombolArsip } from "@/components/tombol-arsip";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -47,16 +47,19 @@ export default async function HalamanUbahKarya({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Ubah karya</h1>
-        {karya.status !== "ARSIP" && (
-          <TombolArsip
-            arsipkan={arsip}
-            kembaliKe="/pemuda/karya"
-            keterangan="Arsipkan karya ini?"
-          />
-        )}
-      </div>
+      <KepalaHalaman
+        overline="Karya"
+        judul="Ubah karya"
+        aksi={
+          karya.status !== "ARSIP" ? (
+            <TombolArsip
+              arsipkan={arsip}
+              kembaliKe="/pemuda/karya"
+              keterangan="Arsipkan karya ini?"
+            />
+          ) : undefined
+        }
+      />
 
       <Kartu>
         <FormKarya

@@ -3,6 +3,7 @@ import {
   Bell,
   Briefcase,
   CalendarDays,
+  CalendarCheck,
   Check,
   ChevronDown,
   ChevronRight,
@@ -190,4 +191,10 @@ export function IkonAdmin({ className }: { className?: string }) {
 /** Riwayat dan catatan — rekam jejak serta jejak audit. Dari `history`. */
 export function IkonRiwayat({ className }: { className?: string }) {
   return <History {...SIFAT} className={className} />;
+}
+
+/** Sudah dihadiri — pendaftaran kegiatan yang kehadirannya tercatat. Dari
+ *  `event_available`. */
+export function IkonHadir({ className }: { className?: string }) {
+  return <CalendarCheck {...SIFAT} className={className} />;
 }

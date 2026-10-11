@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ComponentType } from "react";
 
-import { Kartu } from "@/components/sk";
+import {
+  IkonDiterima,
+  IkonDitolak,
+  IkonHadir,
+  IkonMenunggu,
+} from "@/components/ikon";
+import { KepalaHalaman, Kartu, PanelSunk, UbinMetrik } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
 import { tanggalPendek, waktuSaja } from "@/lib/teks";
@@ -22,38 +29,61 @@ const WARNA: Record<string, string> = {
   HADIR: "bg-brass-soft text-brass",
 };
 
+const IKON: Record<string, ComponentType<{ className?: string }>> = {
+  MENUNGGU: IkonMenunggu,
+  DITERIMA: IkonDiterima,
+  DITOLAK: IkonDitolak,
+  HADIR: IkonHadir,
+};
+
 export default async function HalamanKegiatanSaya() {
   const sesi = await wajibPeran("pemuda");
 
-  const pendaftaran = await prisma.pendaftaran.findMany({
-    where: { userId: sesi.user.id },
-    orderBy: { dibuatPada: "desc" },
-    take: 100,
-    select: {
-      id: true,
-      status: true,
-      dibuatPada: true,
-      agenda: { select: { judul: true, slug: true, mulai: true } },
-      peluang: { select: { judul: true, slug: true, tenggat: true } },
-    },
-  });
+  const [pendaftaran, perStatus] = await Promise.all([
+    prisma.pendaftaran.findMany({
+      where: { userId: sesi.user.id },
+      orderBy: { dibuatPada: "desc" },
+      take: 100,
+      select: {
+        id: true,
+        status: true,
+        dibuatPada: true,
+        agenda: { select: { judul: true, slug: true, mulai: true } },
+        peluang: { select: { judul: true, slug: true, tenggat: true } },
+      },
+    }),
+    // Jumlah per status, dihitung sungguhan — bukan panjang daftar yang dibatasi.
+    prisma.pendaftaran.groupBy({
+      by: ["status"],
+      where: { userId: sesi.user.id },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const jumlah = new Map(perStatus.map((r) => [r.status, r._count._all]));
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 py-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Kegiatan Saya</h1>
-          <p className="text-sm text-muted">
-            Seluruh kegiatan dan peluang yang Anda daftari.
-          </p>
-        </div>
-        <Link
-          href="/pemuda"
-          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-        >
-          Dasbor
-        </Link>
-      </div>
+    <div className="flex flex-col gap-6">
+      <KepalaHalaman
+        overline="Pemuda"
+        judul="Kegiatan saya"
+        keterangan="Seluruh kegiatan dan peluang yang Anda daftari."
+        aksi={
+          <Link
+            href="/agenda"
+            className="sk-btn-utama sk-pressable px-4 py-2.5 text-sm"
+          >
+            Jelajahi agenda
+          </Link>
+        }
+      />
+
+      <PanelSunk className="grid grid-cols-2 gap-x-4 gap-y-5 p-5 sm:grid-cols-4">
+        <UbinMetrik nilai={jumlah.get("MENUNGGU") ?? 0} label="Menunggu" />
+        <UbinMetrik nilai={jumlah.get("DITERIMA") ?? 0} label="Diterima" />
+        <UbinMetrik nilai={jumlah.get("HADIR") ?? 0} label="Hadir" />
+        <UbinMetrik nilai={jumlah.get("DITOLAK") ?? 0} label="Ditolak" />
+      </PanelSunk>
 
       {pendaftaran.length === 0 ? (
         <Kartu className="flex flex-col gap-3">
@@ -63,13 +93,13 @@ export default async function HalamanKegiatanSaya() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/agenda"
-              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              className="sk-btn-utama sk-pressable px-4 py-2.5 text-sm"
             >
               Lihat agenda
             </Link>
             <Link
               href="/peluang"
-              className="sk-btn-utama sk-pressable rounded-sk px-4 py-2.5 text-sm"
+              className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
               Lihat peluang
             </Link>
@@ -88,6 +118,7 @@ export default async function HalamanKegiatanSaya() {
               : p.peluang?.tenggat
                 ? `Tenggat ${tanggalPendek(p.peluang.tenggat)}`
                 : "Tanpa tenggat";
+            const Ikon = IKON[p.status] ?? IkonMenunggu;
 
             return (
               <li key={p.id}>
@@ -101,8 +132,9 @@ export default async function HalamanKegiatanSaya() {
                       <span className="text-xs text-muted">{waktu}</span>
                     </div>
                     <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${WARNA[p.status]}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${WARNA[p.status]}`}
                     >
+                      <Ikon className="h-3.5 w-3.5 shrink-0" />
                       {LABEL[p.status]}
                     </span>
                   </Kartu>

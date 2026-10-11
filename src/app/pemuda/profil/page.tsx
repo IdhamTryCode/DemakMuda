@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FormProfil } from "@/app/pemuda/profil/form-profil";
-import { Kartu } from "@/components/sk";
+import { KepalaHalaman, Kartu } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibMasuk } from "@/lib/sesi";
 import { simpanProfil } from "@/server/aksi-profil";
@@ -49,31 +49,30 @@ export default async function HalamanProfil() {
   ]);
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 py-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Kartu Talenta</h1>
-          <p className="text-sm text-muted">
-            Isian di sini menjadi portofolio digital yang bisa Anda bagikan.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          {profil?.slug && (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <KepalaHalaman
+        overline="Pemuda"
+        judul="Kartu Talenta"
+        keterangan="Isian di sini menjadi portofolio digital yang bisa Anda bagikan."
+        aksi={
+          <>
+            {profil?.slug && (
+              <Link
+                href={`/p/${profil.slug}`}
+                className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
+              >
+                Lihat kartu publik
+              </Link>
+            )}
             <Link
-              href={`/p/${profil.slug}`}
-              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
+              href="/pemuda"
+              className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
             >
-              Lihat kartu publik
+              Dasbor
             </Link>
-          )}
-          <Link
-            href="/pemuda"
-            className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-          >
-            Dasbor
-          </Link>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <Kartu>
         <FormProfil

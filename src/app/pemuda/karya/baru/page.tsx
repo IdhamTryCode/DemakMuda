@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { FormKarya } from "@/app/pemuda/form-karya";
-import { Kartu } from "@/components/sk";
+import { KepalaHalaman, Kartu } from "@/components/sk";
 import { wajibPeran } from "@/lib/sesi";
 import { buatKarya } from "@/server/aksi-karya";
 
@@ -12,7 +13,18 @@ export default async function HalamanKaryaBaru() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Tambah karya</h1>
+      <KepalaHalaman
+        overline="Karya"
+        judul="Tambah karya"
+        aksi={
+          <Link
+            href="/pemuda/karya"
+            className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
+          >
+            Karya saya
+          </Link>
+        }
+      />
       <Kartu>
         <FormKarya simpan={buatKarya} />
       </Kartu>

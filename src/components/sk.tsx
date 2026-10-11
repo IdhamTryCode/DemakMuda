@@ -177,9 +177,41 @@ export function UbinMetrik({
 }
 
 /**
- * Wadah terbenam: latar `sunk` bergaris rambut, untuk mengelompokkan ubin
- * metrik atau kelompok saringan. Dibedakan oleh warna latarnya, bukan oleh
- * bayangan dalam.
+ * Kepala halaman area masuk: Overline, judul, keterangan, dan aksi di kanan.
+ *
+ * Pola yang sama dipakai di seluruh halaman dasbor supaya kepalanya tidak
+ * berbeda-beda bentuknya antar halaman. Aksi di kanan dibungkus flex-wrap
+ * supaya tidak meluber pada lebar isi yang sempit karena sidebar.
+ */
+export function KepalaHalaman({
+  overline,
+  judul,
+  keterangan,
+  aksi,
+}: {
+  overline?: ReactNode;
+  judul: ReactNode;
+  keterangan?: ReactNode;
+  aksi?: ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex min-w-0 flex-col gap-1">
+        {overline && <Overline>{overline}</Overline>}
+        <h1 className="text-2xl font-semibold tracking-tight">{judul}</h1>
+        {keterangan && (
+          <p className="max-w-prose text-sm text-muted">{keterangan}</p>
+        )}
+      </div>
+      {aksi && (
+        <div className="flex flex-wrap items-center gap-2">{aksi}</div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * PanelSunk sebagai wadah ubin metrik.
  */
 export function PanelSunk({ className = "", ...sisa }: ComponentProps<"div">) {
   return <div className={`sk-redup ${className}`} {...sisa} />;
