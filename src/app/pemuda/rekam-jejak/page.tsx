@@ -7,10 +7,11 @@ import {
   FormPrestasi,
   TombolHapus,
 } from "@/app/pemuda/rekam-jejak/form-rekam-jejak";
-import { Kartu } from "@/components/sk";
+import { Kartu, Overline, PanelSunk, UbinMetrik } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { LABEL_TINGKAT } from "@/lib/prestasi";
 import { wajibMasuk } from "@/lib/sesi";
+import { tanggalPendek } from "@/lib/teks";
 import {
   hapusPengalaman,
   hapusPrestasi,
@@ -27,6 +28,11 @@ export const metadata: Metadata = { title: "Rekam Jejak" };
  * yang sama, tetapi bentuk pekerjaannya berbeda: yang satu satu formulir
  * sekali isi, yang ini daftar yang tumbuh sedikit demi sedikit. Menggabungkan
  * keduanya menghasilkan satu halaman panjang yang selalu terasa belum selesai.
+ *
+ * Isian sendiri TIDAK pernah dinyatakan terverifikasi: tidak ada lencana
+ * "Terverifikasi", "Menunggu verifikasi", "Divalidasi", atau tenggat
+ * pemeriksaan. Sertifikat berkode — satu-satunya yang memang diperiksa lewat
+ * kodenya — ditampilkan sebagai bagian tersendiri di bawah, jelas terpisah.
  */
 export default async function HalamanRekamJejak() {
   // Sengaja tidak wajibPeran("pemuda"): peran mana pun boleh punya Kartu
@@ -64,23 +70,49 @@ export default async function HalamanRekamJejak() {
     },
   });
 
+  // Sertifikat berkode: satu-satunya bagian di halaman ini yang memang dapat
+  // diperiksa keasliannya. Karena itu ia dihitung dan ditampilkan terpisah.
+  const [jumlahSertifikat, sertifikat] = await Promise.all([
+    prisma.sertifikat.count({
+      where: { penerimaId: sesi.user.id, dibatalkanPada: null },
+    }),
+    prisma.sertifikat.findMany({
+      where: { penerimaId: sesi.user.id, dibatalkanPada: null },
+      orderBy: { terbitPada: "desc" },
+      take: 10,
+      select: {
+        kode: true,
+        judul: true,
+        peringkat: true,
+        terbitPada: true,
+        organisasi: { select: { nama: true } },
+        penerbit: { select: { name: true } },
+      },
+    }),
+  ]);
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Rekam jejak</h1>
+        <div className="flex min-w-0 flex-col gap-2">
+          <Overline>Rekam jejak</Overline>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Rekam jejak &amp; prestasi
+          </h1>
           <p className="max-w-prose text-sm text-ink-soft">
             Pengalaman dan prestasi yang Anda isi sendiri. Keduanya tampil di
             Kartu Talenta Anda, dan di sana disebut apa adanya sebagai isian
             sendiri — bukan sesuatu yang sudah disahkan dinas.
           </p>
         </div>
-        <Link
-          href="/pemuda/profil"
-          className="sk-kartu sk-pressable rounded-sk px-4 py-2 text-sm font-medium text-ink-soft"
-        >
-          Kartu Talenta
-        </Link>
+        {profil?.slug && (
+          <Link
+            href={`/p/${profil.slug}`}
+            className="sk-kartu sk-pressable px-4 py-2 text-sm font-medium text-ink-soft"
+          >
+            Pratinjau di Kartu Talenta
+          </Link>
+        )}
       </div>
 
       {!profil ? (
@@ -91,13 +123,19 @@ export default async function HalamanRekamJejak() {
           </p>
           <Link
             href="/pemuda/profil"
-            className="sk-btn-utama sk-pressable w-fit rounded-sk px-4 py-2 text-sm"
+            className="sk-btn-utama sk-pressable w-fit px-4 py-2 text-sm"
           >
             Lengkapi Kartu Talenta
           </Link>
         </Kartu>
       ) : (
         <>
+          <PanelSunk className="grid grid-cols-3 gap-x-4 gap-y-4 p-5">
+            <UbinMetrik nilai={profil.prestasi.length} label="Prestasi" />
+            <UbinMetrik nilai={profil.pengalaman.length} label="Pengalaman" />
+            <UbinMetrik nilai={jumlahSertifikat} label="Sertifikat berkode" />
+          </PanelSunk>
+
           <section className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">Prestasi</h2>
@@ -123,27 +161,29 @@ export default async function HalamanRekamJejak() {
                         />
                       )}
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">
+                            Tingkat {LABEL_TINGKAT[p.tingkat]}
+                          </span>
+                          <span className="text-xs tabular-nums text-muted">
+                            {p.tahun}
+                          </span>
+                        </div>
                         <h3 className="font-medium leading-snug">{p.judul}</h3>
-                        <span className="text-xs text-muted">
-                          {[
-                            LABEL_TINGKAT[p.tingkat],
-                            p.tahun,
-                            p.penyelenggara,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </span>
+                        {p.penyelenggara && (
+                          <span className="text-xs text-muted">
+                            Penyelenggara: {p.penyelenggara}
+                          </span>
+                        )}
                       </div>
                       {p.peringkat && (
                         <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
                           {p.peringkat}
                         </span>
                       )}
-                      {!p.buktiUrl && (
-                        <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs text-muted">
-                          Tanpa bukti
-                        </span>
-                      )}
+                      <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs text-muted">
+                        {p.buktiUrl ? "Bukti terlampir" : "Tanpa bukti"}
+                      </span>
                       <TombolHapus
                         id={p.id}
                         aksi={hapusPrestasi}
@@ -210,16 +250,57 @@ export default async function HalamanRekamJejak() {
             </Kartu>
           </section>
 
-          <p className="text-sm text-muted">
-            Lihat hasilnya di{" "}
-            <Link
-              href={`/p/${profil.slug}`}
-              className="text-accent underline underline-offset-2"
-            >
-              Kartu Talenta publik Anda
-            </Link>
-            .
-          </p>
+          {/* Bagian tersendiri: satu-satunya yang diperiksa lewat kodenya. */}
+          <section className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">Sertifikat berkode</h2>
+              <p className="max-w-prose text-sm text-muted">
+                Diterbitkan penyelenggara kegiatan di dalam aplikasi dan punya
+                kode — keasliannya dapat diperiksa siapa pun lewat{" "}
+                <Link
+                  href="/cek"
+                  className="text-accent underline underline-offset-2"
+                >
+                  periksa sertifikat
+                </Link>
+                . Berbeda dari prestasi di atas yang Anda isi sendiri.
+              </p>
+            </div>
+
+            {sertifikat.length === 0 ? (
+              <Kartu>
+                <p className="text-sm text-muted">
+                  Belum ada sertifikat berkode yang tercatat atas nama Anda.
+                </p>
+              </Kartu>
+            ) : (
+              <ul className="flex flex-col gap-3">
+                {sertifikat.map((s) => (
+                  <li key={s.kode}>
+                    <Link href={`/cek/${s.kode}`} className="block rounded-sk">
+                      <Kartu className="sk-pressable flex flex-wrap items-center gap-4">
+                        <div className="flex min-w-0 flex-1 flex-col gap-1">
+                          <h3 className="font-medium leading-snug">{s.judul}</h3>
+                          <span className="text-xs text-muted">
+                            {tanggalPendek(s.terbitPada)} ·{" "}
+                            {s.organisasi?.nama ?? s.penerbit.name}
+                          </span>
+                        </div>
+                        {s.peringkat && (
+                          <span className="rounded-full bg-brass-soft px-2.5 py-1 text-xs font-medium text-brass">
+                            {s.peringkat}
+                          </span>
+                        )}
+                        <span className="font-mono text-xs text-muted">
+                          {s.kode}
+                        </span>
+                      </Kartu>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </>
       )}
     </div>
