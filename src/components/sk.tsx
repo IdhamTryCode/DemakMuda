@@ -155,11 +155,14 @@ export function Cip({
 export function UbinMetrik({
   nilai,
   label,
+  keterangan,
   ikon,
   className = "",
 }: {
   nilai: ReactNode;
   label: string;
+  /** Kalimat kecil di bawah label, bila ubinnya perlu keterangan tambahan. */
+  keterangan?: ReactNode;
   ikon?: ReactNode;
   className?: string;
 }) {
@@ -172,6 +175,9 @@ export function UbinMetrik({
       <span className="text-[11px] font-semibold uppercase leading-[14px] tracking-[0.12em] text-muted">
         {label}
       </span>
+      {keterangan && (
+        <span className="text-xs leading-snug text-muted">{keterangan}</span>
+      )}
     </div>
   );
 }

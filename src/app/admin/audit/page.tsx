@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Kartu } from "@/components/sk";
+import { Cip, KepalaHalaman, Kartu, Overline } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
 import { tanggalPendek, waktuSaja } from "@/lib/teks";
@@ -42,45 +42,33 @@ export default async function HalamanAudit({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Jejak Audit</h1>
-          <p className="max-w-prose text-sm text-ink-soft">
-            Catatan seluruh tindakan pengelola: pembuatan, penyuntingan,
-            verifikasi, dan penerbitan sertifikat. Hanya dapat dibaca — tidak ada
-            jalan mengubah atau menghapusnya dari antarmuka.
-          </p>
-        </div>
-        <Link
-          href="/admin"
-          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-        >
-          Kembali
-        </Link>
-      </div>
-
-      <div className="sk-redup flex flex-wrap items-center gap-2 p-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-          Jenis tindakan
-        </span>
-        <Link
-          href="/admin/audit"
-          className={`rounded-full px-3 py-1.5 text-sm ${
-            !aksi ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-          }`}
-        >
-          Semua
-        </Link>
-        {kelompok.map((k) => (
+      <KepalaHalaman
+        overline="Admin"
+        judul="Jejak audit"
+        keterangan="Catatan seluruh tindakan pengelola: pembuatan, penyuntingan, verifikasi, dan penerbitan sertifikat. Hanya dapat dibaca — tidak ada jalan mengubah atau menghapusnya dari antarmuka."
+        aksi={
           <Link
+            href="/admin"
+            className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
+          >
+            Kembali
+          </Link>
+        }
+      />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Overline>Jenis tindakan</Overline>
+        <Cip href="/admin/audit" aktif={!aksi}>
+          Semua
+        </Cip>
+        {kelompok.map((k) => (
+          <Cip
             key={k}
             href={`/admin/audit?aksi=${encodeURIComponent(k)}`}
-            className={`rounded-full px-3 py-1.5 text-sm ${
-              aksi === k ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-            }`}
+            aktif={aksi === k}
           >
             {k}
-          </Link>
+          </Cip>
         ))}
       </div>
 

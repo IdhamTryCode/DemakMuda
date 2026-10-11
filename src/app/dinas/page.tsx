@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { Angka, GrafikBatang } from "@/components/grafik-batang";
-import { Kartu } from "@/components/sk";
+import { GrafikBatang } from "@/components/grafik-batang";
+import { Kartu, Overline, PanelSunk, UbinMetrik } from "@/components/sk";
 import { agendaAkanDatang } from "@/lib/agenda";
 import { peluangMasihTerbuka } from "@/lib/peluang";
 import { LABEL_PERAN } from "@/lib/peran";
@@ -112,9 +112,7 @@ export default async function DasborDinas() {
     <div className="flex flex-col gap-6">
 
       <header className="flex flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-          {LABEL_PERAN[sesi.peran]}
-        </span>
+        <Overline>{LABEL_PERAN[sesi.peran]}</Overline>
         <h1 className="text-2xl font-semibold tracking-tight">Peta Potensi Pemuda</h1>
         <p className="max-w-prose text-sm text-ink-soft">
           Ringkasan keadaan kepemudaan Kabupaten Demak berdasarkan data yang
@@ -123,36 +121,36 @@ export default async function DasborDinas() {
         </p>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Angka
-          label="Pemuda terdaftar"
+      <PanelSunk className="grid grid-cols-2 gap-x-4 gap-y-5 p-5 lg:grid-cols-4">
+        <UbinMetrik
           nilai={jumlahPemuda}
+          label="Pemuda terdaftar"
           keterangan={`${jumlahProfil} sudah mengisi Kartu Talenta`}
         />
-        <Angka
-          label="Jangkauan kecamatan"
+        <UbinMetrik
           nilai={`${jangkauan}/${kecamatan.length}`}
+          label="Jangkauan kecamatan"
           keterangan={
             kecamatanKosong.length === 0
               ? "Seluruh kecamatan terjangkau"
               : `${kecamatanKosong.length} kecamatan belum terjangkau`
           }
         />
-        <Angka
-          label="Organisasi terverifikasi"
+        <UbinMetrik
           nilai={organisasiTerverifikasi}
+          label="Organisasi terverifikasi"
           keterangan={
             organisasiMenunggu > 0
               ? `${organisasiMenunggu} menunggu verifikasi Anda`
               : "Tidak ada yang menunggu verifikasi"
           }
         />
-        <Angka
-          label="Sertifikat diterbitkan"
+        <UbinMetrik
           nilai={jumlahSertifikat}
+          label="Sertifikat diterbitkan"
           keterangan={`dari ${totalPendaftaran} pendaftaran kegiatan`}
         />
-      </section>
+      </PanelSunk>
 
       {kecamatanKosong.length > 0 && (
         <Kartu className="flex flex-col gap-2 border-l-4 border-l-brass">

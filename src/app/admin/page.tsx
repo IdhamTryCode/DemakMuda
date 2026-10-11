@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import { Angka } from "@/components/grafik-batang";
-import { Kartu } from "@/components/sk";
+import { Kartu, Overline, PanelSunk, UbinMetrik } from "@/components/sk";
 import { LABEL_PERAN, PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -36,9 +35,7 @@ export default async function DasborAdmin() {
     <div className="flex flex-col gap-6">
 
       <header className="flex flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-brass">
-          {LABEL_PERAN.superadmin}
-        </span>
+        <Overline>{LABEL_PERAN.superadmin}</Overline>
         <h1 className="text-2xl font-semibold tracking-tight">Administrasi Sistem</h1>
         <p className="max-w-prose text-sm text-ink-soft">
           Pengelolaan peran pengguna dan penelusuran jejak audit. Halaman ini
@@ -46,27 +43,27 @@ export default async function DasborAdmin() {
         </p>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <Angka
-          label="Total pengguna"
+      <PanelSunk className="grid grid-cols-2 gap-x-4 gap-y-5 p-5 sm:grid-cols-3">
+        <UbinMetrik
           nilai={totalPengguna}
+          label="Total pengguna"
           keterangan={`${sesiAktif} sesi masih aktif`}
         />
-        <Angka
-          label="Tercatat di jejak audit"
+        <UbinMetrik
           nilai={totalJejak}
+          label="Tercatat di jejak audit"
           keterangan="Seluruh tindakan pengelola"
         />
-        <Angka
-          label="Pengelola isi"
+        <UbinMetrik
           nilai={
             (hitungPeran.get("organisasi") ?? 0) +
             (hitungPeran.get("dinas") ?? 0) +
             (hitungPeran.get("superadmin") ?? 0)
           }
+          label="Pengelola isi"
           keterangan="Organisasi, dinas, dan superadmin"
         />
-      </section>
+      </PanelSunk>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Kartu className="flex flex-col gap-4">

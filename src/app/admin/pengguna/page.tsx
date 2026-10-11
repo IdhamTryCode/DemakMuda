@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { PilihPeran } from "@/app/admin/pengguna/pilih-peran";
-import { Kartu } from "@/components/sk";
+import { Cip, KepalaHalaman, Kartu, Overline } from "@/components/sk";
 import { bacaPeran, LABEL_PERAN, PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibPeran } from "@/lib/sesi";
@@ -46,45 +46,34 @@ export default async function HalamanPengguna({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Kelola Pengguna</h1>
-          <p className="max-w-prose text-sm text-ink-soft">
-            Menaikkan peran seseorang menjadi dinas berarti memberinya akses ke
-            data seluruh pemuda. Setiap perubahan tercatat di jejak audit.
-          </p>
-        </div>
-        <Link
-          href="/admin"
-          className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-        >
-          Kembali
-        </Link>
-      </div>
+      <KepalaHalaman
+        overline="Admin"
+        judul="Kelola pengguna"
+        keterangan="Menaikkan peran seseorang menjadi dinas berarti memberinya akses ke data seluruh pemuda. Setiap perubahan tercatat di jejak audit."
+        aksi={
+          <Link
+            href="/admin"
+            className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
+          >
+            Kembali
+          </Link>
+        }
+      />
 
       <div className="sk-redup flex flex-col gap-4 p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Peran
-          </span>
-          <Link
-            href="/admin/pengguna"
-            className={`rounded-full px-3 py-1.5 text-sm ${
-              !peran ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-            }`}
-          >
+          <Overline>Peran</Overline>
+          <Cip href="/admin/pengguna" aktif={!peran}>
             Semua
-          </Link>
+          </Cip>
           {PERAN.map((p) => (
-            <Link
+            <Cip
               key={p}
               href={`/admin/pengguna?peran=${p}`}
-              className={`rounded-full px-3 py-1.5 text-sm ${
-                peran === p ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-              }`}
+              aktif={peran === p}
             >
               {LABEL_PERAN[p]}
-            </Link>
+            </Cip>
           ))}
         </div>
 

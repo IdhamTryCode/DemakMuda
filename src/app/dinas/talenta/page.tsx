@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { KotakCari } from "@/components/kotak-cari";
-import { Kartu } from "@/components/sk";
+import { Cip, KepalaHalaman, Kartu, Overline } from "@/components/sk";
 import { prisma } from "@/lib/prisma";
 import {
   LABEL_TINGKAT,
@@ -114,14 +114,19 @@ export default async function HalamanCariTalenta({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Cari talenta</h1>
-        <p className="max-w-prose text-sm text-ink-soft">
-          Mencari lintas seluruh pemuda yang mencantumkan prestasi, tanpa
-          memandang keanggotaan organisasinya. Dipakai untuk menyusun calon
-          wakil kabupaten atau menyalurkan dukungan.
-        </p>
-      </div>
+      <KepalaHalaman
+        overline="Dinas"
+        judul="Cari talenta"
+        keterangan="Mencari lintas seluruh pemuda yang mencantumkan prestasi, tanpa memandang keanggotaan organisasinya. Dipakai untuk menyusun calon wakil kabupaten atau menyalurkan dukungan."
+        aksi={
+          <Link
+            href="/dinas"
+            className="sk-kartu sk-pressable px-4 py-2.5 text-sm font-medium text-ink-soft"
+          >
+            Kembali
+          </Link>
+        }
+      />
 
       {/* Diletakkan di atas hasil, bukan di bawah. Daftar yang tampak seperti
           hasil kurasi resmi, padahal isinya klaim yang tidak diperiksa siapa
@@ -138,27 +143,14 @@ export default async function HalamanCariTalenta({
 
       <div className="sk-redup flex flex-col gap-4 p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Tingkat minimal
-          </span>
-          <Link
-            href={tautan({ tingkat: "" })}
-            className={`rounded-full px-3 py-1.5 text-sm ${
-              !ambang ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-            }`}
-          >
+          <Overline>Tingkat minimal</Overline>
+          <Cip href={tautan({ tingkat: "" })} aktif={!ambang}>
             Semua
-          </Link>
+          </Cip>
           {TINGKAT_PRESTASI.map((t) => (
-            <Link
-              key={t}
-              href={tautan({ tingkat: t })}
-              className={`rounded-full px-3 py-1.5 text-sm ${
-                ambang === t ? "bg-accent text-on-accent" : "sk-kartu text-ink-soft"
-              }`}
-            >
+            <Cip key={t} href={tautan({ tingkat: t })} aktif={ambang === t}>
               {LABEL_TINGKAT[t]} ke atas
-            </Link>
+            </Cip>
           ))}
         </div>
 
@@ -225,14 +217,11 @@ export default async function HalamanCariTalenta({
             Terapkan
           </button>
 
-          <Link
-            href={tautan({ bukti: hanyaBerbukti ? "" : "1" })}
-            className="px-2 py-2.5 text-sm text-accent underline underline-offset-2"
-          >
+          <Cip href={tautan({ bukti: hanyaBerbukti ? "" : "1" })} aktif={hanyaBerbukti}>
             {hanyaBerbukti
               ? "Tampilkan semua, berbukti maupun tidak"
               : "Hanya yang melampirkan bukti"}
-          </Link>
+          </Cip>
         </form>
       </div>
 
