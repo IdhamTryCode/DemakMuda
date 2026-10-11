@@ -83,7 +83,7 @@ export default async function HalamanAspirasiSaya() {
         <UbinMetrik nilai={jumlah.get("BARU") ?? 0} label="Baru masuk" />
         <UbinMetrik nilai={jumlah.get("DIPROSES") ?? 0} label="Sedang diproses" />
         <UbinMetrik nilai={jumlah.get("SELESAI") ?? 0} label="Selesai" />
-        <UbinMetrik nilai={jumlah.get("DITOLAK") ?? 0} label="Belum dapat" />
+        <UbinMetrik nilai={jumlah.get("DITOLAK") ?? 0} label="Tidak dilanjutkan" />
       </PanelSunk>
 
       {daftar.length === 0 ? (
@@ -115,7 +115,7 @@ export default async function HalamanAspirasiSaya() {
                   <h2 className="text-base font-semibold leading-snug">
                     {a.judul}
                   </h2>
-                  <p className="whitespace-pre-wrap text-sm text-ink-soft">
+                  <p className="max-w-prose whitespace-pre-wrap text-sm text-ink-soft">
                     {a.isi}
                   </p>
 
@@ -125,7 +125,7 @@ export default async function HalamanAspirasiSaya() {
                         Tanggapan dinas
                         {a.ditanggapiPada && ` · ${tanggalPendek(a.ditanggapiPada)}`}
                       </span>
-                      <p className="whitespace-pre-wrap text-sm text-ink-soft">
+                      <p className="max-w-prose whitespace-pre-wrap text-sm text-ink-soft">
                         {a.tanggapan}
                       </p>
                     </div>
