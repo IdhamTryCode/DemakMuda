@@ -3,11 +3,9 @@ import Link from "next/link";
 import { TombolCabutSemua, TombolCabutSesi } from "@/app/keamanan/kelola-sesi";
 import { MatikanDuaLangkah } from "@/app/keamanan/matikan-dua-langkah";
 import { PasangDuaLangkah } from "@/app/keamanan/pasang-dua-langkah";
-import { GantiTema } from "@/components/ganti-tema";
-import { LogoDemak } from "@/components/logo-demak";
 import { Kartu } from "@/components/sk";
 import { MODE_PERAGAAN, PERAN_WAJIB_2FA } from "@/lib/auth";
-import { dasborUntuk, LABEL_PERAN } from "@/lib/peran";
+import { LABEL_PERAN } from "@/lib/peran";
 import { prisma } from "@/lib/prisma";
 import { wajibMasuk } from "@/lib/sesi";
 import { tanggalPendek, waktuSaja } from "@/lib/teks";
@@ -43,21 +41,6 @@ export default async function HalamanKeamanan() {
 
   return (
     <div className="flex flex-col gap-6">
-      <nav className="flex items-center justify-between gap-4">
-        <LogoDemak ukuran={36} />
-        <div className="flex items-center gap-3">
-          <GantiTema />
-          {(sudahAktif || !wajib || MODE_PERAGAAN) && (
-            <Link
-              href={dasborUntuk(sesi.peran)}
-              className="sk-kartu sk-pressable rounded-sk px-4 py-2.5 text-sm font-medium text-ink-soft"
-            >
-              Dasbor
-            </Link>
-          )}
-        </div>
-      </nav>
-
       <header className="flex flex-col gap-1">
         <span className="text-xs font-semibold uppercase tracking-wider text-brass">
           {LABEL_PERAN[sesi.peran]}
