@@ -14,9 +14,19 @@
  *  2. Kaca hanya untuk yang melayang di atas isi: bilah yang menempel dan panel
  *     mengambang. Dua permukaan, bukan lebih — backdrop-filter membebani GPU,
  *     dan sebagian besar penggunanya memakai ponsel kelas menengah ke bawah.
- *  3. Satu warna aksen saja, hijau kubah Masjid Agung Demak. Kuningan dan merah
- *     bukan aksen kedua; keduanya penanda keadaan.
+ *  3. Satu warna aksen saja, hijau kubah Masjid Agung Demak. Kuningan, merah,
+ *     biru laut, dan emas bukan aksen kedua; semuanya penanda keadaan.
  *  4. Warna dan radius diambil dari token di bawah, tidak pernah ditulis lepas.
+ *  5. Tombol utama dan cip berbentuk kapsul; kartu dan kolom isian memakai
+ *     radius token.
+ *
+ * Sejak Oktober 2026 tata letaknya mengikuti redesign "Pemuda Pesisir":
+ * palet dan aturan di atas tidak berubah, yang bertambah adalah dok navigasi
+ * bawah di ponsel (kaca, sama dengan bilah atas) dan sidebar area masuk di
+ * layar lebar (datar, bukan kaca). Kelas di berkas ini: .sk-kartu, .sk-redup,
+ * .sk-overlay, .sk-bilah, .sk-pressable, .sk-btn-utama, .sk-field. Kepingan
+ * yang lebih besar — Overline, Cip, UbinMetrik, PanelSunk, KepalaHalaman —
+ * ada di src/components/sk.tsx.
  *
  * Rujukan bentuknya DESIGN.md (apple.com) untuk tipografi, skala radius, dan
  * disiplin menahan hiasan — tetapi bukan kepadatannya. Satu ubin per layar

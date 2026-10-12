@@ -535,14 +535,45 @@ pribadi orang sungguhan untuk keperluan lomba tidak dapat dibenarkan.
 
 ## Sistem visual
 
-Namanya **sistem kaca**, dan hanya satu unsur yang benar-benar berupa kaca:
-bilah navigasi. Selebihnya permukaan rata dengan garis rambut. Kedalaman
-dipakai sesedikit mungkin, supaya yang sedikit itu berarti.
+Namanya **sistem kaca**, dan yang benar-benar berupa kaca hanya bilah
+navigasi: bilah atas dan dok bawah di ponsel. Selebihnya permukaan rata dengan
+garis rambut. Kedalaman dipakai sesedikit mungkin, supaya yang sedikit itu
+berarti.
 
-Seluruh warna dan kepingan berasal dari `src/app/globals.css` — `.sk-kartu`,
-`.sk-redup`, `.sk-bilah`, `.sk-btn-utama`, `.sk-field`, `.sk-pressable`,
-`.sk-overlay` — tidak pernah dari gaya yang ditulis lepas di komponen. Warna
-hijau dan kuningannya diambil dari Masjid Agung Demak.
+Seluruh warna berasal dari token `--sk-*` di `src/app/globals.css`, tidak
+pernah dari gaya yang ditulis lepas di komponen. Hijau aksen dan kuningannya
+diambil dari Masjid Agung Demak; biru laut (`--sk-navy`) dan emas (`--sk-gold`,
+dengan teks `--sk-on-gold`) dari lambang daerah. Hanya hijau yang menjadi
+aksen. Yang lain penanda keadaan.
+
+Kepingannya ada di dua tempat:
+
+| Tempat | Isi |
+| --- | --- |
+| `src/app/globals.css` | `.sk-kartu`, `.sk-redup`, `.sk-bilah`, `.sk-btn-utama`, `.sk-field`, `.sk-pressable`, `.sk-overlay` |
+| `src/components/sk.tsx` | `Kartu`, `Tombol`, `Kolom`, `Label`, `Pesan`, `Overline`, `Cip`, `UbinMetrik`, `PanelSunk`, `KepalaHalaman` |
+
+Tombol utama dan cip berbentuk kapsul. Halaman area masuk
+dibuka dengan `KepalaHalaman` (label kecil, judul, keterangan, tombol utama di
+kanan), lalu baris `UbinMetrik` di dalam `PanelSunk` bila ada angka yang patut
+diringkas. Angka di ubin selalu hitungan dari basis data. Lencana status
+memakai ikon dan teks, tidak warna saja.
+
+### Kerangka halaman
+
+| Lebar | Halaman publik | Area masuk |
+| --- | --- | --- |
+| Di bawah 640 px | Bilah atas dan dok bawah (`dok-bawah.tsx`) | Bilah atas, bilah peran, dan dok bawah |
+| 640–1023 px | Bilah atas | Bilah atas dan bilah peran |
+| 1024 px ke atas | Bilah atas | Sidebar (`sidebar-akun.tsx`) dan strip atas tipis |
+
+Sidebar, bilah peran, dan nama bagian di strip atas membaca daftar yang sama,
+`MENU_PERAN` di `src/lib/menu.ts`, dan menentukan butir aktif dengan
+`butirAktif()`. Menambah halaman ke menu cukup di satu tempat itu. Ikon butir
+sidebar didaftarkan di `sidebar-akun.tsx`.
+
+Sesi dibaca sekali per halaman, di `bingkai-publik.tsx` atau
+`bingkai-masuk.tsx`, lalu diteruskan lewat prop ke bilah atas dan lonceng.
 
 **Mode terang adalah bawaan.** Mode gelap hanya aktif bila pengguna menekan
 tombol ganti tema, dan pilihannya diingat peramban. Preferensi sistem sengaja
