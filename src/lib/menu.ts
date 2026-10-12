@@ -97,11 +97,19 @@ export const MENU_PERAN: Record<Peran, ButirMenu[]> = {
  *
  * Yang cocok paling panjang menang, supaya /pemuda/karya menandai "Karya saya"
  * dan bukan "Beranda" — keduanya sama-sama berawalan /pemuda.
+ *
+ * Daftar peserta beralamat /kelola/peserta/<jenis>/<id>, di luar awalan butir
+ * mana pun, padahal orang sampai ke sana dari Agenda atau Peluang. Alamatnya
+ * dipetakan ke butir asalnya, supaya sidebar, bilah peran, dan jejak lokasi
+ * sama-sama tahu sedang di mana.
  */
 export function butirAktif(menu: ButirMenu[], jalur: string): string | null {
+  const peserta = /^\/kelola\/peserta\/(agenda|peluang)(\/|$)/.exec(jalur);
+  const dicari = peserta ? `/kelola/${peserta[1]}` : jalur;
+
   let aktif: string | null = null;
   for (const m of menu) {
-    if (jalur === m.href || jalur.startsWith(`${m.href}/`)) {
+    if (dicari === m.href || dicari.startsWith(`${m.href}/`)) {
       if (!aktif || m.href.length > aktif.length) aktif = m.href;
     }
   }
